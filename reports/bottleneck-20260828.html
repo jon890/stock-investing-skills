@@ -1,0 +1,111 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>섹터 병목 점수 2026-08-28</title><style>
+:root{--bg:#fbfbf9;--fg:#1c1c1a;--mut:#6b6b64;--line:#e2e1db;--card:#fff;
+--up:#0a7d4f;--dn:#c0392b;--acc:#2d4f8e;--warn:#8a6d1f;--warnbg:#fdf8e8}
+@media(prefers-color-scheme:dark){:root{--bg:#16161a;--fg:#e8e8e4;--mut:#9a9a92;
+--line:#2e2e34;--card:#1e1e23;--up:#4ade80;--dn:#f87171;--acc:#7aa2e3;
+--warn:#d4b45a;--warnbg:#2a2413}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:15px/1.65 -apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.3px}
+h2{font-size:19px;margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:15px;margin:26px 0 10px;color:var(--mut);font-weight:600}
+.sub{color:var(--mut);font-size:13px;margin-bottom:28px}
+.verdict{background:var(--card);border:1px solid var(--line);border-radius:10px;
+padding:22px 24px;margin:22px 0 8px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:20px}
+.vk{font-size:12px;color:var(--mut);margin-bottom:4px}
+.vv{font-size:23px;font-weight:650;letter-spacing:-.5px}
+.vn{font-size:12px;color:var(--mut);margin-top:2px}
+.scroll{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;font-size:13.5px;
+font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);
+white-space:nowrap}
+th{font-weight:600;color:var(--mut);font-size:12px;text-align:right;
+border-bottom:1.5px solid var(--line)}
+th:first-child,td:first-child,.l{text-align:left}
+tbody tr:hover{background:color-mix(in srgb,var(--acc) 6%,transparent)}
+tr.hi{background:color-mix(in srgb,var(--acc) 9%,transparent);font-weight:600}
+.up{color:var(--up)}.dn{color:var(--dn)}.mut{color:var(--mut)}
+.note{background:var(--warnbg);border-left:3px solid var(--warn);
+padding:12px 16px;margin:16px 0;font-size:13.5px;border-radius:0 6px 6px 0}
+.note b{color:var(--warn)}
+p{margin:10px 0}
+ul{margin:10px 0;padding-left:20px}li{margin:5px 0}
+.bar{display:inline-block;height:9px;border-radius:2px;vertical-align:middle;
+margin-right:6px;min-width:2px}
+code{background:color-mix(in srgb,var(--fg) 7%,transparent);padding:1px 5px;
+border-radius:4px;font-size:12.5px}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+color:var(--mut);font-size:12px}
+</style></head><body><div class="wrap">
+<h1>섹터 병목 점수</h1>
+<div class="sub">기준일 2026-08-28 · 미국 25개 산업 그룹 ·
+원자료 <code>reports/universe-USA-20260828.json</code></div>
+
+<div class="verdict"><div class="vgrid">
+<div><div class="vk">최상위 병목</div>
+<div class="vv">5710 기술</div>
+<div class="vn">NVDA, AAPL, AVGO, MU</div></div>
+<div><div class="vk">병목 점수</div><div class="vv">+1.36</div>
+<div class="vn">2위와 +0.36 차이</div></div>
+<div><div class="vk">매출 성장</div>
+<div class="vv">10.6%</div>
+<div class="vn">시가총액 가중</div></div>
+<div><div class="vk">마진 변화</div>
+<div class="vv">+2.4%p</div>
+<div class="vn">가격결정력의 증거</div></div>
+<div><div class="vk">텐베거 후보</div><div class="vv">6개</div>
+<div class="vn">시총 500억 달러 이하</div></div>
+</div></div>
+
+<h2>병목을 무엇으로 재는가</h2>
+<p>병목이란 수요가 공급을 초과해 그 구간이 가치사슬 전체의 처리량을 제한하는 상태다.
+병목 구간은 가격결정력을 쥐고 초과이윤을 가져간다. 텐베거는 여기서 나온다.</p>
+<p>다섯 팩터를 산업 그룹 사이에서 표준점수로 바꾸고 가중합한다.
+이상치가 표준점수를 무너뜨리므로 양 끝 2%를 절단한 뒤 계산한다.
+집계는 시가총액 가중으로 한다.</p>
+<div class="verdict"><div class="vgrid"><div><div class="vk">수요 초과</div><div class="vv">30%</div><div class="vn">매출 성장률. 병목의 1차 증거다</div></div><div><div class="vk">가격결정력</div><div class="vv">25%</div><div class="vn">이익률 확대. 병목과 단순 성장을 가른다</div></div><div><div class="vk">자금 집중</div><div class="vv">20%</div><div class="vn">시장 대비 초과수익. 시장이 병목을 인지했다는 증거다</div></div><div><div class="vk">지속성</div><div class="vv">15%</div><div class="vn">초과수익이 여러 기간에 걸쳐 일관된 정도. 테마와 구조를 가른다</div></div><div><div class="vk">미반영 여지</div><div class="vv">10%</div><div class="vn">성장 대비 배수가 낮은 정도. 텐베거 여지다</div></div></div></div>
+
+<h2>산업 그룹 순위</h2>
+<div class="scroll"><table>
+<thead><tr><th class="l">그룹</th><th class="l">섹터</th><th>점수</th><th>수요 초과</th><th>가격결정력</th><th>자금 집중</th><th>지속성</th><th>미반영 여지</th>
+<th>매출성장</th><th>마진변화</th><th>시총</th><th class="l">대표 종목</th></tr></thead>
+<tbody><tr class="hi"><td class="l">5710</td><td class="l">기술</td><td><span class="bar" style="width:62.36070330613562px;background:var(--up)"></span>+1.36</td><td>+0.9</td><td>+1.6</td><td>+2.8</td><td>+1.5</td><td>-1.1</td><td><span class="up">+10.6%</span></td><td><span class="up">+2.4%</span></td><td>19,244B</td><td class="l mut">NVDA, AAPL, AVGO</td></tr><tr><td class="l">5720</td><td class="l">기술</td><td><span class="bar" style="width:45.884011411022186px;background:var(--up)"></span>+1.00</td><td>+1.2</td><td>+0.8</td><td>+0.8</td><td>+1.5</td><td>+0.2</td><td><span class="up">+11.9%</span></td><td><span class="up">+1.4%</span></td><td>14,666B</td><td class="l mut">GOOGL, MSFT, META</td></tr><tr><td class="l">5340</td><td class="l">경기소비재</td><td><span class="bar" style="width:21.91285413758382px;background:var(--up)"></span>+0.48</td><td>+0.3</td><td>+1.2</td><td>+0.1</td><td>-0.2</td><td>+1.0</td><td><span class="up">+8.0%</span></td><td><span class="up">+1.9%</span></td><td>4,277B</td><td class="l mut">AMZN, COST, HD</td></tr><tr><td class="l">5620</td><td class="l">헬스케어</td><td><span class="bar" style="width:17.641123534998478px;background:var(--up)"></span>+0.38</td><td>-0.4</td><td>+0.5</td><td>+1.1</td><td>+1.5</td><td>-0.6</td><td><span class="up">+4.6%</span></td><td><span class="up">+1.0%</span></td><td>4,307B</td><td class="l mut">LLY, JNJ, ABBV</td></tr><tr><td class="l">5240</td><td class="l">산업재</td><td><span class="bar" style="width:14.293510574262658px;background:var(--up)"></span>+0.31</td><td>+0.0</td><td>+0.1</td><td>+0.6</td><td>+0.7</td><td>+0.5</td><td><span class="up">+6.5%</span></td><td><span class="up">+0.6%</span></td><td>728B</td><td class="l mut">UNP, CSX, UPS</td></tr><tr><td class="l">5130</td><td class="l">소재</td><td><span class="bar" style="width:12.885333248347218px;background:var(--up)"></span>+0.28</td><td>+1.2</td><td>-0.3</td><td>-0.2</td><td>-0.2</td><td>+0.8</td><td><span class="up">+11.6%</span></td><td><span class="dn">-0.1%</span></td><td>90B</td><td class="l mut">SW, PKG, AMCR</td></tr><tr><td class="l">5120</td><td class="l">소재</td><td><span class="bar" style="width:11.929168706539167px;background:var(--up)"></span>+0.26</td><td>-0.4</td><td>-0.0</td><td>+1.4</td><td>+2.4</td><td>-2.8</td><td><span class="up">+5.0%</span></td><td><span class="up">+0.3%</span></td><td>1,136B</td><td class="l mut">SCCO, NEM, FCX</td></tr><tr><td class="l">5610</td><td class="l">헬스케어</td><td><span class="bar" style="width:10.982093220469464px;background:var(--up)"></span>+0.24</td><td>+0.3</td><td>+0.2</td><td>+0.2</td><td>-0.2</td><td>+0.7</td><td><span class="up">+7.9%</span></td><td><span class="up">+0.7%</span></td><td>2,531B</td><td class="l mut">UNH, TMO, ABT</td></tr><tr><td class="l">5310</td><td class="l">경기소비재</td><td><span class="bar" style="width:9.57538902435518px;background:var(--up)"></span>+0.21</td><td>+1.5</td><td>+0.2</td><td>-1.6</td><td>-0.2</td><td>+0.6</td><td><span class="up">+13.2%</span></td><td><span class="up">+0.6%</span></td><td>1,636B</td><td class="l mut">TSLA, CMI, GM</td></tr><tr><td class="l">5510</td><td class="l">금융</td><td><span class="bar" style="width:9.08103387361571px;background:var(--up)"></span>+0.20</td><td>+2.0</td><td>-1.0</td><td>+0.5</td><td>-0.2</td><td>-2.2</td><td><span class="up">+15.2%</span></td><td><span class="dn">-0.9%</span></td><td>5,357B</td><td class="l mut">JPM, BAC, MS</td></tr><tr><td class="l">5740</td><td class="l">기술</td><td><span class="bar" style="width:4.123259593938214px;background:var(--up)"></span>+0.09</td><td>+0.2</td><td>+0.6</td><td>-0.3</td><td>-0.2</td><td>-0.1</td><td><span class="up">+7.2%</span></td><td><span class="up">+1.1%</span></td><td>2,625B</td><td class="l mut">SPCX, VZ, TMUS</td></tr><tr><td class="l">5220</td><td class="l">산업재</td><td><span class="bar" style="width:3.135684166606262px;background:var(--up)"></span>+0.07</td><td>+0.4</td><td>-0.4</td><td>+0.4</td><td>-0.2</td><td>-0.3</td><td><span class="up">+8.4%</span></td><td><span class="dn">-0.1%</span></td><td>1,962B</td><td class="l mut">V, SPGI, ADP</td></tr><tr><td class="l">5330</td><td class="l">경기소비재</td><td><span class="bar" style="width:2.083734234569991px;background:var(--dn)"></span>-0.05</td><td>-0.1</td><td>+0.2</td><td>-0.4</td><td>-0.2</td><td>+0.3</td><td><span class="up">+6.2%</span></td><td><span class="up">+0.6%</span></td><td>1,414B</td><td class="l mut">DIS, MCD, BKNG</td></tr><tr><td class="l">5010</td><td class="l">에너지</td><td><span class="bar" style="width:4.522552052918104px;background:var(--dn)"></span>-0.10</td><td>-3.5</td><td>+1.3</td><td>+1.5</td><td>+1.5</td><td>+0.8</td><td><span class="dn">-8.7%</span></td><td><span class="up">+2.1%</span></td><td>2,648B</td><td class="l mut">XOM, CVX, COP</td></tr><tr><td class="l">5410</td><td class="l">필수소비재</td><td><span class="bar" style="width:9.557197486239174px;background:var(--dn)"></span>-0.21</td><td>-0.5</td><td>+0.2</td><td>-0.1</td><td>-0.2</td><td>-0.5</td><td><span class="up">+4.3%</span></td><td><span class="up">+0.6%</span></td><td>1,390B</td><td class="l mut">KO, PM, PEP</td></tr></tbody></table></div>
+<p class="mut">팩터 열은 표준점수다. 0이 전체 평균이고 1이면 표준편차 하나만큼 위다.</p>
+
+<h2>최상위 병목의 기간별 초과수익</h2>
+<p>시장 전체 대비 초과수익이다. 여러 기간에 걸쳐 양수면 테마가 아니라 구조다.</p>
+<div class="scroll"><table><thead><tr><th>1m</th><th>3m</th><th>6m</th><th>ytd</th><th>1y</th></tr></thead>
+<tbody><tr><td><span class="dn">-2.0%</span></td><td><span class="dn">-6.2%</span></td><td><span class="up">+22.0%</span></td><td><span class="up">+32.3%</span></td><td><span class="up">+81.4%</span></td></tr></tbody></table></div>
+
+<h2>텐베거 후보</h2>
+<p>병목을 찾아도 그 안의 대형주는 답이 아니다. 수혜를 이미 값에 담았다.
+시총 500억 달러 이하이면서 매출 성장 10% 이상인 종목만 남겼다.</p>
+<div class="scroll"><table>
+<thead><tr><th class="l">티커</th><th class="l">이름</th><th>시총</th>
+<th>매출성장</th><th>마진변화</th><th>EV/Sales</th><th>1년</th><th>추정기관</th></tr></thead>
+<tbody><tr><td class="l"><b>CRDO</b></td><td class="l">크리도 테크놀로지 그룹 홀딩</td><td>45.1B</td><td><span class="up">+30.9%</span></td><td><span class="up">+11.5%</span></td><td>68.1배</td><td><span class="up">+76.6%</span></td><td>19</td></tr><tr><td class="l"><b>GFS</b></td><td class="l">글로벌파운드리스</td><td>25.4B</td><td><span class="up">+12.9%</span></td><td><span class="up">+5.0%</span></td><td>2.6배</td><td><span class="up">+33.5%</span></td><td>20</td></tr><tr><td class="l"><b>MCHP</b></td><td class="l">마이크로칩 테크놀로지</td><td>41.0B</td><td><span class="up">+15.9%</span></td><td><span class="up">+5.9%</span></td><td>6.6배</td><td><span class="up">+14.7%</span></td><td>24</td></tr><tr><td class="l"><b>SMCI</b></td><td class="l">슈퍼 마이크로 컴퓨터</td><td>24.9B</td><td><span class="up">+17.6%</span></td><td><span class="up">+1.8%</span></td><td>0.8배</td><td><span class="dn">-15.7%</span></td><td>16</td></tr><tr><td class="l"><b>TSEM</b></td><td class="l">타워 세미컨덕터</td><td>24.8B</td><td><span class="up">+18.1%</span></td><td><span class="mut">-</span></td><td>11.9배</td><td><span class="up">+242.1%</span></td><td>6</td></tr><tr><td class="l"><b>ON</b></td><td class="l">온 세미컨덕터</td><td>29.1B</td><td><span class="up">+17.5%</span></td><td><span class="up">+0.3%</span></td><td>3.0배</td><td><span class="up">+43.0%</span></td><td>25</td></tr></tbody></table></div>
+
+<h2>한국 시장</h2>
+<div class="note"><b>점수를 그대로 믿지 않는다.</b>
+한국 종목의 컨센서스 추정 보유율이 26%다. 수요와 가격결정력 팩터가 대부분 결측이라
+자금 집중과 지속성만 참고한다. 시가총액도 원화라 달러 기준 시총 상한을 그대로 쓰지 못한다.</div>
+<div class="scroll"><table>
+<thead><tr><th class="l">그룹</th><th class="l">섹터</th><th>점수</th>
+<th>자금 집중</th><th>지속성</th><th class="l">대표 종목</th></tr></thead>
+<tbody><tr><td class="l">5720</td><td class="l">기술</td><td>+0.78</td><td>+1.8</td><td>+2.6</td><td class="l mut">SK스퀘어, SK, NAVER</td></tr><tr><td class="l">5710</td><td class="l">기술</td><td>+0.67</td><td>+2.7</td><td>+1.6</td><td class="l mut">삼성전자, SK하이닉스, 삼성전기</td></tr><tr><td class="l">5420</td><td class="l">필수소비재</td><td>+0.52</td><td>+1.6</td><td>+1.6</td><td class="l mut">에이피알, 아모레퍼시픽, LG생활건강</td></tr><tr><td class="l">5530</td><td class="l">금융</td><td>+0.42</td><td>+0.9</td><td>+1.6</td><td class="l mut">삼성생명, 삼성화재, DB손해보험</td></tr><tr><td class="l">5220</td><td class="l">산업재</td><td>+0.28</td><td>+0.9</td><td>+0.6</td><td class="l mut">삼성물산, 현대건설, 삼성E&amp;A</td></tr><tr><td class="l">5910</td><td class="l">유틸리티</td><td>+0.17</td><td>+0.3</td><td>+0.6</td><td class="l mut">한국전력, GS, 한국가스공사</td></tr></tbody></table></div>
+
+<h2>다음에 확인할 것</h2>
+<p>점수는 어디를 볼지 알려줄 뿐 왜인지는 말하지 않는다.
+최상위 그룹에 대해 다음 셋에 답해야 종목 선정으로 넘어간다.</p>
+<ul>
+<li>무엇이 공급을 제약하는가. 생산능력인가, 기술 장벽인가, 계약 구조인가.</li>
+<li>그 제약이 몇 년 유지되는가. 증설 발표가 있으면 그 시점이 병목의 끝이다.</li>
+<li>누가 그 제약을 쥐고 있는가. 병목 안에서도 가격을 정하는 계층이 따로 있다.</li>
+</ul>
+
+<footer>재현: <code>python3 scripts/bottleneck.py reports/universe-USA-20260828.json</code><br>
+투자 판단의 근거 자료이며 매매 권유가 아니다.</footer></div></body></html>

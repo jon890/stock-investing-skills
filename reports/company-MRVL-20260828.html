@@ -1,0 +1,192 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Marvell Technology 밸류에이션 2026-08-28</title><style>
+:root{--bg:#fbfbf9;--fg:#1c1c1a;--mut:#6b6b64;--line:#e2e1db;--card:#fff;
+--up:#0a7d4f;--dn:#c0392b;--acc:#2d4f8e;--warn:#8a6d1f;--warnbg:#fdf8e8}
+@media(prefers-color-scheme:dark){:root{--bg:#16161a;--fg:#e8e8e4;--mut:#9a9a92;
+--line:#2e2e34;--card:#1e1e23;--up:#4ade80;--dn:#f87171;--acc:#7aa2e3;
+--warn:#d4b45a;--warnbg:#2a2413}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:15px/1.65 -apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.3px}
+h2{font-size:19px;margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:15px;margin:26px 0 10px;color:var(--mut);font-weight:600}
+.sub{color:var(--mut);font-size:13px;margin-bottom:28px}
+.verdict{background:var(--card);border:1px solid var(--line);border-radius:10px;
+padding:22px 24px;margin:22px 0 8px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:20px}
+.vk{font-size:12px;color:var(--mut);margin-bottom:4px}
+.vv{font-size:23px;font-weight:650;letter-spacing:-.5px}
+.vn{font-size:12px;color:var(--mut);margin-top:2px}
+.scroll{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;font-size:13.5px;
+font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);
+white-space:nowrap}
+th{font-weight:600;color:var(--mut);font-size:12px;text-align:right;
+border-bottom:1.5px solid var(--line)}
+th:first-child,td:first-child,.l{text-align:left}
+tbody tr:hover{background:color-mix(in srgb,var(--acc) 6%,transparent)}
+tr.hi{background:color-mix(in srgb,var(--acc) 9%,transparent);font-weight:600}
+.up{color:var(--up)}.dn{color:var(--dn)}.mut{color:var(--mut)}
+.note{background:var(--warnbg);border-left:3px solid var(--warn);
+padding:12px 16px;margin:16px 0;font-size:13.5px;border-radius:0 6px 6px 0}
+.note b{color:var(--warn)}
+p{margin:10px 0}
+ul{margin:10px 0;padding-left:20px}li{margin:5px 0}
+.bar{display:inline-block;height:9px;border-radius:2px;vertical-align:middle;
+margin-right:6px;min-width:2px}
+code{background:color-mix(in srgb,var(--fg) 7%,transparent);padding:1px 5px;
+border-radius:4px;font-size:12.5px}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+color:var(--mut);font-size:12px}
+</style></head><body><div class="wrap">
+<h1>Marvell Technology <span class="mut">(MRVL)</span></h1>
+<div class="sub">기준일 2026-08-28 · 현재가 $241.45 ·
+시가총액 2,117억 달러 ·
+재현 <code>python3 scripts/valuation.py MRVL</code></div>
+
+<div class="note"><b>두 밸류에이션을 합치지 않는다.</b>
+절대가치는 이 사업이 벌어들일 현금의 오늘 값을 묻고,
+상대가치는 시장이 같은 부류에 매기는 값을 묻는다.
+서로 다른 질문이라 가중평균은 어느 질문에도 답하지 못한다.
+두 답이 갈리면 그 차이 자체가 결론이다.</div>
+
+<h2>판정</h2>
+<h3>절대가치 (DCF)</h3>
+<p class="mut">이 사업의 현금흐름만 보고 매긴 값이다. 시장이 어떻게 보든 무관하다.</p>
+<div class="verdict"><div class="vgrid">
+<div><div class="vk">적정가</div><div class="vv">$89.89</div>
+<div class="vn"><span class="dn">-62.8%</span></div></div>
+<div><div class="vk">상방</div><div class="vv up">$132.97</div>
+<div class="vn"><span class="dn">-45%</span></div></div>
+<div><div class="vk">하방</div><div class="vv dn">$30.51</div>
+<div class="vn"><span class="dn">-87%</span></div></div>
+<div><div class="vk">손익비</div><div class="vv">0.51 : 1</div>
+<div class="vn">비중 축소</div></div>
+<div><div class="vk">진입가 (2:1)</div>
+<div class="vv">$64.66</div>
+<div class="vn"><span class="dn">-73%</span></div></div>
+</div></div>
+<h3>상대가치 (동종 배수)</h3>
+<p class="mut">시장이 같은 부류에 매기는 값이다. 그 배수 자체가 옳은지는 묻지 않는다.</p>
+<div class="verdict"><div class="vgrid">
+<div><div class="vk">적정가</div><div class="vv">$353.81</div>
+<div class="vn"><span class="up">+46.5%</span></div></div>
+<div><div class="vk">상방</div><div class="vv up">$524.95</div>
+<div class="vn"><span class="up">+117%</span></div></div>
+<div><div class="vk">하방</div><div class="vv dn">$153.88</div>
+<div class="vn"><span class="dn">-36%</span></div></div>
+<div><div class="vk">손익비</div><div class="vv">3.24 : 1</div>
+<div class="vn">매수</div></div>
+<div><div class="vk">진입가 (2:1)</div>
+<div class="vv">$277.57</div>
+<div class="vn"><span class="up">+15%</span></div></div>
+</div></div>
+
+<div class="note"><b>두 방법의 차이 +293.6%</b> — 상대가치가 절대가치보다 높다. 시장이 같은 부류에 매기는 값 자체가 현금흐름으로 정당화되는 수준을 넘는다. 섹터가 재평가되면 함께 내려온다</div>
+
+<h2>2년 뒤와 텐베거</h2>
+<p>2년 안에 10배가 되려면 연복리 216%가 필요하다.
+매출과 배수가 함께 폭증해야 나오는 값이라 결과가 크게 갈리는 기업에서만 가능하다.
+아래는 배수를 고정하지 않고 2028년 시점의 기업가치를 직접 구한 값이다.</p>
+<div class="scroll"><table>
+<thead><tr><th class="l">시나리오</th><th>확률</th><th>2028년 매출</th>
+<th>그때 EV/Sales</th><th>기말 주당</th><th>배수</th><th>연복리</th></tr></thead>
+<tbody><tr><td class="l"><b>기본</b></td><td>55%</td><td>18,000</td><td>5.2배</td><td>$115.16</td><td>0.5배</td><td><span class="dn">-30.9%</span></td></tr><tr><td class="l"><b>낙관</b></td><td>25%</td><td>20,000</td><td>6.8배</td><td>$165.15</td><td>0.7배</td><td><span class="dn">-17.3%</span></td></tr><tr><td class="l"><b>비관</b></td><td>20%</td><td>14,000</td><td>2.1배</td><td>$38.90</td><td>0.2배</td><td><span class="dn">-59.9%</span></td></tr>
+<tr class="hi"><td class="l"><b>확률가중</b></td><td>100%</td><td colspan="3"></td>
+<td><b>0.5배</b></td>
+<td><span class="dn">-31.8%</span></td></tr></tbody></table></div>
+<p><b>진폭 4.2배</b> — 최선과 최악의 비율이다.
+최선은 낙관 시나리오의 0.7배이고
+그 확률은 25%다.
+진폭이 클수록 단기 텐베거 여지가 있고, 동시에 잃을 폭도 크다.</p>
+<div class="scroll"><table>
+<thead><tr><th class="l">항</th><th>배수</th><th class="l">내용</th></tr></thead>
+<tbody>
+<tr><td class="l">매출</td><td>2.2배</td>
+<td class="l mut">2028년 매출 ÷ 직전 실적</td></tr>
+<tr><td class="l">이익률</td><td>1.07배</td>
+<td class="l mut">기말 영업이익률 ÷ 현재 영업이익률</td></tr>
+<tr><td class="l">배수</td><td class="dn">0.29배</td>
+<td class="l mut">EV/Sales 17.7 → 5.2</td></tr>
+</tbody></table></div>
+
+<div class="note"><b>판정: 불가</b> — 시가총액이 2,117억 달러다. 10배면 2.1조 달러로 세계 최상위 소수만 닿는 규모다</div>
+
+<h2>컨센서스 검증</h2>
+<div class="note"><b>컨센서스가 갱신되지 않았다.</b>
+데이터 제공자의 매출 추정은 9,084 백만 달러이고
+회사 가이던스는 18,000 백만 달러다. 괴리가 -49.5%다.
+가이던스로 교체해 계산했다.</div>
+
+<h2>절대가치 상세</h2>
+<p>명시 예측 5년에 잔존가치를 더한다.
+명시 기간이 짧아 잔존가치 비중이 커지므로 영구성장률을 미국 장기 명목 GDP 성장률보다
+낮게 잡아 그것을 상쇄한다.
+자유현금흐름은 <code>매출 × 영업이익률 × (1 − 세율) − SBC − 운전자본 증가분</code>으로 잡았다.
+주식보상비용은 주주가 실제로 부담하는 비용이므로 차감한다.</p>
+<div class="scroll"><table>
+<thead><tr><th class="l">시나리오</th><th>확률</th><th>주당가치</th><th>현재가 대비</th>
+<th>잔존가치 비중</th><th>기말 매출</th><th>기말 영업이익률</th></tr></thead>
+<tbody><tr><td class="l"><b>기본</b></td><td>55%</td><td>$91.91</td><td><span class="dn">-61.9%</span></td><td>71%</td><td>32,300</td><td>40.0%</td></tr><tr><td class="l"><b>낙관</b></td><td>25%</td><td>$132.97</td><td><span class="dn">-44.9%</span></td><td>75%</td><td>40,000</td><td>42.0%</td></tr><tr><td class="l"><b>비관</b></td><td>20%</td><td>$30.51</td><td><span class="dn">-87.4%</span></td><td>59%</td><td>17,500</td><td>30.0%</td></tr>
+<tr class="hi"><td class="l"><b>확률가중</b></td><td>100%</td>
+<td><b>$89.89</b></td><td><span class="dn">-62.8%</span></td>
+<td colspan="3"></td></tr></tbody></table></div>
+
+<h3>시나리오 가정과 근거</h3>
+<div class="scroll"><table>
+<thead><tr><th class="l">시나리오</th><th>WACC</th><th>영구성장률</th><th>세율</th>
+<th class="l">매출 추정 출처</th></tr></thead>
+<tbody><tr><td class="l"><b>기본</b></td><td>12.0%</td><td>2.0%</td><td>8%</td><td class="l mut">가이던스 FY2027 · 가이던스 FY2028 · 가정 +30% · 가정 +20% · 가정 +15%</td></tr><tr><td class="l"><b>낙관</b></td><td>11.5%</td><td>2.5%</td><td>8%</td><td class="l mut">가정 가이던스 상회 · 가정 +11% · 가정 +35% · 가정 +26% · 가정 +18%</td></tr><tr><td class="l"><b>비관</b></td><td>13.0%</td><td>1.0%</td><td>10%</td><td class="l mut">가정 가이던스 소폭 미달 · 가정 +22% · 가정 +11% · 가정 +6% · 가정 +6%</td></tr></tbody></table></div>
+<p><b>기본</b> — 회사가 두 분기 연속 가이던스를 올렸고 구글과 커스텀 프로그램 확대 계약을 맺었다. 가이던스가 그대로 실현되고 그 뒤 성장률이 점진적으로 낮아진다.</p><p><b>낙관</b> — FY2029 커스텀 매출 100억 달러 목표가 달성되고 신규 하이퍼스케일러가 추가된다. 회사가 이미 두 번 상향한 이력이 이 경로의 근거다.</p><p><b>비관</b> — 커스텀 실리콘은 고객 집중도가 높다. 구글이 설계를 내재화하거나 Broadcom 에 물량을 넘기면 매출이 한 번에 꺾인다. 단일 고객 이탈이 이 시나리오의 방아쇠다.</p>
+<p class="mut"><b>확률의 근거</b> — 기본 55% 는 두 분기 연속 가이던스 상향과 구글 확대 계약이라는 확인된 사실에 근거한다. 낙관 25% 는 커스텀 목표 달성과 신규 고객 확보라는 두 조건이 함께 성립해야 하므로 기본보다 낮게 둔다. 비관 20% 는 커스텀 사업의 고객 집중도라는 구조적 위험에 근거하며, 발생 확률은 낮지만 발생 시 충격이 크다.</p>
+
+<h3>기본 시나리오 현금흐름 (백만 달러)</h3>
+<div class="scroll"><table>
+<thead><tr><th class="l">연도</th><th>매출</th><th>영업이익률</th><th>세후영업이익</th>
+<th>주식보상</th><th>운전자본</th><th>자유현금흐름</th></tr></thead>
+<tbody><tr><td class="l">2027년</td><td>12,000</td><td>37.0%</td><td>4,085</td><td>600</td><td>190</td><td><b>3,295</b></td></tr><tr><td class="l">2028년</td><td>18,000</td><td>39.0%</td><td>6,458</td><td>900</td><td>300</td><td><b>5,258</b></td></tr><tr><td class="l">2029년</td><td>23,400</td><td>40.0%</td><td>8,611</td><td>1,170</td><td>270</td><td><b>7,171</b></td></tr><tr><td class="l">2030년</td><td>28,100</td><td>40.0%</td><td>10,341</td><td>1,405</td><td>235</td><td><b>8,701</b></td></tr><tr><td class="l">2031년</td><td>32,300</td><td>40.0%</td><td>11,886</td><td>1,615</td><td>210</td><td><b>10,061</b></td></tr></tbody></table></div>
+
+<h3>역DCF: 현재 주가가 전제하는 것</h3>
+<p>넷 중 하나만 성립하면 현재 주가가 정당화된다.
+넷 다 현실 범위 밖이면 시장이 과열이고, 하나라도 가능하면 내 가정을 의심해야 한다.</p>
+<div class="scroll"><table>
+<thead><tr><th class="l">무엇을 바꾸면</th><th>필요한 값</th><th class="l">비교</th></tr></thead>
+<tbody>
+<tr><td class="l">할인율</td><td>6.13%</td>
+<td class="l mut">내가 쓴 WACC 12.0%</td></tr>
+<tr><td class="l">5년 매출 연복리</td><td>59.4%</td>
+<td class="l mut">기말 매출 84,372 백만 달러</td></tr>
+<tr><td class="l">영구성장률</td><td>8.72%</td>
+<td class="l mut">미국 장기 명목 GDP 성장률 약 4%</td></tr>
+<tr><td class="l">영업이익률</td><td>93.6%</td>
+<td class="l mut">업계 최고 수준이 약 62%</td></tr>
+</tbody></table></div>
+
+<h2>상대가치 상세</h2>
+<h3>어떤 배수를 쓸지 데이터로 판정한다</h3>
+<p>손으로 고르지 않는다. 동종군에서 각 배수가 성장률로 설명되는 정도를 회귀로 재고,
+대상 종목의 성장률이 동종군 범위 밖이면 그 회귀를 버린다.</p>
+<div class="scroll"><table>
+<thead><tr><th class="l">배수</th><th>결정계수</th><th>적합 성장률 구간</th>
+<th>대상 성장률</th><th class="l">판정</th></tr></thead>
+<tbody><tr><td class="l">EV/Sales</td><td>0.58</td><td>-0.1% ~ 31.3%</td><td>50%</td><td class="l dn">외삽 — 회귀를 쓰지 않는다</td></tr><tr><td class="l">EV/EBITDA</td><td>0.51</td><td>-14.2% ~ 50.3%</td><td>50%</td><td class="l up">사용 가능</td></tr><tr><td class="l">선행 PER</td><td>0.35</td><td>-14.2% ~ 50.3%</td><td>50%</td><td class="l up">사용 가능</td></tr></tbody></table></div>
+<p class="mut">LTM PER 과 PBR 은 계산에서 제외했다.
+인수 무형자산 상각이 GAAP 순이익과 장부가를 함께 왜곡한다.</p>
+
+<h3>동종군 사분위</h3>
+<div class="scroll"><table>
+<thead><tr><th class="l">배수</th><th class="l">기준</th><th>배수값</th>
+<th>주당가치</th><th>현재가 대비</th></tr></thead>
+<tbody><tr><td class="l">EV/EBITDA</td><td class="l">동종 1사분위</td><td>18.0배</td><td>$153.88</td><td><span class="dn">-36.3%</span></td></tr><tr><td class="l">EV/EBITDA</td><td class="l">동종 중앙값</td><td>35.6배</td><td>$305.79</td><td><span class="up">+26.6%</span></td></tr><tr><td class="l">EV/EBITDA</td><td class="l">동종 3사분위</td><td>41.2배</td><td>$353.81</td><td><span class="up">+46.5%</span></td></tr><tr><td class="l">EV/Sales</td><td class="l">동종 1사분위</td><td>10.9배</td><td>$221.74</td><td><span class="dn">-8.2%</span></td></tr><tr><td class="l">EV/Sales</td><td class="l">동종 중앙값</td><td>17.6배</td><td>$359.85</td><td><span class="up">+49.0%</span></td></tr><tr><td class="l">EV/Sales</td><td class="l">동종 3사분위</td><td>25.6배</td><td>$524.95</td><td><span class="up">+117.4%</span></td></tr></tbody></table></div>
+
+<h3>비교군</h3>
+<div class="scroll"><table>
+<thead><tr><th class="l">종목</th><th>시총</th><th>EV/Sales</th>
+<th>EV/EBITDA</th><th>선행 PER</th><th>매출성장</th></tr></thead>
+<tbody><tr><td class="l">NVDA</td><td>5,494B</td><td>25.6</td><td>36.8</td><td>47.2</td><td><span class="up">+18.1%</span></td></tr><tr><td class="l">AVGO</td><td>1,768B</td><td>24.5</td><td>34.4</td><td>44.8</td><td><span class="up">+8.0%</span></td></tr><tr><td class="l">MU</td><td>1,056B</td><td>22.7</td><td>40.6</td><td>85.0</td><td><span class="dn">-0.1%</span></td></tr><tr><td class="l">AMD</td><td>778B</td><td>16.3</td><td><span class="mut">-</span></td><td>54.1</td><td><span class="up">+16.9%</span></td></tr><tr><td class="l">TXN</td><td>243B</td><td>10.9</td><td>18.0</td><td>27.0</td><td><span class="up">+17.3%</span></td></tr><tr class="hi"><td class="l">MRVL</td><td>212B</td><td>23.4</td><td>60.4</td><td>71.7</td><td><span class="up">+21.3%</span></td></tr><tr><td class="l">ADI</td><td>181B</td><td>14.3</td><td>27.2</td><td>32.4</td><td><span class="up">+13.2%</span></td></tr><tr><td class="l">QCOM</td><td>173B</td><td>3.7</td><td>10.1</td><td>11.2</td><td><span class="up">+6.9%</span></td></tr><tr><td class="l">MPWR</td><td>64B</td><td>17.6</td><td>41.2</td><td>53.7</td><td><span class="up">+15.6%</span></td></tr><tr><td class="l">NXPI</td><td>57B</td><td>3.9</td><td>10.0</td><td>12.2</td><td><span class="up">+10.4%</span></td></tr><tr><td class="l">ALAB</td><td>53B</td><td>56.5</td><td>125.0</td><td>162.8</td><td><span class="up">+31.3%</span></td></tr><tr><td class="l">CRDO</td><td>45B</td><td>68.1</td><td>195.2</td><td>212.2</td><td><span class="up">+30.9%</span></td></tr></tbody></table></div>
+
+<footer>모든 숫자는 <code>scripts/valuation.py</code> 출력에서 나왔다.
+가정은 <code>scripts/inputs/MRVL.json</code> 에 있다.<br>
+투자 판단의 근거 자료이며 매매 권유가 아니다.</footer></div></body></html>
