@@ -136,23 +136,57 @@ def export_browser_cookies(cache: Path) -> None:
     )
 
 
-def download_video(video: dict, target: Path, cookie_file: Path) -> Path:
-    run(
+def download_commands(video_url: str, target: Path, cookie_file: Path | None) -> list[list[str]]:
+    output = str(target / "source.%(ext)s")
+    commands = [
         [
             "yt-dlp",
-            "--cookies",
-            str(cookie_file),
             "--extractor-args",
-            "youtube:lang=ko;player_client=web",
+            "youtube:lang=ko;player_client=android",
+            "--no-cookies",
             "--no-write-subs",
             "--no-write-auto-subs",
             "-f",
             VIDEO_FORMAT,
             "-o",
-            str(target / "source.%(ext)s"),
-            video["url"],
+            output,
+            video_url,
         ]
-    )
+    ]
+    if cookie_file is not None:
+        commands.append(
+            [
+                "yt-dlp",
+                "--cookies",
+                str(cookie_file),
+                "--extractor-args",
+                "youtube:lang=ko;player_client=web",
+                "--no-write-subs",
+                "--no-write-auto-subs",
+                "-f",
+                VIDEO_FORMAT,
+                "-o",
+                output,
+                video_url,
+            ]
+        )
+    return commands
+
+
+def download_video(video: dict, target: Path, cookie_file: Path | None) -> Path:
+    last_error = None
+    for command in download_commands(video["url"], target, cookie_file):
+        for partial in target.glob("source.*"):
+            partial.unlink()
+        try:
+            run(command)
+            break
+        except subprocess.CalledProcessError as error:
+            last_error = error
+    else:
+        assert last_error is not None
+        raise last_error
+
     matches = list(target.glob("source.*"))
     if len(matches) != 1:
         raise RuntimeError(f"다운로드한 영상 파일을 찾을 수 없습니다: {video['id']}")
@@ -225,7 +259,7 @@ def process_one(
     cache: Path,
     model: str,
     interval: int,
-    cookie_file: Path,
+    cookie_file: Path | None,
 ) -> None:
     output_dir = cache / "videos" / video["id"]
     result_path = output_dir / "analysis.json"
@@ -272,14 +306,12 @@ def process_channel(
 ) -> None:
     require_commands("yt-dlp", "ffmpeg")
     cookie_file = cache / COOKIE_FILE_NAME
-    if not cookie_file.exists():
-        raise SystemExit(
-            "Chrome 세션 파일이 없습니다. 최초 한 번만 auth를 실행하세요: "
-            "uv run --with mlx-whisper scripts/wsaj_video_corpus.py auth"
-        )
-    mode = cookie_file.stat().st_mode & 0o777
-    if mode & 0o077:
-        raise SystemExit(f"Chrome 세션 파일 권한이 안전하지 않습니다: {oct(mode)}")
+    if cookie_file.exists():
+        mode = cookie_file.stat().st_mode & 0o777
+        if mode & 0o077:
+            raise SystemExit(f"Chrome 세션 파일 권한이 안전하지 않습니다: {oct(mode)}")
+    else:
+        cookie_file = None
     videos = load_index(cache)
     if selected_ids:
         known_ids = {video["id"] for video in videos}

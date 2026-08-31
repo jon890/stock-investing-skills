@@ -48,5 +48,29 @@ class TranscriptTest(unittest.TestCase):
         )
 
 
+class DownloadCommandTest(unittest.TestCase):
+    def test_public_android_client_is_tried_without_browser_cookies(self):
+        commands = MODULE.download_commands(
+            "https://www.youtube.com/watch?v=video-id",
+            Path("/tmp/wsaj-test"),
+            None,
+        )
+
+        self.assertEqual(len(commands), 1)
+        self.assertIn("youtube:lang=ko;player_client=android", commands[0])
+        self.assertIn("--no-cookies", commands[0])
+
+    def test_saved_browser_cookie_is_only_a_fallback(self):
+        commands = MODULE.download_commands(
+            "https://www.youtube.com/watch?v=video-id",
+            Path("/tmp/wsaj-test"),
+            Path("/tmp/session-cookies.txt"),
+        )
+
+        self.assertEqual(len(commands), 2)
+        self.assertIn("--no-cookies", commands[0])
+        self.assertIn("--cookies", commands[1])
+
+
 if __name__ == "__main__":
     unittest.main()
