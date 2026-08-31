@@ -64,6 +64,8 @@ def pct(v, d=1, sign=True):
     return f'<span class="{c}">{v*100:+.{d}f}%</span>' if sign else f"{v*100:.{d}f}%"
 def num(v, d=1):
     return f"{v:,.{d}f}" if v is not None else '<span class="mut">-</span>'
+def signed(v, d=1):
+    return f"{v:+.{d}f}" if v is not None else '<span class="mut">-</span>'
 def page(title, body):
     return (f'<!doctype html><html lang="ko"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -77,6 +79,11 @@ def render_bottleneck(usa, kor, asof):
     F = usa["factors"]
     g = usa["groups"]
     best = g[0]
+    quality = usa.get("quality", {})
+    missing = quality.get("missing_return_by_period", {})
+    missing_text = " · ".join(f"{esc(k)} {v}개" for k, v in missing.items() if v)
+    if not missing_text:
+        missing_text = "없음"
 
     cards = "".join(
         f'<div><div class="vk">{esc(v["label"])}</div>'
@@ -95,6 +102,8 @@ def render_bottleneck(usa, kor, asof):
                 + "".join(f'<td>{z[k]:+.1f}</td>' for k in F)
                 + f'<td>{pct(v["raw"]["demand"])}</td>'
                   f'<td>{pct(v["raw"]["pricing"])}</td>'
+                  f'<td>{pct(v["raw"].get("dispersion"), 0, sign=False)}</td>'
+                  f'<td>{pct(v.get("persistence"), 0)}</td>'
                   f'<td>{num(v["cap"]/1000,0)}B</td>'
                   f'<td class="l mut">{esc(", ".join(t["t"] for t in v["top"][:3]))}</td></tr>')
 
@@ -107,20 +116,28 @@ def render_bottleneck(usa, kor, asof):
         f'<td class="l">{esc(c["name"])}</td>'
         f'<td>{num(c["mcap"]/1000,1)}B</td><td>{pct(c["rev_g"])}</td>'
         f'<td>{pct(c["margin_delta"])}</td><td>{num(c["es27"],1)}배</td>'
+        f'<td>{pct(c.get("dispersion"), 0, sign=False)}</td>'
         f'<td>{pct((c["ret_1y"] or 0)/100)}</td>'
         f'<td>{num(c["nest"],0) if c["nest"] else "-"}</td></tr>' for c in cand)
 
     ex = best["excess"]
-    exr = "".join(f'<td>{pct(v/100)}</td>' for v in ex.values())
+    exr = "".join(f'<td>{pct(None if v is None else v/100)}</td>' for v in ex.values())
     exh = "".join(f'<th>{k}</th>' for k in ex)
 
     krows = "".join(
         f'<tr><td class="l">{v["group"]}</td>'
         f'<td class="l">{esc(SECTOR.get(v["sector"],"?"))}</td>'
         f'<td>{v["score"]:+.2f}</td><td>{v["z"]["capital"]:+.1f}</td>'
-        f'<td>{v["z"]["persistence"]:+.1f}</td>'
+        f'<td>{signed(v.get("persistence"))}</td>'
         f'<td class="l mut">{esc(", ".join(t["name"][:8] for t in v["top"][:3]))}</td></tr>'
         for v in kor["groups"][:6])
+
+    covrows = "".join(
+        f'<tr><td class="l">{v["group"]}</td>'
+        f'<td class="l">{esc(SECTOR.get(v["sector"],"?"))}</td>'
+        + "".join(f'<td>{pct(v["coverage"].get(k), 0, sign=False)}</td>' for k in F if k != "capital")
+        + f'<td>{pct(min(v.get("return_coverage", {}).values()), 0, sign=False)}</td></tr>'
+        for v in g[:8])
 
     return page(f"섹터 병목 점수 {asof}", f"""
 <h1>섹터 병목 점수</h1>
@@ -154,12 +171,22 @@ def render_bottleneck(usa, kor, asof):
 <h2>산업 그룹 순위</h2>
 <div class="scroll"><table>
 <thead><tr><th class="l">그룹</th><th class="l">섹터</th><th>점수</th>{fh}
-<th>매출성장</th><th>마진변화</th><th>시총</th><th class="l">대표 종목</th></tr></thead>
+<th>매출성장</th><th>마진변화</th><th>분산</th><th>지속성</th>
+<th>시총</th><th class="l">대표 종목</th></tr></thead>
 <tbody>{rows}</tbody></table></div>
 <p class="mut">팩터 열은 표준점수다. 0이 전체 평균이고 1이면 표준편차 하나만큼 위다.</p>
 
+<h2>데이터 커버리지</h2>
+<p>기간 수익률 결측은 0으로 메우지 않는다. 기간별 결측은 {missing_text}다.
+각 팩터는 관측 가능한 종목 비율만큼 표준점수를 수축한다.</p>
+<div class="scroll"><table>
+<thead><tr><th class="l">그룹</th><th class="l">섹터</th>
+<th>수요</th><th>가격</th><th>여지</th><th>분산</th><th>수익률</th></tr></thead>
+<tbody>{covrows}</tbody></table></div>
+
 <h2>최상위 병목의 기간별 초과수익</h2>
-<p>시장 전체 대비 초과수익이다. 여러 기간에 걸쳐 양수면 테마가 아니라 구조다.</p>
+<p>시장 전체 대비 초과수익이다. 여러 기간에 걸쳐 양수면 테마가 아니라 구조다.
+지속성은 {signed(best.get("persistence"))}다.</p>
 <div class="scroll"><table><thead><tr>{exh}</tr></thead>
 <tbody><tr>{exr}</tr></tbody></table></div>
 
@@ -168,8 +195,8 @@ def render_bottleneck(usa, kor, asof):
 시총 500억 달러 이하이면서 매출 성장 10% 이상인 종목만 남겼다.</p>
 <div class="scroll"><table>
 <thead><tr><th class="l">티커</th><th class="l">이름</th><th>시총</th>
-<th>매출성장</th><th>마진변화</th><th>EV/Sales</th><th>1년</th><th>추정기관</th></tr></thead>
-<tbody>{crows or '<tr><td colspan="8" class="l mut">후보 없음</td></tr>'}</tbody></table></div>
+<th>매출성장</th><th>마진변화</th><th>EV/Sales</th><th>분산</th><th>1년</th><th>추정기관</th></tr></thead>
+<tbody>{crows or '<tr><td colspan="9" class="l mut">후보 없음</td></tr>'}</tbody></table></div>
 
 <h2>한국 시장</h2>
 <div class="note"><b>점수를 그대로 믿지 않는다.</b>
