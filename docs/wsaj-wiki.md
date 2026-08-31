@@ -7,6 +7,7 @@
 
 현재 Wiki는 `docs/wsaj/evidence/core.json` 에 검토된 26개 증거를 단일 소스로 삼는다.
 이 증거는 YouTube 자막이 아니라 로컬에서 처리한 음성 전사와 contact sheet 검토에서 승격한 요약이다.
+영상 코퍼스 처리 현황과 재개 절차는 `docs/wsaj-corpus.md` 에 둔다.
 `source_date_status` 가 `verified_upload_date` 인 증거는 `source_date` 를 영상 게시일로 쓸 수 있다.
 그 외 상태의 `source_date` 는 게시일처럼 인용하지 않는다.
 `source_observed_at` 은 원자료 분석일이나 확인일로만 쓴다.
