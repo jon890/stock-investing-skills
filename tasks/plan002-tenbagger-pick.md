@@ -16,7 +16,6 @@
 
 - `docs/flow.md`
 - `skills/tenbagger-pick/SKILL.md`
-- `skills/daily-market-decision/SKILL.md`
 - `scripts/bottleneck.py`
 - `scripts/valuation.py`
 - `scripts/render_report.py`
@@ -29,7 +28,7 @@
 - 티커 직행 흐름을 `tenbagger-pick` 안에 둔다.
 - DCF, 역DCF, 상대가치, 손익비, 3년 텐베거 판정을 하나의 종목 리포트로 연결한다.
 - IPO, M&A, 은행, 실적발표 직후를 일반 가치평가와 분리한다.
-- `daily-market-decision` 은 deprecated 상태로 돌리거나 얇은 안내 파일로 줄인다.
+- `daily-market-decision` 은 제거했다. 옛 진입점은 더 이상 새 작업의 대상이 아니다.
 
 ## 범위 밖
 

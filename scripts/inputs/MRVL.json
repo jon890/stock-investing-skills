@@ -322,6 +322,9 @@
       "n": 26
     }
   ],
-  "horizon_years": 2,
+  "tenbagger_years": 3,
+  "first_projection_year": 2027,
+  "relative_multiple_year": 2027,
+  "horizon_years": 3,
   "_dcf_note": "명시 예측 5년에 잔존가치를 더한다. 명시 기간이 짧아 잔존가치 비중이 커지므로 영구성장률을 미국 장기 명목 GDP 성장률(약 4%)보다 낮게 잡아 상쇄한다."
 }

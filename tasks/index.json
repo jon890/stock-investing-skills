@@ -1,6 +1,6 @@
 {
   "project": "stock-investing-skills",
-  "generated_at": "2026-08-31",
+  "generated_at": "2026-09-01",
   "plans": [
     {
       "id": "plan001-sector-bottleneck",
@@ -32,7 +32,6 @@
       "owned_files": [
         "docs/flow.md",
         "skills/tenbagger-pick/SKILL.md",
-        "skills/daily-market-decision/SKILL.md",
         "scripts/bottleneck.py",
         "scripts/valuation.py",
         "scripts/render_report.py",

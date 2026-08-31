@@ -5,11 +5,14 @@
     python3 valuation.py MRVL --json       결과를 JSON 으로 (리포트 생성용)
 """
 from __future__ import annotations
-import json, sys, statistics as st
+import json, os, sys, statistics as st
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-INPUTS = ROOT / "inputs"
+INPUTS = Path(os.environ.get("VALUATION_INPUTS", ROOT / "inputs"))
+DEFAULT_TENBAGGER_YEARS = 3
+DEFAULT_FIRST_PROJECTION_YEAR = 2027
+DEFAULT_RELATIVE_MULTIPLE_YEAR = 2027
 
 
 # ────────────────────────────── 공통 도구 ──────────────────────────────
@@ -148,29 +151,55 @@ MULTIPLE_CAVEATS = {
 }
 
 
-def prep_peers(peers, ev_field="ev", target=None):
+def multiple_fields(year):
+    return {
+        "sales": f"es{year % 100:02d}",
+        "ebitda": f"ee{year % 100:02d}",
+        "per": f"per{year % 100:02d}",
+        "sales_prev": f"es{(year - 1) % 100:02d}",
+        "per_prev": f"per{(year - 1) % 100:02d}",
+    }
+
+
+def prep_peers(peers, ev_field="ev", target=None, relative_year=DEFAULT_RELATIVE_MULTIPLE_YEAR):
     """배수에서 매출과 EBITDA 를 역산하고 성장률을 붙인다."""
+    fields = multiple_fields(relative_year)
     for x in peers.values():
         ev = x.get(ev_field)
-        x["sales_f2"] = ev / x["es27"] if x.get("es27") else None
-        x["ebitda_f2"] = ev / x["ee27"] if x.get("ee27") else None
-        x["rev_g"] = x["es26"] / x["es27"] - 1 if x.get("es27") and x.get("es26") else None
-        x["eps_g"] = x["per26"] / x["per27"] - 1 if x.get("per27") and x.get("per26") else None
+        x["relative_multiple_year"] = relative_year
+        x["relative_fields"] = {
+            "ev_sales": fields["sales"],
+            "ev_ebitda": fields["ebitda"],
+            "per": fields["per"],
+            "sales_growth_from": fields["sales_prev"],
+            "per_growth_from": fields["per_prev"],
+        }
+        x["sales_f2"] = ev / x[fields["sales"]] if x.get(fields["sales"]) else None
+        x["ebitda_f2"] = ev / x[fields["ebitda"]] if x.get(fields["ebitda"]) else None
+        x["rev_g"] = (x[fields["sales_prev"]] / x[fields["sales"]] - 1
+                      if x.get(fields["sales"]) and x.get(fields["sales_prev"]) else None)
+        x["eps_g"] = (x[fields["per_prev"]] / x[fields["per"]] - 1
+                      if x.get(fields["per"]) and x.get(fields["per_prev"]) else None)
     return peers
 
 
 def consensus_check(peer, guidance_sales):
     """컨센서스가 회사 가이던스를 반영했는지 본다. 실적 발표 직후에는 거의 늘 어긋난다."""
-    est = peer["sales_f2"]
+    est = peer.get("sales_f2")
+    if est is None:
+        return {"consensus_sales": None, "guidance_sales": guidance_sales,
+                "gap": None, "stale": True,
+                "reason": "상대가치 기준연도의 EV/Sales 배수가 없어 제공자 매출 추정을 역산하지 못했다"}
     gap = est / guidance_sales - 1
     return {"consensus_sales": est, "guidance_sales": guidance_sales,
             "gap": gap, "stale": abs(gap) > 0.10}
 
 
-def judge_multiples(peers, target_growth):
+def judge_multiples(peers, target_growth, relative_year=DEFAULT_RELATIVE_MULTIPLE_YEAR):
     """배수 적합성을 데이터로 판정한다. 손으로 고르지 않는다."""
+    fields = multiple_fields(relative_year)
     out = {}
-    for key, gk in [("es27", "rev_g"), ("ee27", "eps_g"), ("per27", "eps_g")]:
+    for key, gk in [(fields["sales"], "rev_g"), (fields["ebitda"], "eps_g"), (fields["per"], "eps_g")]:
         pts = [(x[gk], x[key]) for x in peers.values()
                if x.get(key) and x.get(gk) and x[key] > 0]
         if len(pts) < 5:
@@ -182,12 +211,14 @@ def judge_multiples(peers, target_growth):
     return out
 
 
-def relative_value(peers, target_ticker, base_sales, base_ebitda, market):
+def relative_value(peers, target_ticker, base_sales, base_ebitda, market,
+                   relative_year=DEFAULT_RELATIVE_MULTIPLE_YEAR):
     """동종군 사분위로 범위를 낸다. 회귀 외삽은 하지 않는다."""
+    fields = multiple_fields(relative_year)
     others = {t: x for t, x in peers.items() if t != target_ticker}
     rows = []
-    for key, label, base in [("ee27", "EV/EBITDA", base_ebitda),
-                             ("es27", "EV/Sales", base_sales)]:
+    for key, label, base in [(fields["ebitda"], "EV/EBITDA", base_ebitda),
+                             (fields["sales"], "EV/Sales", base_sales)]:
         vals = sorted(x[key] for x in others.values() if x.get(key) and x[key] > 0)
         if len(vals) < 4 or not base:
             continue
@@ -196,8 +227,20 @@ def relative_value(peers, target_ticker, base_sales, base_ebitda, market):
         for name, mult in q.items():
             p = per_share(mult * base, market["shares"], market["net_debt"])
             rows.append({"multiple": label, "basis": name, "mult": mult,
-                         "price": p, "upside": p / market["price"] - 1})
-    return rows, st.median([r["price"] for r in rows])
+                         "price": p, "upside": p / market["price"] - 1,
+                         "relative_multiple_year": relative_year,
+                         "relative_field": key})
+    return rows, st.median([r["price"] for r in rows]) if rows else None
+
+
+def relative_hold_reason(peers, target_ticker, relative_year, min_count=4):
+    fields = multiple_fields(relative_year)
+    others = {t: x for t, x in peers.items() if t != target_ticker}
+    sales_count = sum(1 for x in others.values() if x.get(fields["sales"]) and x[fields["sales"]] > 0)
+    ebitda_count = sum(1 for x in others.values() if x.get(fields["ebitda"]) and x[fields["ebitda"]] > 0)
+    return (f"{relative_year}년 기준 동종군 배수가 부족하다. "
+            f"{fields['sales']} 관측 {sales_count}개, {fields['ebitda']} 관측 {ebitda_count}개라 "
+            f"사분위 계산에 필요한 {min_count}개를 채우지 못했다.")
 
 
 # ────────────────────────── 텐베거 판정 ──────────────────────────
@@ -205,13 +248,13 @@ def relative_value(peers, target_ticker, base_sales, base_ebitda, market):
 MCAP_IMPOSSIBLE = 200_000   # 백만 달러. 10배면 2조 달러로 세계 최상위 소수만 닿는다
 
 
-def tenbagger(cfg, years=2, first_year=2027):
+def tenbagger(cfg, years=DEFAULT_TENBAGGER_YEARS, first_year=DEFAULT_FIRST_PROJECTION_YEAR):
     """보유 기간 끝 시점의 주당가치를 시나리오별로 직접 구하고 확률가중한다.
 
     `매출배수 × 마진배수` 로만 보면 배수가 내내 그대로라고 가정하게 된다.
     그 축소를 빼면 텐베거 판정이 목표주가와 정반대로 나온다 (실측).
 
-    2년에 10배는 연복리 216% 다. 매출과 배수가 함께 폭증해야 나오므로
+    3년에 10배는 연복리 115% 다. 매출과 배수가 함께 폭증해야 나오므로
     결과가 크게 갈리는 기업에서만 가능하다. 그 산포를 `spread` 로 낸다.
     """
     m, f = cfg["market"], cfg["fundamentals"]
@@ -224,6 +267,14 @@ def tenbagger(cfg, years=2, first_year=2027):
     rows, weighted = {}, 0.0
     for name, s in cfg["scenarios"].items():
         rev = project_revenue(s["revenue"], s["tail_growth"])
+        if len(rev) < years:
+            raise ValueError(
+                f"{name} 시나리오의 매출 투영은 {len(rev)}년뿐이다. "
+                f"{years}년 텐베거 판정에는 최소 {years}년이 필요하다.")
+        if len(s["opm"]) < years:
+            raise ValueError(
+                f"{name} 시나리오의 영업이익률 투영은 {len(s['opm'])}년뿐이다. "
+                f"{years}년 텐베거 판정에는 최소 {years}년이 필요하다.")
         n = len(rev)
         opm = s["opm"] + [s["opm"][-1]] * (n - len(s["opm"]))
         sbc = s["sbc_pct"] if isinstance(s["sbc_pct"], list) else [s["sbc_pct"]] * n
@@ -284,7 +335,7 @@ def tenbagger(cfg, years=2, first_year=2027):
 
 
 def _tenbagger_verdict(mcap, weighted, best):
-    """2년에 10배는 연복리 216% 다. 확률가중으로는 거의 나오지 않으므로
+    """3년에 10배는 연복리 115% 다. 확률가중으로는 거의 나오지 않으므로
     최선 시나리오가 닿는지를 함께 본다."""
     if mcap > MCAP_IMPOSSIBLE:
         return ("불가", f"시가총액이 {mcap/100:,.0f}억 달러다. "
@@ -375,6 +426,13 @@ def load(ticker):
         raise SystemExit(f"가정 파일이 없다: {p}")
     return json.loads(p.read_text())
 
+
+def config_years(cfg):
+    years = cfg.get("tenbagger_years", cfg.get("horizon_years", DEFAULT_TENBAGGER_YEARS))
+    first_year = cfg.get("first_projection_year", DEFAULT_FIRST_PROJECTION_YEAR)
+    relative_year = cfg.get("relative_multiple_year", DEFAULT_RELATIVE_MULTIPLE_YEAR)
+    return years, first_year, relative_year
+
 def main():
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
@@ -383,22 +441,24 @@ def main():
     cfg = load(ticker)
     m, f = cfg["market"], cfg["fundamentals"]
     P = m["price"]
+    tenbagger_years, first_projection_year, relative_year = config_years(cfg)
 
     scen, weighted = run_scenarios(cfg)
     rev = reverse_dcf(cfg)
-    peers = prep_peers({x["t"]: x for x in cfg["peers"]})
+    peers = prep_peers({x["t"]: x for x in cfg["peers"]}, relative_year=relative_year)
     tgt = peers[ticker]
     chk = consensus_check(tgt, f["guidance_sales_f2"])
     base_sales = f["guidance_sales_f2"] if chk["stale"] else tgt["sales_f2"]
     base_ebitda = base_sales * f["ebitda_margin_f2"]
     growth = base_sales / f["guidance_sales_f1"] - 1
-    fits = judge_multiples({t: x for t, x in peers.items() if t != ticker}, growth)
-    rel_rows, rel_ps = relative_value(peers, ticker, base_sales, base_ebitda, m)
+    fits = judge_multiples({t: x for t, x in peers.items() if t != ticker}, growth, relative_year)
+    rel_rows, rel_ps = relative_value(peers, ticker, base_sales, base_ebitda, m, relative_year)
+    rel_hold = relative_hold_reason(peers, ticker, relative_year) if not rel_rows else None
 
     absolute = judge_absolute(scen, weighted, P)
     relative = judge_relative(rel_rows, P)
     gapinfo = disagreement(absolute, relative)
-    ten = tenbagger(cfg, years=cfg.get("horizon_years", 2))
+    ten = tenbagger(cfg, years=tenbagger_years, first_year=first_projection_year)
 
     result = {"ticker": ticker, "name": cfg["name"], "asof": cfg["asof"],
               "market": m, "fundamentals": f,
@@ -411,9 +471,14 @@ def main():
               "scenarios": scen, "dcf_weighted": weighted, "reverse": rev,
               "consensus_check": chk, "multiple_fits": fits,
               "relative_rows": rel_rows, "relative_ps": rel_ps,
+              "relative_hold_reason": rel_hold,
               "absolute": absolute, "relative": relative, "disagreement": gapinfo,
               "tenbagger": ten, "peers": peers, "base_sales": base_sales,
-              "base_ebitda": base_ebitda, "target_growth": growth}
+              "base_ebitda": base_ebitda, "target_growth": growth,
+              "tenbagger_years": tenbagger_years,
+              "first_projection_year": first_projection_year,
+              "relative_multiple_year": relative_year,
+              "relative_fields": multiple_fields(relative_year)}
 
     if as_json:
         print(json.dumps(result, ensure_ascii=False, default=float))
@@ -441,25 +506,35 @@ def main():
           f'또는 영업이익률 {rev["implied_opm"]:.1%}\n')
 
     print("── 컨센서스 검증 ──")
-    print(f'  제공자 추정 {chk["consensus_sales"]:,.0f}  가이던스 {chk["guidance_sales"]:,.0f}  '
-          f'괴리 {chk["gap"]:+.1%}  '
-          f'{"갱신 안 됨 → 가이던스로 교체" if chk["stale"] else "정합"}\n')
+    if chk["consensus_sales"] is None:
+        print(f'  제공자 추정 없음  가이던스 {chk["guidance_sales"]:,.0f}  '
+              f'{chk["reason"]} → 가이던스로 교체\n')
+    else:
+        print(f'  제공자 추정 {chk["consensus_sales"]:,.0f}  가이던스 {chk["guidance_sales"]:,.0f}  '
+              f'괴리 {chk["gap"]:+.1%}  '
+              f'{"갱신 안 됨 → 가이던스로 교체" if chk["stale"] else "정합"}\n')
 
     print("── 상대가치 ──")
     for k, fit in fits.items():
         print(f'  {k:8} R²={fit["r2"]:.2f}  적합 구간 {fit["xmin"]*100:5.1f}~{fit["xmax"]*100:5.1f}%'
               f'  대상 {growth*100:.0f}% → {"외삽" if fit["extrapolates"] else "사용 가능"}')
-    for r in rel_rows:
-        print(f'  {r["multiple"]:10} {r["basis"]:12} {r["mult"]:6.1f}배 → '
-              f'${r["price"]:8.2f} ({r["upside"]:+6.1%})')
-    rl = relative
-    print(f'  중앙 ${rl["fair"]:.2f} ({rl["upside"]:+.1%})   '
-          f'상방 ${rl["high"]:.2f} ({rl["up"]:+.0%})  하방 ${rl["low"]:.2f} ({rl["down"]:+.0%})')
-    print(f'  손익비 {rl["risk_reward"]:.2f}:1 → {rl["call"]}\n')
+    if not rel_rows:
+        print(f'  상대가치 보류 — {rel_hold}\n')
+    else:
+        for r in rel_rows:
+            print(f'  {r["multiple"]:10} {r["basis"]:12} {r["mult"]:6.1f}배 → '
+                  f'${r["price"]:8.2f} ({r["upside"]:+6.1%})')
+        rl = relative
+        print(f'  중앙 ${rl["fair"]:.2f} ({rl["upside"]:+.1%})   '
+              f'상방 ${rl["high"]:.2f} ({rl["up"]:+.0%})  하방 ${rl["low"]:.2f} ({rl["down"]:+.0%})')
+        print(f'  손익비 {rl["risk_reward"]:.2f}:1 → {rl["call"]}\n')
 
     print("── 두 방법의 차이 ──")
-    print(f'  상대가치가 절대가치보다 {gapinfo["gap"]:+.1%}')
-    print(f'  {gapinfo["note"]}\n')
+    if gapinfo:
+        print(f'  상대가치가 절대가치보다 {gapinfo["gap"]:+.1%}')
+        print(f'  {gapinfo["note"]}\n')
+    else:
+        print(f'  상대가치 보류 — {rel_hold}\n')
 
     t = ten
     print(f'── 텐베거 판정 ({t["years"]}년, {t["final_year"]}년 기준) ──')

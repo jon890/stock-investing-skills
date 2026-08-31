@@ -1,7 +1,7 @@
 """병목 점수와 밸류에이션 JSON 을 로컬 HTML 리포트로 렌더링한다.
 
 사용법:
-    python3 render_report.py bottleneck reports/bottleneck-USA-<날짜>.json [KOR JSON] -o <출력>
+    python3 render_report.py bottleneck reports/bottleneck-USA-<날짜>.json KOR-JSON -o <출력>
     python3 render_report.py company    reports/valuation-<티커>-<날짜>.json  -o <출력>
 """
 from __future__ import annotations
@@ -249,6 +249,20 @@ def render_company(v):
     base = v["scenarios"]["기본"]["rows"]
     n_years = len(base)
     y0 = t["final_year"] - t["years"] + 1
+    relative_year = v.get("relative_multiple_year", 2027)
+    relative_fields = v.get("relative_fields", {
+        "sales": f"es{relative_year % 100:02d}",
+        "ebitda": f"ee{relative_year % 100:02d}",
+        "per": f"per{relative_year % 100:02d}",
+    })
+    sales_field = relative_fields["sales"]
+    ebitda_field = relative_fields["ebitda"]
+    per_field = relative_fields["per"]
+    multiple_labels = {
+        sales_field: "EV/Sales",
+        ebitda_field: "EV/EBITDA",
+        per_field: "선행 PER",
+    }
 
     srows = ""
     for name, s in v["scenarios"].items():
@@ -266,27 +280,33 @@ def render_company(v):
 
     mrows = ""
     for k, fit in v["multiple_fits"].items():
-        lbl = {"es27": "EV/Sales", "ee27": "EV/EBITDA", "per27": "선행 PER"}[k]
+        lbl = multiple_labels[k]
         ok = "외삽 — 회귀를 쓰지 않는다" if fit["extrapolates"] else "사용 가능"
         cls = "dn" if fit["extrapolates"] else "up"
         mrows += (f'<tr><td class="l">{lbl}</td><td>{fit["r2"]:.2f}</td>'
                   f'<td>{fit["xmin"]*100:.1f}% ~ {fit["xmax"]*100:.1f}%</td>'
                   f'<td>{v["target_growth"]*100:.0f}%</td>'
                   f'<td class="l {cls}">{ok}</td></tr>')
+    if not mrows:
+        mrows = '<tr><td colspan="5" class="l mut">상대가치 보류</td></tr>'
 
     rrows = "".join(
         f'<tr><td class="l">{esc(r["multiple"])}</td><td class="l">{esc(r["basis"])}</td>'
         f'<td>{r["mult"]:.1f}배</td><td>${r["price"]:,.2f}</td>'
         f'<td>{pct(r["upside"])}</td></tr>' for r in v["relative_rows"])
+    if not rrows:
+        rrows = '<tr><td colspan="5" class="l mut">상대가치 보류</td></tr>'
 
     prows = ""
     for tk, p in sorted(v["peers"].items(), key=lambda kv: -(kv[1].get("mcap") or 0)):
-        if not p.get("es27"):
+        if not p.get(sales_field):
             continue
         hi = ' class="hi"' if tk == v["ticker"] else ""
         prows += (f'<tr{hi}><td class="l">{esc(tk)}</td><td>{num(p["mcap"]/1000,0)}B</td>'
-                  f'<td>{num(p["es27"])}</td><td>{num(p.get("ee27"))}</td>'
-                  f'<td>{num(p.get("per27"))}</td><td>{pct(p.get("rev_g"))}</td></tr>')
+                  f'<td>{num(p[sales_field])}</td><td>{num(p.get(ebitda_field))}</td>'
+                  f'<td>{num(p.get(per_field))}</td><td>{pct(p.get("rev_g"))}</td></tr>')
+    if not prows:
+        prows = '<tr><td colspan="6" class="l mut">상대가치 기준연도 배수가 없다.</td></tr>'
 
     trows = "".join(
         f'<tr><td class="l"><b>{esc(nm)}</b></td><td>{r["p"]*100:.0f}%</td>'
@@ -307,6 +327,23 @@ def render_company(v):
         tamrow = (f'<p>기말 매출 {t["terminal_revenue"]:,.0f} 백만 달러는 '
                   f'{t["tam_year"]}년 시장 {t["tam"]:,.0f} 백만 달러의 '
                   f'<b>{t["tam_share_needed"]*100:.0f}%</b>다.</p>')
+    rel_hold = v.get("relative_hold_reason") or "상대가치 기준연도 배수가 부족하다."
+    relative_block = (_judge_block("상대가치 (동종 배수)", rl, P,
+                      "시장이 같은 부류에 매기는 값이다. 그 배수 자체가 옳은지는 묻지 않는다.")
+                      if rl else
+                      f'<div class="note"><b>상대가치 보류</b> — {esc(rel_hold)}</div>')
+    gap_block = (f'<div class="note"><b>두 방법의 차이 {gap["gap"]*100:+.1f}%</b> — '
+                 f'{esc(gap["note"])}</div>' if gap else
+                 f'<div class="note"><b>두 방법의 차이 보류</b> — {esc(rel_hold)}</div>')
+    if chk["consensus_sales"] is None:
+        consensus_note = (f'<div class="note"><b>컨센서스를 역산하지 못했다.</b> '
+                          f'회사 가이던스는 {chk["guidance_sales"]:,.0f} 백만 달러다. '
+                          f'{esc(chk.get("reason", ""))} 가이던스로 교체해 계산했다.</div>')
+    else:
+        consensus_note = (f'<div class="note"><b>{"컨센서스가 갱신되지 않았다." if chk["stale"] else "컨센서스가 가이던스와 맞는다."}</b> '
+                          f'데이터 제공자의 매출 추정은 {chk["consensus_sales"]:,.0f} 백만 달러이고 '
+                          f'회사 가이던스는 {chk["guidance_sales"]:,.0f} 백만 달러다. 괴리가 {chk["gap"]*100:+.1f}%다. '
+                          f'{"가이던스로 교체해 계산했다." if chk["stale"] else ""}</div>')
 
     return page(f'{v["name"]} 밸류에이션 {v["asof"]}', f"""
 <h1>{esc(v["name"])} <span class="mut">({esc(v["ticker"])})</span></h1>
@@ -323,12 +360,11 @@ def render_company(v):
 <h2>판정</h2>
 {_judge_block("절대가치 (DCF)", a, P,
   "이 사업의 현금흐름만 보고 매긴 값이다. 시장이 어떻게 보든 무관하다.")}
-{_judge_block("상대가치 (동종 배수)", rl, P,
-  "시장이 같은 부류에 매기는 값이다. 그 배수 자체가 옳은지는 묻지 않는다.")}
+{relative_block}
 
-<div class="note"><b>두 방법의 차이 {gap["gap"]*100:+.1f}%</b> — {esc(gap["note"])}</div>
+{gap_block}
 
-<h2>2년 뒤와 텐베거</h2>
+<h2>{t["years"]}년 뒤와 텐베거</h2>
 <p>{t["years"]}년 안에 10배가 되려면 연복리 {t["required_cagr"]*100:.0f}%가 필요하다.
 매출과 배수가 함께 폭증해야 나오는 값이라 결과가 크게 갈리는 기업에서만 가능하다.
 아래는 배수를 고정하지 않고 {t["final_year"]}년 시점의 기업가치를 직접 구한 값이다.</p>
@@ -357,10 +393,7 @@ def render_company(v):
 <div class="note"><b>판정: {esc(t["verdict"][0])}</b> — {esc(t["verdict"][1])}</div>
 
 <h2>컨센서스 검증</h2>
-<div class="note"><b>{"컨센서스가 갱신되지 않았다." if chk["stale"] else "컨센서스가 가이던스와 맞는다."}</b>
-데이터 제공자의 매출 추정은 {chk["consensus_sales"]:,.0f} 백만 달러이고
-회사 가이던스는 {chk["guidance_sales"]:,.0f} 백만 달러다. 괴리가 {chk["gap"]*100:+.1f}%다.
-{"가이던스로 교체해 계산했다." if chk["stale"] else ""}</div>
+{consensus_note}
 
 <h2>절대가치 상세</h2>
 <p>명시 예측 {n_years}년에 잔존가치를 더한다.
@@ -410,6 +443,9 @@ def render_company(v):
 <h3>어떤 배수를 쓸지 데이터로 판정한다</h3>
 <p>손으로 고르지 않는다. 동종군에서 각 배수가 성장률로 설명되는 정도를 회귀로 재고,
 대상 종목의 성장률이 동종군 범위 밖이면 그 회귀를 버린다.</p>
+<p class="mut">상대가치 기준 연도는 {relative_year}년이다.
+배수 필드는 <code>{esc(sales_field)}</code>, <code>{esc(ebitda_field)}</code>,
+<code>{esc(per_field)}</code> 를 쓴다.</p>
 <div class="scroll"><table>
 <thead><tr><th class="l">배수</th><th>결정계수</th><th>적합 성장률 구간</th>
 <th>대상 성장률</th><th class="l">판정</th></tr></thead>
@@ -436,8 +472,32 @@ def render_company(v):
 
 def main():
     a = sys.argv[1:]
-    out = a[a.index("-o") + 1]
+    if not a or a[0] in {"-h", "--help"}:
+        print(__doc__.strip())
+        raise SystemExit(0)
+    if "-o" not in a:
+        print(__doc__.strip(), file=sys.stderr)
+        print("\n오류: 출력 경로를 '-o <출력>' 형식으로 지정해야 한다.", file=sys.stderr)
+        raise SystemExit(2)
+    out_i = a.index("-o")
+    if out_i == len(a) - 1:
+        print(__doc__.strip(), file=sys.stderr)
+        print("\n오류: '-o' 뒤에 출력 경로가 없다.", file=sys.stderr)
+        raise SystemExit(2)
     kind = a[0]
+    if kind not in {"bottleneck", "company"}:
+        print(__doc__.strip(), file=sys.stderr)
+        print(f"\n오류: 알 수 없는 리포트 종류다: {kind}", file=sys.stderr)
+        raise SystemExit(2)
+    if kind == "company" and len(a[:out_i]) != 2:
+        print(__doc__.strip(), file=sys.stderr)
+        print("\n오류: company 리포트는 입력 JSON 하나가 필요하다.", file=sys.stderr)
+        raise SystemExit(2)
+    if kind == "bottleneck" and len(a[:out_i]) < 3:
+        print(__doc__.strip(), file=sys.stderr)
+        print("\n오류: bottleneck 리포트는 미국 JSON 과 한국 JSON 이 필요하다.", file=sys.stderr)
+        raise SystemExit(2)
+    out = a[out_i + 1]
     if kind == "bottleneck":
         usa = json.loads(Path(a[1]).read_text())
         kor = json.loads(Path(a[2]).read_text())
