@@ -54,17 +54,26 @@
         "docs/prd.md",
         "docs/flow.md",
         "docs/glossary.md",
-                "docs/wsaj-wiki.md",
-                "skills/wsaj-investing-brain/SKILL.md",
-                "scripts/wsaj_video_corpus.py",
-                "scripts/evaluate_wsaj_brain.py",
-                "tests/fixtures/wsaj-brain-eval.json",
-                "tests/test_wsaj_brain.py"
+        "docs/wsaj-wiki.md",
+        "docs/wsaj/*.md",
+        "docs/wsaj/evidence/*.json",
+        "omx_wiki/*.md",
+        "skills/wsaj-investing-brain/SKILL.md",
+        "scripts/wsaj_video_corpus.py",
+        "scripts/query_wsaj_wiki.py",
+        "scripts/fetch_youtube_publish_dates.py",
+        "scripts/evaluate_wsaj_brain.py",
+        "tests/fixtures/wsaj-brain-eval.json",
+        "tests/test_wsaj_brain.py",
+        "tests/test_wsaj_wiki.py",
+        "tests/test_youtube_publish_dates.py"
       ],
       "validation_commands": [
-                "for file in docs/prd.md docs/flow.md docs/glossary.md docs/wsaj-wiki.md skills/wsaj-investing-brain/SKILL.md; do ~/.claude/scripts/korean-style-check.sh \"$file\"; python3 ~/.claude/scripts/check-readability.py \"$file\"; done",
-                "python3 scripts/wsaj_video_corpus.py --help",
-                "python3 -m unittest -v tests/test_wsaj_brain.py"
+        "for file in docs/prd.md docs/flow.md docs/glossary.md docs/wsaj-wiki.md skills/wsaj-investing-brain/SKILL.md; do ~/.claude/scripts/korean-style-check.sh \"$file\"; python3 ~/.claude/scripts/check-readability.py \"$file\"; done",
+        "python3 scripts/wsaj_video_corpus.py --help",
+        "python3 scripts/evaluate_wsaj_brain.py",
+        "python3 -m unittest -v tests/test_wsaj_brain.py tests/test_wsaj_wiki.py tests/test_youtube_publish_dates.py",
+        "omx wiki wiki_lint --json"
       ]
     },
     {
@@ -82,7 +91,7 @@
       ],
       "validation_commands": [
         "python3 scripts/wsaj_video_corpus.py --help",
-                "python3 -m unittest -v tests/test_wsaj_video_corpus.py",
+        "python3 -m unittest -v tests/test_wsaj_video_corpus.py",
         "git status --ignored --short reports .cache"
       ]
     }

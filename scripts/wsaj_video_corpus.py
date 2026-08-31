@@ -195,7 +195,7 @@ def download_video(video: dict, target: Path, cookie_file: Path | None) -> Path:
 
 def transcribe(video_path: Path, model: str) -> dict:
     try:
-        import mlx_whisper
+        import mlx_whisper  # pyright: ignore[reportMissingImports]
     except ImportError as error:
         raise SystemExit(
             "mlx-whisper가 필요합니다. "

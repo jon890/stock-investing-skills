@@ -18,6 +18,8 @@
   "source_title": "영상 제목",
   "source_url": "https://www.youtube.com/watch?v=jS4thlOwR1U&t=218s",
   "source_date": "YYYY-MM-DD",
+  "source_date_status": "verified_upload_date",
+  "source_observed_at": "YYYY-MM-DD",
   "timestamp_start_sec": 218.7,
   "timestamp_end_sec": 257.3,
   "transcript_summary": "내재가치가 현금흐름, 할인율, 성장률, 위험으로 구성된다고 설명한다.",
@@ -45,7 +47,9 @@
 | `video_id` | 조건부 | 영상 근거가 있으면 YouTube ID 를 쓴다 |
 | `source_title` | 예 | 사용자가 출처를 알아볼 수 있는 제목이다 |
 | `source_url` | 예 | 영상이면 타임스탬프가 포함된 URL 을 쓴다 |
-| `source_date` | 예 | 영상 게시일이나 외부 데이터 조회일이다 |
+| `source_date` | 예 | 검증한 영상 게시일이나 외부 데이터 조회일이다 |
+| `source_date_status` | 예 | `verified_upload_date` 또는 `unavailable` 이다 |
+| `source_observed_at` | 예 | 원자료를 확인하거나 분석한 날짜다 |
 | `timestamp_start_sec` | 조건부 | 영상 근거의 시작 초다 |
 | `timestamp_end_sec` | 조건부 | 영상 근거의 끝 초다 |
 | `transcript_summary` | 예 | 긴 전사문 대신 검토 요약을 쓴다 |
@@ -53,6 +57,10 @@
 | `confidence` | 예 | `high`, `medium`, `low` 중 하나다 |
 | `reviewed_by` | 예 | 검토 주체를 쓴다 |
 | `reviewed_at` | 예 | 검토일을 쓴다 |
+
+`source_date_status` 가 `verified_upload_date` 일 때만 `source_date` 를 영상 게시일로 인용한다.
+게시일을 확인하지 못했으면 상태를 `unavailable` 로 두고 `source_date_unavailable_reason` 을 적는다.
+분석일을 영상 게시일 대신 넣지 않는다.
 
 ## 주장 종류
 

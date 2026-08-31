@@ -1,0 +1,808 @@
+{
+  "schema_version": "1.0",
+  "evidence": [
+    {
+      "id": "wsaj-evidence-000001",
+      "claim_type": "direct_claim",
+      "claim": "가치평가는 기업의 적정가치를 구하는 일이며, 내재가치와 상대가치 같은 도구로 나누어 배운다.",
+      "topic": [
+        "valuation",
+        "process",
+        "intrinsic-value",
+        "relative-valuation"
+      ],
+      "video_id": "I4w_V9qUCXc",
+      "source_title": "[월가아재]가치평가 입문 공부 시작: 80일간의 투자 일주 - 19일차",
+      "source_url": "https://www.youtube.com/watch?v=I4w_V9qUCXc&t=79s",
+      "source_date": "2021-08-15",
+      "timestamp_start_sec": 79.4,
+      "timestamp_end_sec": 116.3,
+      "transcript_summary": "가치평가의 의미와 책의 구성, 내재가치와 상대가치 학습 흐름을 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/I4w_V9qUCXc/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 90,
+          "summary": "가치평가 강의 목차가 화면에 표시된다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000002",
+      "claim_type": "direct_claim",
+      "claim": "상대가치평가는 기업 고유의 재무제표만 보는 내재가치평가와 구분된다.",
+      "topic": [
+        "relative-valuation",
+        "intrinsic-value",
+        "valuation"
+      ],
+      "video_id": "jS4thlOwR1U",
+      "source_title": "[월가아재]주린이 투자 필수개념, PER을 잘못 사용하면 위험한 이유: 80일간의 투자 일주 - 40일차",
+      "source_url": "https://www.youtube.com/watch?v=jS4thlOwR1U&t=124s",
+      "source_date": "2021-09-06",
+      "timestamp_start_sec": 124.5,
+      "timestamp_end_sec": 170.4,
+      "transcript_summary": "상대가치와 내재가치를 다른 평가 방식으로 나누어 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/jS4thlOwR1U/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 150,
+          "summary": "강의 화면에서 상대가치평가 흐름을 설명한다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000003",
+      "claim_type": "direct_claim",
+      "claim": "내재가치는 현금흐름, 할인율, 성장률, 위험 같은 기업 고유 변수를 바탕으로 본다.",
+      "topic": [
+        "intrinsic-value",
+        "cash-flow",
+        "discount-rate",
+        "growth",
+        "risk"
+      ],
+      "video_id": "jS4thlOwR1U",
+      "source_title": "[월가아재]주린이 투자 필수개념, PER을 잘못 사용하면 위험한 이유: 80일간의 투자 일주 - 40일차",
+      "source_url": "https://www.youtube.com/watch?v=jS4thlOwR1U&t=218s",
+      "source_date": "2021-09-06",
+      "timestamp_start_sec": 218.7,
+      "timestamp_end_sec": 257.3,
+      "transcript_summary": "기업 자체의 현금흐름과 성장, 위험을 통해 가치를 계산하는 관점을 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/jS4thlOwR1U/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 240,
+          "summary": "내재가치와 상대가치를 비교하는 강의 화면이 보인다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000004",
+      "claim_type": "direct_claim",
+      "claim": "상대가치평가는 비교 가능한 다른 주식을 찾고 그 배수를 보는 방식이다.",
+      "topic": [
+        "relative-valuation",
+        "peer-group",
+        "multiples"
+      ],
+      "video_id": "jS4thlOwR1U",
+      "source_title": "[월가아재]주린이 투자 필수개념, PER을 잘못 사용하면 위험한 이유: 80일간의 투자 일주 - 40일차",
+      "source_url": "https://www.youtube.com/watch?v=jS4thlOwR1U&t=265s",
+      "source_date": "2021-09-06",
+      "timestamp_start_sec": 265.8,
+      "timestamp_end_sec": 350.8,
+      "transcript_summary": "유사기업을 찾아 시장 배수로 적정가치를 비교하는 실무 흐름을 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/jS4thlOwR1U/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 300,
+          "summary": "상대가치평가 사례와 비교군 설명이 이어진다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000005",
+      "claim_type": "direct_claim",
+      "claim": "PER은 기대성장률, 배당성향, 위험과 연결되는 배수다.",
+      "topic": [
+        "per",
+        "multiples",
+        "growth",
+        "payout",
+        "risk"
+      ],
+      "video_id": "7v8RppYkGcM",
+      "source_title": "[월가아재]당신은 PER을 제대로 쓰고 계신가요? 80일 간의 투자일주 - 41일차",
+      "source_url": "https://www.youtube.com/watch?v=7v8RppYkGcM&t=615s",
+      "source_date": "2021-09-07",
+      "timestamp_start_sec": 615.6,
+      "timestamp_end_sec": 756.7,
+      "transcript_summary": "PER을 단순 가격 배수가 아니라 성장률, 배당성향, 리스크의 함수로 분해한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/7v8RppYkGcM/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 660,
+          "summary": "PER 결정 변수를 설명하는 표와 수식 화면이 보인다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000006",
+      "claim_type": "direct_claim",
+      "claim": "PBR은 ROE, 배당성향, 자기자본비용, 기대성장률과 연결해서 해석한다.",
+      "topic": [
+        "pbr",
+        "multiples",
+        "roe",
+        "cost-of-equity",
+        "growth"
+      ],
+      "video_id": "7v8RppYkGcM",
+      "source_title": "[월가아재]당신은 PER을 제대로 쓰고 계신가요? 80일 간의 투자일주 - 41일차",
+      "source_url": "https://www.youtube.com/watch?v=7v8RppYkGcM&t=766s",
+      "source_date": "2021-09-07",
+      "timestamp_start_sec": 766.3,
+      "timestamp_end_sec": 823.2,
+      "transcript_summary": "PBR도 자본 구조와 수익성, 성장 변수로 분해해서 봐야 한다고 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/7v8RppYkGcM/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 780,
+          "summary": "PBR 관련 변수 표가 강의 화면에 나온다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000007",
+      "claim_type": "direct_claim",
+      "claim": "배수는 평균 하나만 보지 말고 통계적 분포와 아웃라이어를 함께 확인해야 한다.",
+      "topic": [
+        "multiples",
+        "distribution",
+        "outlier",
+        "relative-valuation"
+      ],
+      "video_id": "7v8RppYkGcM",
+      "source_title": "[월가아재]당신은 PER을 제대로 쓰고 계신가요? 80일 간의 투자일주 - 41일차",
+      "source_url": "https://www.youtube.com/watch?v=7v8RppYkGcM&t=578s",
+      "source_date": "2021-09-07",
+      "timestamp_start_sec": 578.6,
+      "timestamp_end_sec": 589.1,
+      "transcript_summary": "배수를 쓸 때 분포와 왜곡값을 보라는 절차를 제시한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/7v8RppYkGcM/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 570,
+          "summary": "배수의 종류와 변수 표가 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000008",
+      "claim_type": "direct_claim",
+      "claim": "PER의 기본식은 주가를 주당순이익으로 나누는 것이다.",
+      "topic": [
+        "per",
+        "earnings",
+        "multiples"
+      ],
+      "video_id": "w9WGecunB5I",
+      "source_title": "[월가아재] 당신이 몰랐던 PER의 진실 - 주식기초강의 9강",
+      "source_url": "https://www.youtube.com/watch?v=w9WGecunB5I&t=22s",
+      "source_date": "2025-11-05",
+      "timestamp_start_sec": 22.5,
+      "timestamp_end_sec": 30.3,
+      "transcript_summary": "PER을 Price/Earnings, 주식 가격/주당순이익으로 정의한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/w9WGecunB5I/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 30,
+          "summary": "PER = Price / Earnings 수식이 화면에 표시된다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000009",
+      "claim_type": "direct_claim",
+      "claim": "미국 주식의 PER은 GAAP 순이익과 non-GAAP 순이익을 구분해서 봐야 한다.",
+      "topic": [
+        "per",
+        "gaap",
+        "non-gaap",
+        "earnings-quality"
+      ],
+      "video_id": "w9WGecunB5I",
+      "source_title": "[월가아재] 당신이 몰랐던 PER의 진실 - 주식기초강의 9강",
+      "source_url": "https://www.youtube.com/watch?v=w9WGecunB5I&t=210s",
+      "source_date": "2025-11-05",
+      "timestamp_start_sec": 210.3,
+      "timestamp_end_sec": 353.7,
+      "transcript_summary": "일회성 항목 때문에 GAAP PER이 왜곡될 수 있어 non-GAAP 확인을 강조한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/w9WGecunB5I/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 240,
+          "summary": "TTM, NTM, 주당순이익 구분 화면과 Cisco 사례가 보인다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000010",
+      "claim_type": "direct_claim",
+      "claim": "상대가치평가는 유사기업 선정, 배수 선택, 결과 분석의 순서로 진행한다.",
+      "topic": [
+        "relative-valuation",
+        "peer-group",
+        "multiples",
+        "process"
+      ],
+      "video_id": "BWbI_nhLTmg",
+      "source_title": "PER, 인생에 한번이라도 제대로 써본 적 있으신가요? - Valley AI 튜토리얼 Ep.3",
+      "source_url": "https://www.youtube.com/watch?v=BWbI_nhLTmg&t=84s",
+      "source_date": "2023-12-28",
+      "timestamp_start_sec": 84.6,
+      "timestamp_end_sec": 180.3,
+      "transcript_summary": "상대가치평가를 비교군, 배수, 결과 해석 순서로 나눈다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/BWbI_nhLTmg/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 90,
+          "summary": "상대가치 툴과 평가 절차 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000011",
+      "claim_type": "direct_claim",
+      "claim": "PSR은 일관성이 부족해서 제한적으로만 써야 한다.",
+      "topic": [
+        "psr",
+        "multiples",
+        "misuse",
+        "relative-valuation"
+      ],
+      "video_id": "BWbI_nhLTmg",
+      "source_title": "PER, 인생에 한번이라도 제대로 써본 적 있으신가요? - Valley AI 튜토리얼 Ep.3",
+      "source_url": "https://www.youtube.com/watch?v=BWbI_nhLTmg&t=544s",
+      "source_date": "2023-12-28",
+      "timestamp_start_sec": 544.5,
+      "timestamp_end_sec": 719.4,
+      "transcript_summary": "PER, PBR, PSR의 용도를 나누며 PSR의 한계를 경고한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/BWbI_nhLTmg/frames/sheet-002.jpg",
+          "frame_timestamp_sec": 570,
+          "summary": "PER, PBR, PSR, EV/EBITDA 탭과 설명이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000012",
+      "claim_type": "direct_claim",
+      "claim": "안전마진은 내재가치보다 주가가 낮을 때의 차이로 이해한다.",
+      "topic": [
+        "margin-of-safety",
+        "intrinsic-value",
+        "price"
+      ],
+      "video_id": "Byn8et9uM3c",
+      "source_title": "[월가아재]주린이를 위한 안전마진의 제대로 된 사용법 3가지: 80일간의 투자 일주 - 43일차",
+      "source_url": "https://www.youtube.com/watch?v=Byn8et9uM3c&t=64s",
+      "source_date": "2021-09-09",
+      "timestamp_start_sec": 64.8,
+      "timestamp_end_sec": 75.0,
+      "transcript_summary": "안전마진을 내재가치와 시장가격의 차이로 정의한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/Byn8et9uM3c/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 240,
+          "summary": "Margin of Safety 정의와 설명 문단이 보인다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000013",
+      "claim_type": "direct_claim",
+      "claim": "안전마진은 고정 비율이 아니라 가치평가 정확도, 변동성, 위험에 따라 조절한다.",
+      "topic": [
+        "margin-of-safety",
+        "risk",
+        "uncertainty",
+        "valuation"
+      ],
+      "video_id": "Byn8et9uM3c",
+      "source_title": "[월가아재]주린이를 위한 안전마진의 제대로 된 사용법 3가지: 80일간의 투자 일주 - 43일차",
+      "source_url": "https://www.youtube.com/watch?v=Byn8et9uM3c&t=137s",
+      "source_date": "2021-09-09",
+      "timestamp_start_sec": 137.1,
+      "timestamp_end_sec": 221.0,
+      "transcript_summary": "안전마진을 종목과 시점, 불확실성 수준에 맞춰 달리 잡아야 한다고 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/Byn8et9uM3c/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 180,
+          "summary": "불확실성에 따른 안전마진 조절 설명이 이어진다."
+        }
+      ],
+      "confidence": "high",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000014",
+      "claim_type": "direct_claim",
+      "claim": "재무제표를 읽는 습관은 리서치와 가치평가로 넘어가는 출발점이다.",
+      "topic": [
+        "financial-statements",
+        "process",
+        "research",
+        "valuation"
+      ],
+      "video_id": "GePuFvI8xrg",
+      "source_title": "평생 안읽어본 재무제표, 10분만에 읽기 - Valley AI 튜토리얼 Ep.1",
+      "source_url": "https://www.youtube.com/watch?v=GePuFvI8xrg&t=73s",
+      "source_date": "2023-12-05",
+      "timestamp_start_sec": 73.9,
+      "timestamp_end_sec": 87.8,
+      "transcript_summary": "표준화된 재무제표를 준비하고 주요 항목을 훑는 습관을 강조한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/GePuFvI8xrg/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 90,
+          "summary": "재무제표 항목을 설명하는 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000015",
+      "claim_type": "direct_claim",
+      "claim": "엔비디아 사례에서는 미래 매출, 마진, 자본회전율, 자본비용, 실패확률을 함께 넣어 DCF를 구성한다.",
+      "topic": [
+        "nvidia",
+        "dcf",
+        "revenue",
+        "margin",
+        "cost-of-capital",
+        "failure-risk"
+      ],
+      "video_id": "5fhbkQ2Qidc",
+      "source_title": "[기업해부학] 가치평가의 대가가 엔비디아 주식을 전부 팔지 않은 이유?",
+      "source_url": "https://www.youtube.com/watch?v=5fhbkQ2Qidc&t=600s",
+      "source_date": "2023-08-01",
+      "timestamp_start_sec": 600.0,
+      "timestamp_end_sec": 1200.0,
+      "transcript_summary": "AI 시장 점유율, R&D 보정 마진, 자본회전율, WACC, 실패확률을 DCF 입력으로 다룬다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/5fhbkQ2Qidc/frames/sheet-002.jpg",
+          "frame_timestamp_sec": 720,
+          "summary": "DCF 표와 시장 가정표가 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000016",
+      "claim_type": "direct_claim",
+      "claim": "엔비디아 현재 가격을 정당화하려면 2033년 매출과 AI 시장 점유율에 매우 낙관적인 가정이 필요하다고 본다.",
+      "topic": [
+        "nvidia",
+        "scenario",
+        "sensitivity",
+        "margin-of-safety"
+      ],
+      "video_id": "5fhbkQ2Qidc",
+      "source_title": "[기업해부학] 가치평가의 대가가 엔비디아 주식을 전부 팔지 않은 이유?",
+      "source_url": "https://www.youtube.com/watch?v=5fhbkQ2Qidc&t=1020s",
+      "source_date": "2023-08-01",
+      "timestamp_start_sec": 1020.0,
+      "timestamp_end_sec": 1200.0,
+      "transcript_summary": "2033년 매출과 마진 민감도에서 현재 가격을 설명하는 조합이 제한적이라고 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/5fhbkQ2Qidc/frames/sheet-003.jpg",
+          "frame_timestamp_sec": 1080,
+          "summary": "2033년 매출과 마진 민감도 표가 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000017",
+      "claim_type": "direct_claim",
+      "claim": "테슬라 사례에서는 희망편과 절망편을 나누어 에너지, FSD, 시장점유율, 마진 가정을 분리한다.",
+      "topic": [
+        "tesla",
+        "scenario",
+        "fsd",
+        "energy",
+        "margin"
+      ],
+      "video_id": "_Ex0vR_1Ekg",
+      "source_title": "[기업해부학] 테슬라 목표가 xxx만원",
+      "source_url": "https://www.youtube.com/watch?v=_Ex0vR_1Ekg&t=960s",
+      "source_date": "2023-06-26",
+      "timestamp_start_sec": 960.0,
+      "timestamp_end_sec": 1500.0,
+      "transcript_summary": "bullish와 bearish 목표가를 나누고 EV, 에너지, FSD 가정을 각각 둔다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/_Ex0vR_1Ekg/frames/sheet-002.jpg",
+          "frame_timestamp_sec": 1080,
+          "summary": "희망편과 절망편 목표가 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000018",
+      "claim_type": "direct_claim",
+      "claim": "맥도날드 사례에서는 숫자보다 프랜차이즈, 부동산, 로열티와 렌트 구조를 먼저 본다.",
+      "topic": [
+        "mcdonalds",
+        "business-model",
+        "franchise",
+        "real-estate",
+        "royalty"
+      ],
+      "video_id": "Crotyq9sbdo",
+      "source_title": "[기업해부학] 불황에 강한 주식, 맥도날드 낱낱이 파헤치기 1편 [3부작]",
+      "source_url": "https://www.youtube.com/watch?v=Crotyq9sbdo&t=480s",
+      "source_date": "2023-02-03",
+      "timestamp_start_sec": 480.0,
+      "timestamp_end_sec": 930.0,
+      "transcript_summary": "브랜드, 프랜차이즈, 토지와 임대 기반 사업모델을 해자의 출발점으로 본다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/Crotyq9sbdo/frames/sheet-002.jpg",
+          "frame_timestamp_sec": 540,
+          "summary": "프랜차이즈와 글로벌 확장 설명 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000019",
+      "claim_type": "direct_claim",
+      "claim": "맥도날드의 자본잠식은 배당과 자사주 매입이 원인인지 분해해서 봐야 한다.",
+      "topic": [
+        "mcdonalds",
+        "capital-deficit",
+        "buyback",
+        "dividend",
+        "cash-flow"
+      ],
+      "video_id": "t7NUYohjjXs",
+      "source_title": "[기업해부학] 맥도날드는 자본잠식이 되어도 괜찮다? 맥도날드 낱낱이 파헤치기 2편 [3부작]",
+      "source_url": "https://www.youtube.com/watch?v=t7NUYohjjXs&t=420s",
+      "source_date": "2023-02-10",
+      "timestamp_start_sec": 420.0,
+      "timestamp_end_sec": 600.0,
+      "transcript_summary": "자본잠식이 영업 부실인지 주주환원 때문인지 나누어 봐야 한다고 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/t7NUYohjjXs/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 480,
+          "summary": "자본잠식 원인과 환원 구조 설명 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000020",
+      "claim_type": "direct_claim",
+      "claim": "실적 발표 직후에는 매출과 EPS뿐 아니라 컨센서스와 다음 분기 가이던스를 함께 본다.",
+      "topic": [
+        "earnings",
+        "consensus",
+        "guidance",
+        "special-situation"
+      ],
+      "video_id": "qbuyzUI3hAo",
+      "source_title": "[기업해부학] 연속된 매출 감소, 애플의 미래는? 실적발표를 통해 보는 애플의 현재와 미래",
+      "source_url": "https://www.youtube.com/watch?v=qbuyzUI3hAo&t=27s",
+      "source_date": "2023-11-04",
+      "timestamp_start_sec": 27.52,
+      "timestamp_end_sec": 96.24,
+      "transcript_summary": "애플 실적을 컨센서스, 가이던스, 서비스 매출과 함께 해석한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/qbuyzUI3hAo/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 60,
+          "summary": "컨센서스와 가이던스 관련 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000021",
+      "claim_type": "direct_claim",
+      "claim": "IPO는 사업 설명보다 공모 구조, 인수 방식, 락업, 구주매출과 신주모집을 먼저 확인한다.",
+      "topic": [
+        "ipo",
+        "lock-up",
+        "secondary-offering",
+        "new-shares",
+        "special-situation"
+      ],
+      "video_id": "EbfuT0zGGjU",
+      "source_title": "[기업해부학] IPO 공모주 투자, 놓치기 쉬운 3가지 핵심 포인트",
+      "source_url": "https://www.youtube.com/watch?v=EbfuT0zGGjU&t=122s",
+      "source_date": "2023-09-08",
+      "timestamp_start_sec": 122.0,
+      "timestamp_end_sec": 476.22,
+      "transcript_summary": "증권신고서, 공모개요, 총액인수와 모집주선, 락업 구조를 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/EbfuT0zGGjU/frames/sheet-002.jpg",
+          "frame_timestamp_sec": 180,
+          "summary": "공모개요와 인수 방식 설명 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000022",
+      "claim_type": "direct_claim",
+      "claim": "M&A 상황에서는 합의가와 현재가 차이만이 아니라 딜 성사 가능성, 시한, 규제 리스크를 함께 본다.",
+      "topic": [
+        "mna",
+        "deal-spread",
+        "regulatory-risk",
+        "special-situation"
+      ],
+      "video_id": "2cDMgeUD7Aw",
+      "source_title": "[기업해부학] 워렌 버핏에게 배우는 투자 기법 (feat. M&A 뉴스 활용하기)",
+      "source_url": "https://www.youtube.com/watch?v=2cDMgeUD7Aw&t=235s",
+      "source_date": "2023-07-11",
+      "timestamp_start_sec": 235.0,
+      "timestamp_end_sec": 510.0,
+      "transcript_summary": "합의가, 스프레드, CMA/EU 규제, 공매도 비중과 차익거래를 함께 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/2cDMgeUD7Aw/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 270,
+          "summary": "합의가와 스프레드, 규제 리스크 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000023",
+      "claim_type": "direct_claim",
+      "claim": "은행은 PER보다 예금 유출, 비보장 예금, 평가손실, 유동성 창구와 자본비율이 중요하다.",
+      "topic": [
+        "bank",
+        "deposit",
+        "liquidity",
+        "tier-1",
+        "rwa",
+        "special-situation"
+      ],
+      "video_id": "PzpU0H8iqQs",
+      "source_title": "[기업해부학] 주가 대폭락 찰스 슈왑, 실리콘밸리뱅크 2.0? 저가매수 찬스? 1부",
+      "source_url": "https://www.youtube.com/watch?v=PzpU0H8iqQs&t=960s",
+      "source_date": "2023-04-28",
+      "timestamp_start_sec": 960.0,
+      "timestamp_end_sec": 1800.0,
+      "transcript_summary": "Tier 1, RWA, 비보장 예금, FHLB, BTFP와 유동성 구조를 점검한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/PzpU0H8iqQs/frames/sheet-003.jpg",
+          "frame_timestamp_sec": 1020,
+          "summary": "Tier 1, RWA, 예금과 유동성 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000024",
+      "claim_type": "direct_claim",
+      "claim": "물타기와 과한 레버리지는 승률처럼 보여도 손익비를 망가뜨릴 수 있다.",
+      "topic": [
+        "behavior",
+        "leverage",
+        "risk-reward",
+        "averaging-down",
+        "discipline"
+      ],
+      "video_id": "3oy4lj7KURw",
+      "source_title": "[월가아재] 내가 투자로 성공할지 자가진단 체크하기 - 주식기초강의 19강",
+      "source_url": "https://www.youtube.com/watch?v=3oy4lj7KURw&t=205s",
+      "source_date": "2025-12-17",
+      "timestamp_start_sec": 205.48,
+      "timestamp_end_sec": 316.3,
+      "transcript_summary": "물타기와 레버리지가 단기 승률과 장기 손익비를 다르게 만들 수 있다고 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/3oy4lj7KURw/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 240,
+          "summary": "자가진단 강의 화면에서 손익비와 행동 통제를 설명한다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000025",
+      "claim_type": "inferred_principle",
+      "claim": "월가아재식 가치평가 흐름은 재무제표 확인, 내재가치와 상대가치 구분, 배수의 구조 해석, 안전마진 조절로 요약된다.",
+      "topic": [
+        "process",
+        "valuation",
+        "financial-statements",
+        "multiples",
+        "margin-of-safety"
+      ],
+      "video_id": "GePuFvI8xrg",
+      "source_title": "평생 안읽어본 재무제표, 10분만에 읽기 - Valley AI 튜토리얼 Ep.1",
+      "source_url": "https://www.youtube.com/watch?v=GePuFvI8xrg&t=73s",
+      "source_date": "2023-12-05",
+      "timestamp_start_sec": 73.9,
+      "timestamp_end_sec": 221.0,
+      "supporting_evidence_ids": [
+        "wsaj-evidence-000002",
+        "wsaj-evidence-000003",
+        "wsaj-evidence-000005",
+        "wsaj-evidence-000010",
+        "wsaj-evidence-000013",
+        "wsaj-evidence-000014"
+      ],
+      "transcript_summary": "여러 기초 강의에서 반복된 절차를 하나의 운용 흐름으로 묶은 추론이다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/GePuFvI8xrg/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 90,
+          "summary": "재무제표 확인 단계가 흐름의 시작점으로 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000026",
+      "claim_type": "inferred_principle",
+      "claim": "투자 판단은 주가 예측보다 확률적 우위, 절제 우위, 손익비를 지키는 의사결정 문제로 다룬다.",
+      "topic": [
+        "investing-values",
+        "probabilistic-edge",
+        "discipline",
+        "risk-reward",
+        "behavior"
+      ],
+      "video_id": "3oy4lj7KURw",
+      "source_title": "[월가아재] 내가 투자로 성공할지 자가진단 체크하기 - 주식기초강의 19강",
+      "source_url": "https://www.youtube.com/watch?v=3oy4lj7KURw&t=38s",
+      "source_date": "2025-12-17",
+      "timestamp_start_sec": 38.1,
+      "timestamp_end_sec": 834.66,
+      "supporting_evidence_ids": [
+        "wsaj-evidence-000012",
+        "wsaj-evidence-000013",
+        "wsaj-evidence-000024"
+      ],
+      "transcript_summary": "자가진단 강의의 절제, 레버리지, 손익비 경고와 안전마진 원칙을 묶은 추론이다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/3oy4lj7KURw/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 420,
+          "summary": "투자 습관과 행동 통제를 점검하는 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-08-31"
+    }
+  ]
+}

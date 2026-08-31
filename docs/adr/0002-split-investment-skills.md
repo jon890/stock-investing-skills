@@ -19,7 +19,7 @@
 
 ## 결정
 
-`daily-market-decision` 은 장기적으로 제거하고, 스킬을 다음처럼 나눈다.
+`daily-market-decision` 을 제거하고, 스킬을 다음처럼 나눈다.
 
 | 스킬 | 책임 |
 | --- | --- |
@@ -43,8 +43,8 @@ Claude Code 와 Codex 는 모두 `skills/` 를 실제 원본으로 읽는다.
 병목 분석과 종목 발굴은 독립적으로 실행하고 검증할 수 있다.
 사용자는 “어느 섹터가 병목인가”와 “그 병목에서 어떤 종목을 볼 것인가”를 따로 물을 수 있다.
 
-`daily-market-decision` 을 즉시 삭제하지는 않는다.
-후속 스킬이 같은 결과를 내고 검증을 통과한 뒤 제거한다.
+`sector-bottleneck` 과 `tenbagger-pick` 이 검증을 통과한 뒤 `daily-market-decision` 을 제거했다.
+이전 이름은 새 요청의 진입점으로 쓰지 않는다.
 
 ## 검증 조건
 

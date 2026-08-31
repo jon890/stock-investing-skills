@@ -19,11 +19,17 @@
 - `docs/flow.md`
 - `docs/glossary.md`
 - `docs/wsaj-wiki.md`
+- `docs/wsaj/*.md`
+- `docs/wsaj/evidence/*.json`
+- `omx_wiki/*.md`
 - `skills/wsaj-investing-brain/SKILL.md`
 - `scripts/wsaj_video_corpus.py`
+- `scripts/query_wsaj_wiki.py`
+- `scripts/fetch_youtube_publish_dates.py`
 - `scripts/evaluate_wsaj_brain.py`
 - `tests/fixtures/wsaj-brain-eval.json`
 - `tests/test_wsaj_brain.py`
+- `tests/test_wsaj_wiki.py`
 
 ## 범위
 
@@ -59,7 +65,9 @@ for file in docs/prd.md docs/flow.md docs/glossary.md docs/wsaj-wiki.md skills/w
   python3 ~/.claude/scripts/check-readability.py "$file"
 done
 python3 scripts/wsaj_video_corpus.py --help
-python3 -m unittest -v tests/test_wsaj_brain.py
+python3 scripts/evaluate_wsaj_brain.py
+python3 -m unittest -v tests/test_wsaj_brain.py tests/test_wsaj_wiki.py tests/test_youtube_publish_dates.py
+omx wiki wiki_lint --json
 ```
 
 답변 예시는 실제 코퍼스 근거가 있을 때만 추가한다.

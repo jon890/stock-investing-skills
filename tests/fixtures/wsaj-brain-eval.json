@@ -1,0 +1,418 @@
+{
+  "schema_version": "1.0",
+  "description": "Fixed 50-question deterministic quality gate for the WSAJ investing brain evidence layer.",
+  "thresholds": {
+    "citation_validity": 0.9,
+    "unsupported_refusal": 0.95,
+    "numeric_time_errors": 0
+  },
+  "required_category_counts": {
+    "term": 15,
+    "process": 15,
+    "company_case": 10,
+    "time_or_conflict": 5,
+    "unsupported": 5
+  },
+  "cases": [
+    {
+      "id": "term-001",
+      "category": "term",
+      "question": "PER의 기본식은 무엇인가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000008"],
+      "expected_behavior": {"query_terms_include": ["per"], "required_topics": ["per", "earnings"]}
+    },
+    {
+      "id": "term-002",
+      "category": "term",
+      "question": "미국 주식 PER을 볼 때 GAAP과 non-GAAP은 어떻게 구분해야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000009"],
+      "expected_behavior": {"query_terms_include": ["per"], "required_topics": ["gaap", "non-gaap"]}
+    },
+    {
+      "id": "term-003",
+      "category": "term",
+      "question": "PBR은 어떤 변수와 연결해서 해석해야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000006"],
+      "expected_behavior": {"query_terms_include": ["pbr"], "required_topics": ["roe", "cost-of-equity"]}
+    },
+    {
+      "id": "term-004",
+      "category": "term",
+      "question": "PSR은 왜 제한적으로만 써야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000011"],
+      "expected_behavior": {"query_terms_include": ["psr"], "required_topics": ["psr", "misuse"]}
+    },
+    {
+      "id": "term-005",
+      "category": "term",
+      "question": "안전마진이란 무엇인가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000012"],
+      "expected_behavior": {"query_terms_include": ["margin-of-safety"], "required_topics": ["margin-of-safety", "price"]}
+    },
+    {
+      "id": "term-006",
+      "category": "term",
+      "question": "안전마진 비율은 항상 고정해야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000013"],
+      "expected_behavior": {"query_terms_include": ["margin-of-safety"], "required_topics": ["uncertainty", "risk"]}
+    },
+    {
+      "id": "term-007",
+      "category": "term",
+      "question": "내재가치는 어떤 기업 고유 변수로 보나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000003"],
+      "expected_behavior": {"query_terms_include": ["intrinsic-value"], "required_topics": ["cash-flow", "discount-rate", "growth"]}
+    },
+    {
+      "id": "term-008",
+      "category": "term",
+      "question": "유사기업 배수를 보는 방식은 무엇인가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000004"],
+      "expected_behavior": {"query_terms_include": ["peer-group", "multiples"], "required_topics": ["peer-group", "multiples"]}
+    },
+    {
+      "id": "term-009",
+      "category": "term",
+      "question": "배수를 볼 때 평균만 보면 왜 부족한가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000007"],
+      "expected_behavior": {"query_terms_include": ["multiples"], "required_topics": ["distribution", "outlier"]}
+    },
+    {
+      "id": "term-010",
+      "category": "term",
+      "question": "DCF에서 할인율과 성장률은 왜 중요한가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000015"],
+      "expected_behavior": {"query_terms_include": ["dcf"], "required_topics": ["dcf", "cost-of-capital"]}
+    },
+    {
+      "id": "term-011",
+      "category": "term",
+      "question": "현금흐름과 할인율은 내재가치에서 어떻게 쓰이나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000003"],
+      "expected_behavior": {"query_terms_include": ["cash-flow", "discount-rate"], "required_topics": ["cash-flow", "discount-rate"]}
+    },
+    {
+      "id": "term-012",
+      "category": "term",
+      "question": "물타기와 레버리지는 손익비에 어떤 영향을 줄 수 있나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000024"],
+      "expected_behavior": {"query_terms_include": ["averaging-down", "leverage"], "required_topics": ["risk-reward", "discipline"]}
+    },
+    {
+      "id": "term-013",
+      "category": "term",
+      "question": "손익비는 투자 판단에서 왜 필요한가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000026"],
+      "expected_behavior": {"query_terms_include": ["risk-reward"], "required_topics": ["probabilistic-edge", "risk-reward"]}
+    },
+    {
+      "id": "term-014",
+      "category": "term",
+      "question": "유사기업과 비교군은 상대가치평가에서 어떻게 쓰이나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000010"],
+      "expected_behavior": {"query_terms_include": ["peer-group"], "required_topics": ["peer-group", "process"]}
+    },
+    {
+      "id": "term-015",
+      "category": "term",
+      "question": "재무제표를 읽는 습관은 왜 필요한가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000014"],
+      "expected_behavior": {"query_terms_include": ["financial-statements"], "required_topics": ["research", "valuation"]}
+    },
+    {
+      "id": "process-001",
+      "category": "process",
+      "question": "가치평가 공부는 어떤 큰 흐름으로 시작하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000001"],
+      "expected_behavior": {"query_terms_include": ["valuation", "process"], "required_topics": ["valuation", "process"]}
+    },
+    {
+      "id": "process-002",
+      "category": "process",
+      "question": "상대가치와 내재가치는 어떻게 구분하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000002"],
+      "expected_behavior": {"query_terms_include": ["relative-valuation", "intrinsic-value"], "required_topics": ["relative-valuation", "intrinsic-value"]}
+    },
+    {
+      "id": "process-003",
+      "category": "process",
+      "question": "내재가치에서 현금흐름, 할인율, 성장률, 위험은 어떻게 쓰이나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000003"],
+      "expected_behavior": {"query_terms_include": ["intrinsic-value"], "required_topics": ["cash-flow", "risk"]}
+    },
+    {
+      "id": "process-004",
+      "category": "process",
+      "question": "상대가치평가의 실행 순서는 무엇인가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000010"],
+      "expected_behavior": {"query_terms_include": ["relative-valuation", "process"], "required_topics": ["peer-group", "multiples", "process"]}
+    },
+    {
+      "id": "process-005",
+      "category": "process",
+      "question": "배수를 선택한 뒤 결과는 어떻게 검토해야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000007"],
+      "expected_behavior": {"query_terms_include": ["multiples"], "required_topics": ["distribution", "outlier"]}
+    },
+    {
+      "id": "process-006",
+      "category": "process",
+      "question": "재무제표 확인은 가치평가 플로우에서 어디에 놓이나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000014"],
+      "expected_behavior": {"query_terms_include": ["financial-statements", "process"], "required_topics": ["financial-statements", "process"]}
+    },
+    {
+      "id": "process-007",
+      "category": "process",
+      "question": "월가아재식 가치평가 흐름을 한 줄로 요약하면?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000025"],
+      "expected_behavior": {"query_terms_include": ["valuation", "process"], "required_topics": ["financial-statements", "multiples", "margin-of-safety"]}
+    },
+    {
+      "id": "process-008",
+      "category": "process",
+      "question": "투자 판단에서 확률적 우위, 절제 우위, 손익비가 왜 필요한가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000026"],
+      "expected_behavior": {"query_terms_include": ["risk-reward"], "required_topics": ["probabilistic-edge", "discipline"]}
+    },
+    {
+      "id": "process-009",
+      "category": "process",
+      "question": "기업 분석에서 안전마진은 언제 조절해야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000013"],
+      "expected_behavior": {"query_terms_include": ["margin-of-safety"], "required_topics": ["uncertainty", "valuation"]}
+    },
+    {
+      "id": "process-010",
+      "category": "process",
+      "question": "PER을 쓰는 과정에서 성장률과 위험을 왜 함께 봐야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000005"],
+      "expected_behavior": {"query_terms_include": ["per"], "required_topics": ["growth", "risk"]}
+    },
+    {
+      "id": "process-011",
+      "category": "process",
+      "question": "PBR을 해석할 때 ROE와 자기자본비용은 왜 같이 봐야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000006"],
+      "expected_behavior": {"query_terms_include": ["pbr"], "required_topics": ["roe", "cost-of-equity"]}
+    },
+    {
+      "id": "process-012",
+      "category": "process",
+      "question": "실적발표 직후에는 컨센서스와 가이던스를 어떤 흐름으로 봐야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000020"],
+      "expected_behavior": {"query_terms_include": ["earnings", "consensus", "guidance"], "required_topics": ["earnings", "special-situation"]}
+    },
+    {
+      "id": "process-013",
+      "category": "process",
+      "question": "IPO를 분석할 때 사업 설명보다 먼저 확인할 구조는 무엇인가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000021"],
+      "expected_behavior": {"query_terms_include": ["ipo"], "required_topics": ["lock-up", "new-shares"]}
+    },
+    {
+      "id": "process-014",
+      "category": "process",
+      "question": "M&A 상황은 합의가와 시장 가격 차이만 보면 충분한가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000022"],
+      "expected_behavior": {"query_terms_include": ["mna"], "required_topics": ["deal-spread", "regulatory-risk"]}
+    },
+    {
+      "id": "process-015",
+      "category": "process",
+      "question": "은행을 일반 기업 PER 방식과 분리해야 하는 이유는 무엇인가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000023"],
+      "expected_behavior": {"query_terms_include": ["bank"], "required_topics": ["deposit", "liquidity", "tier-1"]}
+    },
+    {
+      "id": "company-001",
+      "category": "company_case",
+      "question": "엔비디아 DCF 사례에서는 어떤 가정을 넣나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000015"],
+      "expected_behavior": {"query_terms_include": ["nvidia", "dcf"], "required_topics": ["revenue", "margin", "failure-risk"]}
+    },
+    {
+      "id": "company-002",
+      "category": "company_case",
+      "question": "엔비디아 가격 정당화에는 어떤 낙관 가정이 필요한가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000016"],
+      "expected_behavior": {"query_terms_include": ["nvidia"], "required_topics": ["scenario", "sensitivity"]}
+    },
+    {
+      "id": "company-003",
+      "category": "company_case",
+      "question": "테슬라 사례에서는 희망편과 절망편을 어떻게 나누나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000017"],
+      "expected_behavior": {"query_terms_include": ["tesla"], "required_topics": ["fsd", "energy", "scenario"]}
+    },
+    {
+      "id": "company-004",
+      "category": "company_case",
+      "question": "맥도날드 사례에서 숫자보다 먼저 봐야 할 사업 구조는 무엇인가?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000018"],
+      "expected_behavior": {"query_terms_include": ["mcdonalds"], "required_topics": ["franchise", "real-estate", "royalty"]}
+    },
+    {
+      "id": "company-005",
+      "category": "company_case",
+      "question": "맥도날드 자본잠식은 어떤 현금흐름 항목으로 분해해야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000019"],
+      "expected_behavior": {"query_terms_include": ["mcdonalds"], "required_topics": ["capital-deficit", "buyback", "dividend"]}
+    },
+    {
+      "id": "company-006",
+      "category": "company_case",
+      "question": "실적발표 사례에서는 컨센서스와 가이던스를 어떻게 봐야 하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000020"],
+      "expected_behavior": {"query_terms_include": ["earnings", "consensus", "guidance"], "required_topics": ["consensus", "guidance"]}
+    },
+    {
+      "id": "company-007",
+      "category": "company_case",
+      "question": "IPO 사례에서는 락업과 신주모집을 왜 보나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000021"],
+      "expected_behavior": {"query_terms_include": ["ipo", "lock-up"], "required_topics": ["secondary-offering", "new-shares"]}
+    },
+    {
+      "id": "company-008",
+      "category": "company_case",
+      "question": "M&A 사례에서는 딜 스프레드와 규제 리스크를 어떻게 보나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000022"],
+      "expected_behavior": {"query_terms_include": ["mna"], "required_topics": ["deal-spread", "regulatory-risk"]}
+    },
+    {
+      "id": "company-009",
+      "category": "company_case",
+      "question": "은행주 사례에서는 예금 유출과 자본비율 중 무엇을 보나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000023"],
+      "expected_behavior": {"query_terms_include": ["bank", "deposit"], "required_topics": ["deposit", "tier-1", "liquidity"]}
+    },
+    {
+      "id": "company-010",
+      "category": "company_case",
+      "question": "미국 주식 PER 사례에서 시스코 같은 일회성 항목은 어떻게 처리하나?",
+      "expected_status": "matched",
+      "required_evidence_ids": ["wsaj-evidence-000009"],
+      "expected_behavior": {"query_terms_include": ["per"], "required_topics": ["earnings-quality", "non-gaap"]}
+    },
+    {
+      "id": "current-001",
+      "category": "time_or_conflict",
+      "question": "오늘 엔비디아를 매수해도 되나?",
+      "expected_status": "requires_current_external_data",
+      "required_evidence_ids": ["wsaj-evidence-000015"],
+      "expected_behavior": {"message_contains": ["현재", "매수"], "required_topics": ["nvidia"]}
+    },
+    {
+      "id": "current-002",
+      "category": "time_or_conflict",
+      "question": "내 포트폴리오에서 테슬라 비중을 늘려도 될까?",
+      "expected_status": "requires_current_external_data",
+      "required_evidence_ids": ["wsaj-evidence-000017"],
+      "expected_behavior": {"message_contains": ["현재"], "required_topics": ["tesla"]}
+    },
+    {
+      "id": "current-003",
+      "category": "time_or_conflict",
+      "question": "최신 실적발표 후 바로 사야 하는 종목인가?",
+      "expected_status": "requires_current_external_data",
+      "required_evidence_ids": ["wsaj-evidence-000020"],
+      "expected_behavior": {"message_contains": ["최신", "영상 근거"], "required_topics": ["earnings"]}
+    },
+    {
+      "id": "current-004",
+      "category": "time_or_conflict",
+      "question": "현재 맥도날드 주가는 싸다고 볼 수 있나?",
+      "expected_status": "requires_current_external_data",
+      "required_evidence_ids": ["wsaj-evidence-000018"],
+      "expected_behavior": {"message_contains": ["현재", "주가"], "required_topics": ["mcdonalds"]}
+    },
+    {
+      "id": "current-005",
+      "category": "time_or_conflict",
+      "question": "오늘 은행주를 팔아야 하나?",
+      "expected_status": "requires_current_external_data",
+      "required_evidence_ids": ["wsaj-evidence-000023"],
+      "expected_behavior": {"message_contains": ["현재", "매수"], "required_topics": ["bank"]}
+    },
+    {
+      "id": "unsupported-001",
+      "category": "unsupported",
+      "question": "ROIC와 투하자본수익률을 어떤 기준으로 계산하나?",
+      "expected_status": "unsupported",
+      "required_evidence_ids": [],
+      "expected_behavior": {"message_contains": ["근거", "찾지 못했다"]}
+    },
+    {
+      "id": "unsupported-002",
+      "category": "unsupported",
+      "question": "SBC 회계 처리 기준은 무엇인가?",
+      "expected_status": "unsupported",
+      "required_evidence_ids": [],
+      "expected_behavior": {"message_contains": ["근거", "찾지 못했다"]}
+    },
+    {
+      "id": "unsupported-003",
+      "category": "unsupported",
+      "question": "경제적 해자와 브랜드 소비재 근거는 어떻게 검증하나?",
+      "expected_status": "unsupported",
+      "required_evidence_ids": [],
+      "expected_behavior": {"message_contains": ["근거", "찾지 못했다"]}
+    },
+    {
+      "id": "unsupported-004",
+      "category": "unsupported",
+      "question": "환율 캐리 트레이드는 어떤 통화쌍이 좋은가?",
+      "expected_status": "unsupported",
+      "required_evidence_ids": [],
+      "expected_behavior": {"message_contains": ["근거", "찾지 못했다"]}
+    },
+    {
+      "id": "unsupported-005",
+      "category": "unsupported",
+      "question": "원자재 스프레드 차익거래의 진입 규칙은 무엇인가?",
+      "expected_status": "unsupported",
+      "required_evidence_ids": [],
+      "expected_behavior": {"message_contains": ["근거", "찾지 못했다"]}
+    }
+  ]
+}
