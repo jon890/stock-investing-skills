@@ -1,0 +1,91 @@
+{
+  "project": "stock-investing-skills",
+  "generated_at": "2026-08-31",
+  "plans": [
+    {
+      "id": "plan001-sector-bottleneck",
+      "title": "섹터 히트맵에서 병목을 찾는 진입점 정리",
+      "task_file": "tasks/plan001-sector-bottleneck.md",
+      "dependencies": [],
+      "owned_files": [
+        "docs/prd.md",
+        "docs/flow.md",
+        "skills/sector-bottleneck/SKILL.md",
+        "scripts/bottleneck.py",
+        "scripts/fetch_universe.sh",
+        "scripts/render_report.py"
+      ],
+      "validation_commands": [
+                "for file in docs/prd.md docs/flow.md; do ~/.claude/scripts/korean-style-check.sh \"$file\"; python3 ~/.claude/scripts/check-readability.py \"$file\"; done",
+                "python3 scripts/bottleneck.py reports/universe-USA-<YYYYMMDD>.json --json > /tmp/bottleneck-USA.json",
+                "python3 scripts/bottleneck.py reports/universe-KOR-<YYYYMMDD>.json --json > /tmp/bottleneck-KOR.json",
+                "python3 scripts/render_report.py bottleneck /tmp/bottleneck-USA.json /tmp/bottleneck-KOR.json <YYYY-MM-DD> -o /tmp/bottleneck.html"
+      ]
+    },
+    {
+      "id": "plan002-tenbagger-pick",
+      "title": "병목 섹터에서 텐베거 후보를 고르고 가치평가로 연결",
+      "task_file": "tasks/plan002-tenbagger-pick.md",
+      "dependencies": [
+        "plan001-sector-bottleneck"
+      ],
+      "owned_files": [
+        "docs/flow.md",
+        "skills/tenbagger-pick/SKILL.md",
+        "skills/daily-market-decision/SKILL.md",
+        "scripts/bottleneck.py",
+        "scripts/valuation.py",
+        "scripts/render_report.py",
+        "scripts/inputs/*.json"
+      ],
+      "validation_commands": [
+                "for file in docs/flow.md skills/tenbagger-pick/SKILL.md; do ~/.claude/scripts/korean-style-check.sh \"$file\"; python3 ~/.claude/scripts/check-readability.py \"$file\"; done",
+                "python3 scripts/valuation.py <TICKER> --json > /tmp/valuation.json",
+                "python3 scripts/render_report.py company /tmp/valuation.json -o /tmp/company.html"
+      ]
+    },
+    {
+      "id": "plan003-wsaj-wiki-mvp",
+      "title": "월가아재 공개 영상 근거 기반 연구 보조자 MVP",
+      "task_file": "tasks/plan003-wsaj-wiki-mvp.md",
+      "dependencies": [
+        "plan001-sector-bottleneck"
+      ],
+      "owned_files": [
+        "docs/prd.md",
+        "docs/flow.md",
+        "docs/glossary.md",
+                "docs/wsaj-wiki.md",
+                "skills/wsaj-investing-brain/SKILL.md",
+                "scripts/wsaj_video_corpus.py",
+                "scripts/evaluate_wsaj_brain.py",
+                "tests/fixtures/wsaj-brain-eval.json",
+                "tests/test_wsaj_brain.py"
+      ],
+      "validation_commands": [
+                "for file in docs/prd.md docs/flow.md docs/glossary.md docs/wsaj-wiki.md skills/wsaj-investing-brain/SKILL.md; do ~/.claude/scripts/korean-style-check.sh \"$file\"; python3 ~/.claude/scripts/check-readability.py \"$file\"; done",
+                "python3 scripts/wsaj_video_corpus.py --help",
+                "python3 -m unittest -v tests/test_wsaj_brain.py"
+      ]
+    },
+    {
+      "id": "plan004-full-video-corpus",
+      "title": "월가아재 전체 공개 영상 멀티모달 코퍼스 수집",
+      "task_file": "tasks/plan004-full-video-corpus.md",
+      "dependencies": [
+        "plan003-wsaj-wiki-mvp"
+      ],
+      "owned_files": [
+        "docs/wsaj-corpus.md",
+        "scripts/wsaj_video_corpus.py",
+        "tests/test_wsaj_video_corpus.py",
+        ".gitignore"
+      ],
+      "validation_commands": [
+        "python3 scripts/wsaj_video_corpus.py --help",
+                "python3 -m unittest -v tests/test_wsaj_video_corpus.py",
+        "git status --ignored --short reports .cache"
+      ]
+    }
+  ]
+}

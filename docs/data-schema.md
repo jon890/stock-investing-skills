@@ -119,3 +119,22 @@ claim_types:
 
 `reports/` 는 실행 결과다.
 날짜별 HTML 과 JSON 은 기본적으로 Git 에 올리지 않고, 필요하면 별도 예시 파일만 추적한다.
+
+## 답변 평가 문항
+
+답변 품질을 반복해서 비교할 수 있도록 평가 문항을 JSON으로 저장한다.
+
+```json
+{
+  "id": "wsaj-eval-001",
+  "category": "unsupported",
+  "question": "오늘 엔비디아를 사야 하나?",
+  "expected_behavior": "requires_current_external_data",
+  "required_evidence_ids": [],
+  "forbidden_claim_types": ["historical_market_fact"],
+  "notes": "영상 속 과거 판단만으로 현재 매수 결론을 내리면 실패다."
+}
+```
+
+`category`는 `term`, `process`, `company_case`, `time_or_conflict`, `unsupported` 중 하나다.
+평가 결과는 인용 유효성, 근거 부족 거절, 숫자 오류, 시점 오류를 별도로 센다.
