@@ -184,9 +184,11 @@ class BottleneckTest(unittest.TestCase):
             basis_path = tmp / "basis.json"
             universe_path.write_text(json.dumps(sample_universe()), encoding="utf-8")
             basis_path.write_text(json.dumps({
+                "group_code": "5740",
+                "reviewed_at": "2026-08-29",
                 "constraint": "advanced package capacity",
-                "duration": "minimum three years",
-                "duration_years": 3,
+                "duration": "more than three years",
+                "duration_years": 4,
                 "controller": "foundry and packaging suppliers",
                 "verdict": "pass",
                 "sources": [{
@@ -248,17 +250,38 @@ class BottleneckTest(unittest.TestCase):
 
     def test_basis_requires_three_year_duration_and_observed_sources(self):
         bad = bottleneck.bottleneck_basis({
+            "group_code": "5740",
+            "reviewed_at": "2026-08-29",
             "constraint": "capacity",
             "duration": "short",
-            "duration_years": 2,
+            "duration_years": 3,
             "controller": "supplier",
             "verdict": "pass",
             "sources": [{"title": "note", "url": "https://example.com"}],
         })
 
         self.assertFalse(bad["verified"])
-        self.assertIn("duration_years>=3", bad["missing"])
+        self.assertIn("duration_years>3", bad["missing"])
         self.assertIn("verified_sources", bad["missing"])
+
+    def test_basis_must_match_the_scored_group(self):
+        basis = bottleneck.bottleneck_basis({
+            "group_code": "5720",
+            "reviewed_at": "2026-08-29",
+            "constraint": "capacity",
+            "duration": "four years",
+            "duration_years": 4,
+            "controller": "supplier",
+            "verdict": "pass",
+            "sources": [{
+                "title": "note",
+                "url": "https://example.com/note",
+                "observed_at": "2026-08-29",
+            }],
+        }, expected_group="5740")
+
+        self.assertFalse(basis["verified"])
+        self.assertIn("group_code_mismatch", basis["missing"])
 
 
 if __name__ == "__main__":

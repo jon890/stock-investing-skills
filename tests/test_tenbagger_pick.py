@@ -20,9 +20,11 @@ VALUATION_OK = {
 
 def valid_basis():
     return {
+        "group_code": "5740",
+        "reviewed_at": "2026-08-29",
         "constraint": "advanced package capacity",
-        "duration": "minimum three years",
-        "duration_years": 3,
+        "duration": "more than three years",
+        "duration_years": 4,
         "controller": "foundry and packaging suppliers",
         "verdict": "pass",
         "sources": [{
@@ -66,6 +68,30 @@ class TenbaggerPickTest(unittest.TestCase):
 
         self.assertEqual(result["candidate_status"], "reference_only")
         self.assertIn("산업 그룹이 병목 상위권", result["candidate_status_reasons"][0])
+
+    def test_group_mode_returns_screened_candidates(self):
+        with tempfile.TemporaryDirectory() as td:
+            universe_path = self.write_universe(td)
+            result = tenbagger_pick.analyze_group("5740", universe_path, basis=valid_basis())
+
+        self.assertEqual(result["candidate_pool_status"], "screenable")
+        self.assertGreater(len(result["candidates"]), 0)
+        self.assertTrue(all(c["candidate_status"] == "screenable" for c in result["candidates"]))
+
+    def test_ticker_must_pass_size_growth_and_margin_screen(self):
+        with tempfile.TemporaryDirectory() as td:
+            universe = sample_universe()
+            target = next(stock for stock in universe["stocks"] if stock["t"] == "T41")
+            target["cap"] = 60_000.0
+            target["val"]["mcap"] = 60_000.0
+            universe_path = Path(td) / "universe.json"
+            universe_path.write_text(json.dumps(universe), encoding="utf-8")
+            with mock.patch.object(tenbagger_pick.valuation, "analyze", return_value=VALUATION_OK):
+                result = tenbagger_pick.analyze("T41", universe_path, basis=valid_basis())
+
+        self.assertEqual(result["candidate_status"], "reference_only")
+        self.assertFalse(result["bottleneck_context"]["ticker"]["screen"]["passed"])
+        self.assertIn("500억 달러", " ".join(result["candidate_status_reasons"]))
 
 
 if __name__ == "__main__":

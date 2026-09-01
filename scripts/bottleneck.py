@@ -11,6 +11,7 @@
 """
 from __future__ import annotations
 import json, sys, statistics as st
+from datetime import date
 from pathlib import Path
 
 # ────────────── 병목의 다섯 가지 증거와 가중치 ──────────────
@@ -280,6 +281,22 @@ MCAP_CEILING = 50_000      # 백만 달러. 10배면 5,000억 달러다
 MCAP_SWEET = 10_000        # 이 아래가 10배 여지가 가장 크다
 
 
+def candidate_screen(member):
+    """종목이 병목 수혜 후보의 최소 조건을 통과하는지 판정한다."""
+    cap = member["val"].get("mcap")
+    data = member["d"]
+    reasons = []
+    if not cap:
+        reasons.append("시가총액이 없다.")
+    elif cap > MCAP_CEILING:
+        reasons.append("시가총액이 500억 달러를 넘는다.")
+    if data["rev_g"] is None or data["rev_g"] < 0.10:
+        reasons.append("매출 성장률이 10% 미만이다.")
+    if data["margin_delta"] is None or data["margin_delta"] <= 0:
+        reasons.append("마진이 확대되지 않는다.")
+    return {"passed": not reasons, "reasons": reasons}
+
+
 def tenbagger_candidates(group, limit=8):
     """병목 그룹 안에서 3년 10배 여지가 남은 종목을 고른다.
 
@@ -289,12 +306,8 @@ def tenbagger_candidates(group, limit=8):
     out = []
     for m in group["members"]:
         cap, d, v = m["val"].get("mcap"), m["d"], m["val"]
-        if not cap or cap > MCAP_CEILING:
+        if not candidate_screen(m)["passed"]:
             continue
-        if d["rev_g"] is None or d["rev_g"] < 0.10:
-            continue          # 그룹이 병목이어도 개별 기업이 못 따라가면 제외한다
-        if d["margin_delta"] is None or d["margin_delta"] <= 0:
-            continue          # 마진 확대가 없으면 병목의 가격결정력 수혜가 아니다
         size = 1.0 if cap <= MCAP_SWEET else MCAP_SWEET / cap
         # 순위는 병목 점수와 같은 축으로 매긴다. 그룹에서 쓴 다섯 팩터 중
         # 종목 단위로 계산되는 넷을 같은 순서로 쓴다. 분산은 가정 없이
@@ -313,29 +326,45 @@ def tenbagger_candidates(group, limit=8):
             "tlo": v.get("tlo"), "thi": v.get("thi"),
             "rank": rank,
         })
-    return sorted(out, key=lambda x: -x["rank"])[:limit]
+    ranked = sorted(out, key=lambda x: -x["rank"])
+    return ranked if limit is None else ranked[:limit]
 
 
 # ────────────── handoff 계약 ──────────────
 
-RESEARCH_FIELDS = ("constraint", "duration", "duration_years", "controller")
+RESEARCH_FIELDS = (
+    "group_code", "reviewed_at", "constraint", "duration",
+    "duration_years", "controller",
+)
 PASS_VERDICTS = {"pass", "통과"}
 MIN_FACTOR_COVERAGE = 0.70
 
 
-def bottleneck_basis(raw=None):
+def valid_date(value):
+    try:
+        date.fromisoformat(value)
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
+def bottleneck_basis(raw=None, expected_group=None):
     """정량 점수와 별도로 사람이 확인한 병목 실체를 검증한다."""
     basis = dict(raw or {})
     sources = basis.get("sources") or []
     missing = [k for k in RESEARCH_FIELDS if not basis.get(k)]
     if not sources:
         missing.append("sources")
-    if not isinstance(basis.get("duration_years"), (int, float)) or basis.get("duration_years", 0) < 3:
-        missing.append("duration_years>=3")
+    if not valid_date(basis.get("reviewed_at")):
+        missing.append("reviewed_at")
+    if expected_group and basis.get("group_code") != expected_group:
+        missing.append("group_code_mismatch")
+    if not isinstance(basis.get("duration_years"), (int, float)) or basis.get("duration_years", 0) <= 3:
+        missing.append("duration_years>3")
     verified_sources = [
         s for s in sources
         if isinstance(s, dict) and s.get("title") and (s.get("url") or s.get("source_locator"))
-        and (s.get("observed_at") or s.get("source_observed_at"))
+        and valid_date(s.get("observed_at") or s.get("source_observed_at"))
     ]
     if len(verified_sources) != len(sources):
         missing.append("verified_sources")
@@ -366,7 +395,7 @@ def is_bottleneck_group(group, rank):
 
 def serialize_group(group, rank, universe_path=None, basis=None, include_candidates=False):
     """다음 스킬로 넘기는 최소 계약을 만든다."""
-    basis_checked = bottleneck_basis(basis)
+    basis_checked = bottleneck_basis(basis, expected_group=group["group"])
     out = {
         "universe_path": str(universe_path) if universe_path else None,
         "group_code": group["group"],
