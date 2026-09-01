@@ -5,7 +5,7 @@
 
 ## 범위
 
-현재 Wiki는 `docs/wsaj/evidence/core.json` 에 검토된 26개 증거를 단일 소스로 삼는다.
+현재 Wiki는 `docs/wsaj/evidence/core.json` 에 검토된 29개 증거를 단일 소스로 삼는다.
 이 증거는 YouTube 자막이 아니라 로컬에서 처리한 음성 전사와 contact sheet 검토에서 승격한 요약이다.
 영상 코퍼스 처리 현황과 재개 절차는 `docs/wsaj-corpus.md` 에 둔다.
 `source_date_status` 가 `verified_upload_date` 인 증거는 `source_date` 를 영상 게시일로 쓸 수 있다.
@@ -37,8 +37,8 @@ Git에 올리는 답변 근거는 검토된 짧은 claim과 위치 정보로 제
 | 문서 | 다루는 질문 | 핵심 증거 |
 | --- | --- | --- |
 | `docs/wsaj/investing-values.md` | 투자 가치관, 절제 우위, 손익비 | `wsaj-evidence-000024`, `wsaj-evidence-000026` |
-| `docs/wsaj/valuation-process.md` | 재무제표, 내재가치, 상대가치, 안전마진 | `wsaj-evidence-000001` 부터 `wsaj-evidence-000014`, `wsaj-evidence-000025` |
-| `docs/wsaj/company-cases.md` | 엔비디아, 테슬라, 맥도날드 사례 | `wsaj-evidence-000015` 부터 `wsaj-evidence-000019` |
+| `docs/wsaj/valuation-process.md` | 재무제표, 내재가치, 상대가치, 안전마진, Reverse DCF | `wsaj-evidence-000001` 부터 `wsaj-evidence-000014`, `wsaj-evidence-000025`, `wsaj-evidence-000027` 부터 `wsaj-evidence-000029` |
+| `docs/wsaj/company-cases.md` | 엔비디아, 테슬라, 맥도날드 사례 | `wsaj-evidence-000015` 부터 `wsaj-evidence-000019`, `wsaj-evidence-000029` |
 | `docs/wsaj/special-situations.md` | 실적 발표, IPO, M&A, 은행 | `wsaj-evidence-000020` 부터 `wsaj-evidence-000023` |
 
 ## 한계

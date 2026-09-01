@@ -18,6 +18,9 @@ evidence_ids:
   - wsaj-evidence-000013
   - wsaj-evidence-000014
   - wsaj-evidence-000025
+  - wsaj-evidence-000027
+  - wsaj-evidence-000028
+  - wsaj-evidence-000029
 claim_types:
   - direct_claim
   - inferred_principle
@@ -35,9 +38,11 @@ claim_types:
 | 재무제표 확인 | 리서치와 가치평가로 넘어가기 전에 재무제표 흐름을 본다 | `wsaj-evidence-000014` |
 | 가치평가의 큰 틀 | 적정가치를 구하는 일을 내재가치와 상대가치 같은 도구로 나눈다 | `wsaj-evidence-000001` |
 | 내재가치 | 현금흐름, 할인율, 성장률, 위험 같은 기업 고유 변수를 본다 | `wsaj-evidence-000003` |
-| 상대가치 | 비교 가능한 주식과 배수를 통해 가격을 해석한다 | `wsaj-evidence-000004`, `wsaj-evidence-000010` |
+| 상대가치 | 비교 가능한 주식과 배수를 통해 가격을 해석하되, 비교군 전체의 고평가 가능성을 본다 | `wsaj-evidence-000004`, `wsaj-evidence-000010`, `wsaj-evidence-000028` |
 | 배수 해석 | 평균 하나가 아니라 분포, 아웃라이어, 성장률, 위험을 함께 본다 | `wsaj-evidence-000005`, `wsaj-evidence-000007` |
 | 안전마진 | 가치평가 뒤에 불확실성에 맞춰 여유분을 조절한다 | `wsaj-evidence-000012`, `wsaj-evidence-000013` |
+| 시장 가치평가 | 시장 전체도 미래 현금흐름과 할인율로 기대수익률과 리스크 프리미엄을 점검한다 | `wsaj-evidence-000027` |
+| Reverse DCF | 시장 가격에서 요구되는 매출 성장률과 잉여현금흐름 성장률을 역산한다 | `wsaj-evidence-000029` |
 
 ## 배수별 주의점
 
@@ -56,6 +61,9 @@ PSR은 일관성이 부족하므로 제한적으로만 사용한다.
 `wsaj-evidence-000025` 는 직접 주장들을 묶은 가치평가 절차 추론이다.
 따라서 이 문장을 쓸 때는 `wsaj-evidence-000001`, `wsaj-evidence-000003`, `wsaj-evidence-000010`, `wsaj-evidence-000013`, `wsaj-evidence-000014` 를 함께 제시한다.
 
+`wsaj-evidence-000027` 과 `wsaj-evidence-000029` 는 각각 시장 전체와 성장주의 역산 질문에 적용한다.
+이 증거들은 특정 시점의 영상 사례이므로 현재 가격 판단에는 최신 지표를 따로 붙인다.
+
 ## 오용 위험
 
 PER, PBR, PSR 같은 배수는 숫자 하나로 외우면 안 된다.
@@ -70,3 +78,6 @@ PER, PBR, PSR 같은 배수는 숫자 하나로 외우면 안 된다.
 - `wsaj-evidence-000009`: GAAP과 non-GAAP 구분, `w9WGecunB5I` `210.3-353.7초`
 - `wsaj-evidence-000010`: 상대가치평가 순서, `BWbI_nhLTmg` `84.6-180.3초`
 - `wsaj-evidence-000013`: 안전마진 조절, `Byn8et9uM3c` `137.1-221.0초`
+- `wsaj-evidence-000027`: 인덱스 DCF와 리스크 프리미엄, `Yh5NJ7tOZ-w` `490.52-589.66초`
+- `wsaj-evidence-000028`: 상대가치평가의 시장 고평가 위험, `80la6WW8O74` `372.52-505.04초`
+- `wsaj-evidence-000029`: Reverse DCF로 성장률 역산, `bkttT8wNPgA` `430.9-705.24초`

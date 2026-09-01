@@ -8,6 +8,7 @@ evidence_ids:
   - wsaj-evidence-000017
   - wsaj-evidence-000018
   - wsaj-evidence-000019
+  - wsaj-evidence-000029
 claim_types:
   - direct_claim
 ---
@@ -23,6 +24,7 @@ claim_types:
 | --- | --- | --- |
 | 엔비디아 | 미래 매출, 마진, 자본회전율, 자본비용, 실패확률을 DCF에 함께 넣는다 | `wsaj-evidence-000015` |
 | 엔비디아 | 현재 가격을 정당화하려면 2033년 매출과 AI 시장 점유율에 낙관적인 가정이 필요하다고 본다 | `wsaj-evidence-000016` |
+| 엔비디아 | Reverse DCF로 시장 가격에 들어 있는 매출 성장률과 잉여현금흐름 성장률을 역산한다 | `wsaj-evidence-000029` |
 | 테슬라 | 희망편과 절망편을 나누고 에너지, FSD, 시장점유율, 마진 가정을 분리한다 | `wsaj-evidence-000017` |
 | 맥도날드 | 숫자보다 프랜차이즈, 부동산, 로열티와 렌트 구조를 먼저 본다 | `wsaj-evidence-000018` |
 | 맥도날드 | 자본잠식은 영업 부실인지 주주환원 때문인지 분해한다 | `wsaj-evidence-000019` |
@@ -47,6 +49,7 @@ claim_types:
 
 - `wsaj-evidence-000015`: 엔비디아 DCF 입력, `5fhbkQ2Qidc` `600.0-1200.0초`
 - `wsaj-evidence-000016`: 엔비디아 민감도와 현재 가격 정당화 조건, `5fhbkQ2Qidc` `1020.0-1200.0초`
+- `wsaj-evidence-000029`: 엔비디아 Reverse DCF 성장률 역산, `bkttT8wNPgA` `430.9-705.24초`
 - `wsaj-evidence-000017`: 테슬라 시나리오 분리, `_Ex0vR_1Ekg` `960.0-1500.0초`
 - `wsaj-evidence-000018`: 맥도날드 사업모델, `Crotyq9sbdo` `480.0-930.0초`
 - `wsaj-evidence-000019`: 맥도날드 자본잠식 원인 분해, `t7NUYohjjXs` `420.0-600.0초`

@@ -68,6 +68,16 @@ class WsajEvidenceTests(unittest.TestCase):
         self.assertEqual(result["status"], "matched")
         self.assertEqual(result["matches"][0]["id"], "wsaj-evidence-000026")
 
+    def test_query_matches_index_dcf(self):
+        result = run_query("인덱스 DCF로 시장 리스크 프리미엄을 어떻게 봐?")
+        self.assertEqual(result["status"], "matched")
+        self.assertEqual(result["matches"][0]["id"], "wsaj-evidence-000027")
+
+    def test_query_matches_reverse_dcf(self):
+        result = run_query("Reverse DCF로 시장 가격에 들어간 성장률을 어떻게 역산해?")
+        self.assertEqual(result["status"], "matched")
+        self.assertEqual(result["matches"][0]["id"], "wsaj-evidence-000029")
+
     def test_query_rejects_current_buy_sell(self):
         result = run_query("오늘 엔비디아 매수해도 돼?")
         self.assertEqual(result["status"], "requires_current_external_data")

@@ -803,6 +803,99 @@
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
       "source_observed_at": "2026-08-31"
+    },
+    {
+      "id": "wsaj-evidence-000027",
+      "claim_type": "direct_claim",
+      "claim": "시장 전체도 미래 현금흐름과 할인율을 두고 인덱스 DCF로 기대수익률과 리스크 프리미엄을 점검할 수 있다.",
+      "topic": [
+        "index-dcf",
+        "market-valuation",
+        "cash-flow",
+        "discount-rate",
+        "equity-risk-premium"
+      ],
+      "video_id": "Yh5NJ7tOZ-w",
+      "source_title": "미국주식은 지금 얼마나 과대평가되어 있을까? [월가아재 시즌3 - 62편]",
+      "source_url": "https://www.youtube.com/watch?v=Yh5NJ7tOZ-w&t=490s",
+      "source_date": "2025-01-26",
+      "timestamp_start_sec": 490.52,
+      "timestamp_end_sec": 589.66,
+      "transcript_summary": "미국 기업의 미래 현금흐름을 추정하고 할인율을 적용해 S&P500 기대수익률과 주식 리스크 프리미엄을 계산하는 흐름을 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/Yh5NJ7tOZ-w/frames/sheet-002.jpg",
+          "frame_timestamp_sec": 540,
+          "summary": "인덱스 DCF와 주식 리스크 프리미엄 설명 구간이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-09-01"
+    },
+    {
+      "id": "wsaj-evidence-000028",
+      "claim_type": "direct_claim",
+      "claim": "상대가치평가는 유사기업의 배수로 적정가치를 추정하지만, 유사기업 전체가 고평가되면 결론도 왜곡된다.",
+      "topic": [
+        "relative-valuation",
+        "multiples",
+        "peer-group",
+        "market-efficiency",
+        "valuation-risk"
+      ],
+      "video_id": "80la6WW8O74",
+      "source_title": "[월가아재] 개인투자자를 위한 전략 - 주식기초강의 3강",
+      "source_url": "https://www.youtube.com/watch?v=80la6WW8O74&t=372s",
+      "source_date": "2025-10-20",
+      "timestamp_start_sec": 372.52,
+      "timestamp_end_sec": 505.04,
+      "transcript_summary": "PER과 PBR 같은 유사기업 배수로 적정가치를 추정하는 방법과 시장 전체 고평가 시 생기는 약점을 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/80la6WW8O74/frames/sheet-001.jpg",
+          "frame_timestamp_sec": 390,
+          "summary": "상대가치평가와 PER 예시를 설명하는 구간이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-09-01"
+    },
+    {
+      "id": "wsaj-evidence-000029",
+      "claim_type": "direct_claim",
+      "claim": "Reverse DCF는 현재 주가를 출발점으로 두고 시장 가격에 들어 있는 매출 성장률과 잉여현금흐름 성장률을 역산한다.",
+      "topic": [
+        "reverse-dcf",
+        "growth-expectation",
+        "free-cash-flow",
+        "sensitivity-analysis",
+        "nvidia"
+      ],
+      "video_id": "bkttT8wNPgA",
+      "source_title": "Nvidia의 적정 주가는 얼마일까? [월가아재 시즌3 - 72편]",
+      "source_url": "https://www.youtube.com/watch?v=bkttT8wNPgA&t=430s",
+      "source_date": "2025-02-08",
+      "timestamp_start_sec": 430.9,
+      "timestamp_end_sec": 705.24,
+      "transcript_summary": "엔비디아 사례에서 현재 주가를 기준으로 Reverse DCF를 열고 매출 성장률과 잉여현금흐름 성장률을 역산하는 과정을 설명한다.",
+      "visual_evidence": [
+        {
+          "contact_sheet_path": ".cache/wsaj-youtube/videos/bkttT8wNPgA/frames/sheet-002.jpg",
+          "frame_timestamp_sec": 510,
+          "summary": "Reverse DCF 입력값과 성장률 역산 화면이 보인다."
+        }
+      ],
+      "confidence": "medium",
+      "reviewed_by": "agent",
+      "reviewed_at": "2026-09-01",
+      "source_date_status": "verified_upload_date",
+      "source_observed_at": "2026-09-01"
     }
   ]
 }
