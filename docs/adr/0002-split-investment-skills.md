@@ -24,7 +24,7 @@
 | 스킬 | 책임 |
 | --- | --- |
 | `sector-bottleneck` | 시장과 섹터 데이터를 받아 병목 산업 그룹을 찾는다 |
-| `tenbagger-pick` | 확정된 병목 안에서 텐베거 후보를 찾고 가치평가로 검증한다 |
+| `tenbagger-pick` | 검증된 병목 안에서 텐베거 후보를 찾고 가치평가로 검증한다 |
 | `investing-wiki` | 투자 거장별 자료 기반 원칙과 용어를 근거와 함께 검색해 답한다 |
 | `wsaj-investing-brain` | 기존 월가아재 호출을 `investing-wiki --expert wsaj` 로 위임한다 |
 
@@ -50,7 +50,10 @@ Claude Code 와 Codex 는 모두 `skills/` 를 실제 원본으로 읽는다.
 ## 검증 조건
 
 1. `sector-bottleneck` 은 종목 목표가 없이 병목 그룹을 낸다.
-2. `tenbagger-pick` 은 병목 그룹 입력 없이는 종목 결론을 내지 않는다.
-3. `investing-wiki` 와 `wsaj-investing-brain` 은 투자 원칙 답변에 증거 ID 를 붙인다.
-4. 스킬 원본은 `skills/` 에만 둔다.
-5. `CLAUDE.md`, `.claude/skills`, `.agents/skills` 의 심볼릭 링크가 끊어지지 않는다.
+2. `sector-bottleneck` 은 종목 후보를 출력하지 않고 검증된 `bottleneck_context` 만 넘긴다.
+3. `tenbagger-pick` 은 검증된 병목 근거 없이는 종목을 후보로 올리지 않는다.
+4. 병목 밖 티커와 출처가 불완전한 가치평가는 `reference_only` 로 남긴다.
+5. `investing-wiki` 와 `wsaj-investing-brain` 은 투자 원칙 답변에 증거 ID 를 붙인다.
+6. 실행 스킬은 임시 원자료를 직접 읽지 않는다.
+7. 스킬 원본은 `skills/` 에만 둔다.
+8. `CLAUDE.md`, `.claude/skills`, `.agents/skills` 의 심볼릭 링크가 끊어지지 않는다.

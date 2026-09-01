@@ -1,128 +1,152 @@
 ---
 name: tenbagger-pick
 description: >
-  확정된 병목 산업 그룹 안에서 3년 안에 10배 여지가 남은 종목을 고르고
-  DCF, 역DCF, 상대가치, 손익비, 특수 상황 점검으로 보류 또는 후보 판정을 낸다.
+  검증된 병목 산업 그룹에서 3년 안에 10배 여지가 남은 종목을 추리고,
+  DCF, 역DCF, 상대가치, 손익비, 데이터 출처와 특수 상황 점검으로
+  후보 또는 참고 가치평가 판정을 낸다.
   "텐베거", "10배", "종목 발굴", "병목 섹터에서 종목", "이 종목 사도 되나",
   "밸류에이션", "적정주가", "목표주가", "DCF", "상대가치", "tenbagger",
-  "valuation report" 를 언급하면 이 스킬을 쓴다.
-  사용자가 섹터나 산업만 묻고 종목 판단을 원하지 않으면 sector-bottleneck 이 먼저 담당한다.
+  "valuation report"를 언급하면 이 스킬을 쓴다.
+  섹터나 산업만 묻고 종목 판단을 원하지 않으면 sector-bottleneck이 먼저 담당한다.
 ---
 
 # 텐베거 후보 선정
 
-이 스킬은 병목이 정해진 뒤 **무엇을 후보로 볼지** 답한다.
-병목을 아직 정하지 않았으면 `sector-bottleneck` 을 먼저 실행한다.
+이 스킬은 검증된 병목 안에서 **무엇을 후보로 볼지** 답한다.
+병목을 아직 정하지 않았으면 `sector-bottleneck`을 먼저 실행한다.
 
-목표와 판정 기준은 `docs/prd.md` 가 소유한다.
-전체 흐름은 `docs/flow.md` 가 소유한다.
-계산은 `scripts/bottleneck.py`, `scripts/tenbagger_pick.py`,
-`scripts/valuation.py`, `scripts/render_report.py` 가 소유한다.
-일반 투자 용어는 `docs/glossary.md` 를 기준으로 삼는다.
-특정 expert 의 용어집을 공통 정의의 원본으로 쓰지 않는다.
+목표와 판정 기준은 `docs/prd.md`, 전체 흐름은 `docs/flow.md`,
+입력과 출력 형식은 `docs/data-schema.md`가 소유한다.
+실행 진입점은 `scripts/tenbagger_pick.py`다.
 
 매매 주문은 넣지 않는다.
-분석과 리포트까지만 만든다.
+분석과 로컬 리포트까지만 만든다.
 
-## 입력을 나눈다
+## 입력을 확인한다
 
-| 입력 | 처리 |
-| --- | --- |
-| 병목 그룹과 유니버스 JSON | 그 그룹 안에서 후보를 고른다 |
-| 티커만 있음 | 해당 종목의 산업 그룹을 찾고 병목 여부를 역확인한다 |
-| 특수 상황이 명확함 | 일반 가치평가 전에 관련 reference 를 읽는다 |
+필수 입력은 다음과 같다.
 
-티커가 병목 밖이면 그 사실을 결론 첫 줄에 쓴다.
-이때 리포트는 참고 가치평가로만 만든다.
-병목 밖 종목을 텐베거 후보로 올리지 않는다.
+- 미국 시장 유니버스 JSON
+- `sector-bottleneck`이 확정한 `bottleneck_context` JSON
+- 그룹 코드 또는 티커
+- 티커 가치평가를 할 때는 `scripts/inputs/<TICKER>.json`
 
-## 후보를 고른다
+병목 근거의 `group_code`가 실제 산업 그룹과 다르거나 `duration_years`가 3 이하면
+`reference_only`로 끝낸다.
 
-병목 그룹이 정해졌으면 다음 명령으로 후보를 확인한다.
+## 병목 그룹에서 후보를 발굴한다
 
 ```bash
 cd ~/personal/finance-skills
-python3 scripts/tenbagger_pick.py <티커> reports/universe-USA-<YYYYMMDD>.json --basis <병목근거.json> --json
+today=$(date +%Y%m%d)
+python3 scripts/tenbagger_pick.py "reports/universe-USA-$today.json" \
+  --group <GROUP> --context "reports/bottleneck-context-<GROUP>-$today.json" \
+  --json --output "reports/candidates-<GROUP>-$today.json"
 ```
 
-`--basis` 파일에는 공급 제약, 지속 기간, 통제 주체, 출처를 둔다.
-`duration_years` 가 3 미만이거나 출처에 확인일이 없으면 후보로 올리지 않고
-`candidate_status=reference_only` 로 둔다.
-
-기본 후보 조건은 다음과 같다.
+`candidate_pool_status=screenable`일 때만 후보 목록을 다음 단계로 넘긴다.
+기본 선별 조건은 다음과 같다.
 
 | 조건 | 판정 |
 | --- | --- |
 | 시가총액 100억 달러 이하 | 3년 10배 후보로 우선 검토한다 |
-| 시가총액 100억 달러 초과, 500억 달러 이하 | 성장률과 배수 확대 근거를 더 강하게 본다 |
-| 시가총액 500억 달러 초과 | 3년 10배 후보에서 제외한다 |
+| 시가총액 100억 달러 초과, 500억 달러 이하 | 성장과 배수 확대 근거를 더 강하게 본다 |
+| 시가총액 500억 달러 초과 | 텐베거 후보에서 제외한다 |
 | 매출 성장률 10% 미만 | 병목 수혜 후보에서 제외한다 |
 | 마진 확대 없음 | 가격결정력 근거가 약하므로 제외한다 |
 
-성장률이 높아도 마진이 좋아지지 않으면 병목의 수혜를 받는 기업으로 보지 않는다.
-기대 분산이 큰 종목은 최선과 최악의 차이를 따로 적는다.
+그룹 후보 출력은 1차 선별이다.
+아직 가치평가 입력과 현재 데이터가 없는 종목을 최종 후보로 부르지 않는다.
 
-## 일반 가치평가를 한다
+## 티커를 역방향으로 검증한다
 
-후보를 하나 골랐으면 `scripts/inputs/<TICKER>.json` 을 만든다.
-이미 있으면 새 데이터가 필요한 필드만 갱신한다.
-
-모든 현재 데이터에는 조회일과 출처를 붙인다.
-주가, 시가총액, 컨센서스, 실적 발표, 금리, 환율, 뉴스는 시간이 지나면 바뀌므로 오래된 리포트 숫자를 재사용하지 않는다.
+사용자가 티커를 바로 주면 산업 그룹과 병목 문맥부터 확인한다.
 
 ```bash
-python3 scripts/valuation.py <TICKER>
-python3 scripts/valuation.py <TICKER> --json > reports/valuation-<TICKER>-<YYYYMMDD>.json
-python3 scripts/render_report.py company reports/valuation-<TICKER>-<YYYYMMDD>.json \
-  -o reports/company-<TICKER>-<YYYYMMDD>.html
+python3 scripts/tenbagger_pick.py "reports/universe-USA-$today.json" \
+  --ticker <TICKER> --context "reports/bottleneck-context-<GROUP>-$today.json" \
+  --json --output "reports/tenbagger-<TICKER>-$today.json"
 ```
 
-반드시 따르는 원칙은 다음과 같다.
+다음 중 하나라도 실패하면 `candidate_status=reference_only`로 둔다.
 
-- 재무제표와 가이던스를 먼저 읽는다.
-- 내재가치와 상대가치를 섞어 평균 내지 않는다.
-- 유사기업과 배수는 근거 없이 손으로 고르지 않는다.
-- 평균만 보지 말고 분포와 이상치를 확인한다.
-- DCF 결과가 현재가와 크게 다르면 역DCF 로 시장 가정을 역산한다.
-- 상승 여력이 있어도 손익비가 약하면 보류한다.
-- 3년 텐베거 판정은 보유 기간 끝 시점의 기업가치를 시나리오별로 직접 계산한다.
+- 산업 그룹이 정량 병목 상위권이 아니다.
+- 병목 근거가 다른 그룹을 가리키거나 검증되지 않았다.
+- 티커가 시총, 성장률, 마진 확대 조건을 통과하지 못했다.
+- 가치평가의 데이터 출처, 상대가치, 특수 상황 또는 텐베거 안전장치가 보류다.
+
+## 가치평가 입력을 준비한다
+
+새 종목은 `scripts/inputs/<TICKER>.json`을 만든다.
+기존 종목도 시점이 바뀌는 값은 다시 조회한다.
+
+`data_provenance`에는 다음 값을 둔다.
+
+- `provider`
+- timezone을 포함한 `queried_at`
+- 비어 있지 않은 `source_urls`
+- 조회한 필드 목록 `fields`
+- `status=current`
+
+과거 입력에 출처가 남아 있지 않으면 `status=legacy_unavailable`과 보류 사유를 남긴다.
+이 상태에서는 계산 결과가 나와도 후보로 승격하지 않는다.
+
+## 가치평가 안전장치를 적용한다
+
+- 절대가치와 상대가치를 평균 내지 않는다.
+- 대상 성장률이 동종군 범위 밖이면 해당 상대가치 배수를 버린다.
+- 모든 상대가치 배수가 외삽이면 상대가치를 보류한다.
+- DCF와 현재가가 크게 다르면 역DCF로 시장 가정을 확인한다.
+- 3년 텐베거 판정이 `가능` 또는 `최선 시나리오만`이 아니면 후보로 올리지 않는다.
+- 손익비가 약하거나 현재 데이터 출처가 부족하면 보류한다.
 
 ## 특수 상황을 먼저 분기한다
 
-다음 상황은 일반 DCF 만으로 결론을 내지 않는다.
-해당되면 [특수 상황](references/special-situations.md) 을 먼저 읽는다.
+IPO, M&A, 은행과 보험, 실적발표 직후, 브랜드 소비재는
+[특수 상황](references/special-situations.md)을 먼저 읽는다.
 
-| 상황 | 분기 기준 |
-| --- | --- |
-| IPO 직후 | 공모 구조, 락업, 구주매출, 신주모집이 가격을 흔든다 |
-| M&A | 합의가보다 성사확률, 스프레드, 규제, 마감 시한이 중요하다 |
-| 은행과 보험 | 예금, 유동성, Tier 1, RWA 를 일반 EV 배수보다 먼저 본다 |
-| 실적발표 직후 | 헤드라인보다 다음 분기 가이던스와 사업부별 추세를 먼저 본다 |
-| 브랜드 소비재 | 마진, 성장률, 시장 침투율, 지역 확장, 프리미엄 지속성을 먼저 본다 |
+`special_situation.active=true`이면 `type`, `review_status`, `decision`,
+`evidence`, `source_urls`를 입력에 둔다.
+`review_status=completed`이고 `decision=continue`일 때만 일반 가치평가를 후보 판정에 쓴다.
 
-특수 상황 근거가 부족하면 보류한다.
-일반 가치평가 결과가 좋아 보여도 특수 상황 리스크를 결론에서 분리한다.
+## HTML 리포트를 만든다
+
+```bash
+python3 scripts/render_report.py company "reports/tenbagger-<TICKER>-$today.json" \
+  -o "reports/company-<TICKER>-$today.html"
+```
+
+리포트 첫 부분에서 다음 내용을 확인한다.
+
+- `candidate`인지 `reference_only`인지
+- 산업 그룹, 병목 순위와 근거 검증 상태
+- 보류 사유
+- 현재 데이터 제공자, 조회 시점과 출처
+- 특수 상황 검토 상태
+
+로컬 HTML을 실제로 열어 제목과 오류를 확인한다.
+
+```bash
+B=~/.claude/scripts/browser-driver
+REPORT_PAGE=$($B open "file://$PWD/reports/company-<TICKER>-$today.html")
+$B snap "$REPORT_PAGE"
+$B errors "$REPORT_PAGE"
+$B close "$REPORT_PAGE"
+```
 
 ## 결론 형식
 
-결론은 다음 네 줄을 포함한다.
-
-1. 병목 안 후보인지, 병목 밖 참고 가치평가인지.
-2. 3년 텐베거 판정과 그 판정을 만든 핵심 가정.
-3. 절대가치, 상대가치, 손익비가 각각 말하는 것.
-4. 보류해야 한다면 어떤 데이터가 부족한지.
-
-리포트 파일은 `reports/` 에 둔다.
-`reports/` 는 Git 에 추적하지 않는다.
+1. 병목 안 후보인지, 병목 밖 참고 가치평가인지 적는다.
+2. 3년 텐베거 판정과 핵심 가정을 적는다.
+3. 절대가치, 상대가치와 손익비를 분리해 적는다.
+4. 출처, 특수 상황 또는 계산이 보류라면 부족한 데이터를 적는다.
 
 ## 내기 전에 점검할 것
 
-- [ ] 병목 그룹과 유니버스 JSON 경로를 확인했다
-- [ ] 병목 근거가 `constraint`, `duration_years`, `controller`, `sources`, `verdict=pass` 를 가진다
-- [ ] 티커 직행이면 병목 여부를 역확인했다
-- [ ] 모든 현재 데이터에 조회일과 출처를 붙였다
-- [ ] 시총, 성장률, 마진 확대 조건을 확인했다
-- [ ] 특수 상황이면 관련 reference 를 읽었다
-- [ ] 절대가치와 상대가치를 평균 내지 않았다
-- [ ] 손익비와 3년 텐베거 판정을 결론에 적었다
-- [ ] 리포트의 숫자는 스크립트 출력에서 나왔다
+- [ ] 병목 근거가 티커의 실제 산업 그룹과 일치한다
+- [ ] 티커가 시총, 성장률과 마진 확대 조건을 통과했다
+- [ ] 모든 현재 데이터에 조회 시점과 출처가 있다
+- [ ] 상대가치 외삽을 후보 판정에 쓰지 않았다
+- [ ] 특수 상황의 완료 상태를 확인했다
+- [ ] 3년 텐베거와 손익비가 모두 후보 기준을 통과했다
+- [ ] HTML을 실제로 열고 오류를 확인했다

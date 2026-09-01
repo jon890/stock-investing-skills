@@ -1,0 +1,16 @@
+{
+  "group_code": "",
+  "reviewed_at": "YYYY-MM-DD",
+  "constraint": "",
+  "duration": "",
+  "duration_years": 0,
+  "controller": "",
+  "verdict": "unverified",
+  "sources": [
+    {
+      "title": "",
+      "url": "",
+      "observed_at": "YYYY-MM-DD"
+    }
+  ]
+}

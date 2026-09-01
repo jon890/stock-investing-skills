@@ -1,8 +1,8 @@
 # 특수 상황 가치평가
 
 일반 DCF 와 상대가치가 설명력을 잃는 사건은 먼저 분기한다.
-이 문서는 월가아재 영상 노트의 공통 절차만 옮긴 것이다.
-필요한 근거는 `wiki/experts/wsaj/pages/special-situations.md` 와 연결된 evidence 에서 확인한다.
+이 문서는 일반 가치평가를 멈추고 별도 검토로 넘기는 공통 조건을 소유한다.
+특정 투자 거장의 해석이 필요하면 `investing-wiki`에서 해당 expert의 근거를 별도로 찾는다.
 
 ## IPO
 

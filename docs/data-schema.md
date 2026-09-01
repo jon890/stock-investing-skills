@@ -212,11 +212,16 @@ expert 페이지의 증거 ID는 해당 expert 의 증거만 가리킨다.
 | `bottleneck_basis` | 사람이 확인한 공급 제약, 지속 기간, 통제 주체, 출처 |
 | `candidate_pool_passed` | 정량 병목과 근거 검증을 모두 통과해 종목 선별로 넘길 수 있는지 |
 
-`bottleneck_basis` 는 `constraint`, `duration`, `duration_years`, `controller`, `sources`, `verdict` 를 가진다.
-`duration_years` 는 3 이상이어야 하고, 각 출처는 제목, URL 또는 locator, 확인일을 가져야 한다.
+`bottleneck_basis` 는 `group_code`, `reviewed_at`, `constraint`, `duration`,
+`duration_years`, `controller`, `sources`, `verdict` 를 가진다.
+`group_code` 는 점수를 낸 그룹과 같아야 한다.
+`duration_years` 는 3보다 커야 하고, 각 출처는 제목, URL 또는 locator, 확인일을 가져야 한다.
 이 조건을 통과하지 못하면 `verified=false` 가 되며 종목 결과는 참고 가치평가로만 남긴다.
 
-`scripts/tenbagger_pick.py <TICKER> <UNIVERSE_JSON> --json` 결과는
+`scripts/tenbagger_pick.py <UNIVERSE_JSON> --group <GROUP> --context <CONTEXT_JSON> --json` 결과는
+`candidate_pool_status`, `candidate_pool_reasons`, `bottleneck_context`, `candidates` 를 가진다.
+
+`scripts/tenbagger_pick.py <UNIVERSE_JSON> --ticker <TICKER> --context <CONTEXT_JSON> --json` 결과는
 `candidate_status`, `candidate_status_reasons`, `bottleneck_context`, `valuation` 을 가진다.
 병목 밖이거나 병목 근거가 미검증이면 `candidate_status=reference_only` 로 둔다.
 
@@ -230,7 +235,9 @@ expert 페이지의 증거 ID는 해당 expert 의 증거만 가리킨다.
 확률 합은 1이어야 한다.
 DCF 명시 예측은 기본 5개 연도 값을 쓰며, 기간을 바꾸면 입력 파일에 이유를 남긴다.
 
-`scripts/valuation.py <TICKER> --json` 결과는 입력의 기준일과 시장·기초체력·가정을 보존하고 `absolute`, `dcf_weighted`, `reverse`, `relative`, `multiple_fits`, `disagreement`, `tenbagger` 를 추가한다.
+`scripts/valuation.py <TICKER> --json` 결과는 입력의 기준일과 시장·기초체력·가정을 보존하고
+`absolute`, `dcf_weighted`, `reverse`, `relative`, `multiple_fits`, `disagreement`,
+`tenbagger`, `data_provenance`, `special_situation`, `candidate` 를 추가한다.
 절대가치와 상대가치는 별도 필드로 유지하며 하나의 가중 목표가로 합치지 않는다.
 
 ## 현재 데이터 조회 기록
@@ -239,18 +246,20 @@ DCF 명시 예측은 기본 5개 연도 값을 쓰며, 기간을 바꾸면 입�
 
 ```json
 {
-  "id": "market-data-20260831-CRDO",
   "provider": "valley.ai",
   "queried_at": "2026-08-31T15:00:00+09:00",
-  "ticker": "CRDO",
-  "fields": {
-    "price": 241.23,
-    "market_cap_usd": 12000000000
-  },
-  "source_url": "https://...",
-  "notes": "로그인 세션이 필요한 조회다."
+  "fields": ["market", "fundamentals", "peers"],
+  "source_urls": ["https://..."],
+  "status": "current"
 }
 ```
+
+`status=current` 는 timezone 이 있는 조회 시점, 비어 있지 않은 출처와 필드 목록을 요구한다.
+출처가 남지 않은 과거 입력은 `status=legacy_unavailable` 과 `hold_reason` 을 쓰며 후보로 승격하지 않는다.
+
+`special_situation.active=true` 이면 `type`, `review_status`, `decision`, `evidence`,
+`source_urls` 를 필수로 둔다.
+`review_status=completed`, `decision=continue` 일 때만 일반 가치평가를 후보 판정에 쓴다.
 
 이 기록은 리포트와 답변의 재현성을 위해 남긴다.
 다만 계정 세션, 쿠키, 원본 응답 전체처럼 민감하거나 큰 값은 Git 에 올리지 않는다.
@@ -259,6 +268,8 @@ DCF 명시 예측은 기본 5개 연도 값을 쓰며, 기간을 바꾸면 입�
 
 `.cache/wsaj-youtube/` 는 원자료 저장소다.
 전사문, 프레임, 쿠키, 임시 분석 결과를 담을 수 있으므로 Git 에 올리지 않는다.
+실행 스킬은 이 원자료를 직접 읽지 않는다.
+`reports/` 전달 파일과 검토된 Wiki, 문서, 계산 입력은 사용할 수 있다.
 
 `wiki/experts/<expert_id>/evidence/` 는 검토를 거친 요약과 출처만 담는다.
 저작권이나 개인정보 위험이 있는 긴 원문은 넣지 않는다.

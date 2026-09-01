@@ -16,12 +16,16 @@
 | 검색과 답변 | 질문과 관련된 근거를 찾고, 근거가 부족하면 답하지 않는다 | `skills/investing-wiki/` | Codex, Claude Code |
 | 호환 진입점 | 기존 월가아재 호출을 새 검색 스크립트로 위임한다 | `skills/wsaj-investing-brain/` | Codex, Claude Code |
 | 현재 데이터 연결 | 주가, 배수, 실적 발표, 컨센서스처럼 시점이 바뀌는 값만 새로 조회한다 | `scripts/` 또는 별도 adapter | 답변 스킬 |
-| 병목 handoff | 정량 병목 점수와 사람이 확인한 병목 근거를 `bottleneck_context` 로 묶는다 | `scripts/bottleneck.py` | `scripts/tenbagger_pick.py` |
+| 병목 전달 | 정량 병목 점수와 사람이 확인한 병목 근거를 `bottleneck_context` 로 묶는다 | `scripts/bottleneck.py` | `scripts/tenbagger_pick.py` |
 | 종목 후보 연결 | 티커가 병목 안 후보인지 확인한 뒤 가치평가 결과를 붙인다 | `scripts/tenbagger_pick.py` | `tenbagger-pick` |
 | 품질 평가 | 인용, 거절, 숫자와 시점 정확도를 고정 문항으로 검증한다 | `tests/fixtures/`, `tests/` | 배포 전 검증 |
 
 현재 시장 사실은 영상 근거에서 가져오지 않는다.
 주가, 시가총액, 실적, 컨센서스, 금리, 환율, 뉴스는 항상 현재 데이터 연결 경계를 통해 조회하고 조회일을 남긴다.
+
+실행 스킬은 `.cache` 원자료를 읽지 않는다.
+원자료는 적재와 컴파일 스크립트만 읽는다.
+실행 스킬은 `reports/` 전달 파일과 검토된 Wiki, 문서, 계산 입력을 사용한다.
 
 ## 디렉터리 책임
 
@@ -42,6 +46,9 @@
 | `wiki/experts/<expert_id>/pages/` | expert 별 철학, 원칙, 사례, 한계를 사람이 읽는 문서로 둔다 |
 | `wiki/concepts/` | 여러 expert 를 연결하는 공통 개념 문서를 둔다 |
 | `reports/` | 실행 결과 HTML 과 JSON 리포트를 둔다 |
+| `scripts/bottleneck.py` | 산업 그룹 점수와 검증 가능한 병목 전달 문맥을 만든다 |
+| `scripts/tenbagger_pick.py` | 그룹 후보 발굴과 티커 역검증을 수행하고 가치평가를 연결한다 |
+| `scripts/valuation.py` | 출처와 안전장치를 확인한 뒤 가치평가 결과를 만든다 |
 
 스킬 원본은 `skills/` 하나만 둔다.
 도구별 경로에는 복사본을 만들지 않고 심볼릭 링크만 둔다.

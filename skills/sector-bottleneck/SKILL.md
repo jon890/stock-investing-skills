@@ -2,27 +2,24 @@
 name: sector-bottleneck
 description: >
   시장 전 종목의 기간별 등락과 밸류에이션 배수를 받아
-  어느 산업 그룹이 가치사슬의 병목인지 다섯 팩터로 점수화하고
-  상위 병목 그룹을 판정한 리포트를 로컬 HTML 로 낸다.
+  어느 산업 그룹이 가치사슬의 병목인지 다섯 팩터로 점수화하고,
+  공급 제약과 지속 기간을 출처로 확인해 로컬 HTML 리포트를 만든다.
   "병목", "어느 섹터", "어느 산업", "섹터 히트맵", "히트맵", "섹터 선정",
   "오늘 장", "시황", "시장 훑어줘", "어디가 좋나", "산업 그룹 점수",
-  "bottleneck", "sector heatmap" 을 언급하면
-  스킬 이름을 부르지 않아도 이 스킬을 쓴다.
-  종목 단위 선별과 밸류에이션은 tenbagger-pick 스킬이 담당한다.
-  병목 그룹이 이미 정해져 있으면 이 스킬을 건너뛰고 그쪽으로 간다.
+  "bottleneck", "sector heatmap"을 언급하면 이 스킬을 쓴다.
+  종목 후보 선별과 가치평가는 tenbagger-pick이 담당한다.
   매매 주문은 넣지 않는다.
 ---
 
 # 병목 섹터 선정
 
-목표와 병목의 정의, 팩터 가중치의 근거는 `~/personal/finance-skills/docs/prd.md` 가 소유한다.
-데이터 경로와 실측 함정은 `~/personal/finance-skills/CLAUDE.md` 가 소유한다.
-이 문서는 실행 절차만 담는다.
-
 이 스킬은 **어디를 볼지**까지만 답한다.
-그 안에서 무엇을 살지는 `tenbagger-pick` 이 답한다.
+개별 종목 후보를 출력하지 않고 검증된 `bottleneck_context`를 다음 스킬에 넘긴다.
 
-## 0. 준비
+목표와 팩터 기준은 `docs/prd.md`, 전체 흐름은 `docs/flow.md`가 소유한다.
+valley 수집을 실행할 때는 [valley 데이터 수집](references/valley-data.md)을 읽는다.
+
+## 준비
 
 ```bash
 B=~/.claude/scripts/browser-driver
@@ -30,103 +27,119 @@ PAGE=$($B open "https://www.valley.town/markets/sector-heatmap" 30000)
 $B url "$PAGE"
 ```
 
-주소가 로그인 화면이면 멈추고 사용자에게 로그인을 요청한다. 추측으로 진행하지 않는다.
+주소가 로그인 화면이면 중단하고 사용자에게 로그인을 요청한다.
 
-## 1. 유니버스를 받는다
+## 유니버스를 수집한다
 
 ```bash
 cd ~/personal/finance-skills
-scripts/fetch_universe.sh "$PAGE" USA reports/universe-USA-$(date +%Y%m%d).json
-scripts/fetch_universe.sh "$PAGE" KOR reports/universe-KOR-$(date +%Y%m%d).json
+today=$(date +%Y%m%d)
+scripts/fetch_universe.sh "$PAGE" USA "reports/universe-USA-$today.json"
+scripts/fetch_universe.sh "$PAGE" KOR "reports/universe-KOR-$today.json"
 ```
 
-시장당 약 490개 종목의 일곱 기간 등락과 밸류에이션 배수를 모은다.
-2분 남짓 걸린다. 완료 줄에 찍히는 배수 결측 개수를 확인한다.
+같은 날 파일이 있으면 기본적으로 다시 받지 않는다.
+수집 결과의 종목 수와 기간 수익률, 배수 결측 개수를 확인한다.
 
-**같은 날 파일이 이미 있으면 다시 받지 않는다.** 장중에 여러 번 부르면 그때마다 값이 달라진다.
-
-## 2. 점수를 낸다
+## 정량 병목을 계산한다
 
 ```bash
-python3 scripts/bottleneck.py reports/universe-USA-$(date +%Y%m%d).json
+python3 scripts/bottleneck.py "reports/universe-USA-$today.json" \
+  --json --output "reports/bottleneck-USA-$today.json"
+python3 scripts/bottleneck.py "reports/universe-USA-$today.json"
 ```
 
-산업 그룹별 병목 점수와 팩터별 표준점수가 나온다.
-상위 세 그룹을 후보로 삼는다.
+상위 세 그룹만 질적 검증 대상으로 삼는다.
+다음 조건을 하나라도 통과하지 못하면 다음 순위로 내려간다.
 
-**점수만 보고 넘어가지 않는다.** 상위 그룹마다 다음을 확인한다.
+- 수요 수준과 가격결정력 표준점수가 모두 양수다.
+- 팩터별 관측률이 70% 이상이다.
+- 기간 수익률 커버리지가 98% 이상이다.
+- 최근 흐름이 병목 해소 신호를 보이지 않는다.
+- 대표 종목이 한 가지 공급 제약으로 설명된다.
 
-- 수요 수준과 가격결정력 표준점수가 둘 다 양수인가.
-  하나라도 음수면 병목이 아니라 자금 쏠림이다.
-- 기간별 초과수익에서 최근 1개월이 음수인데 1년이 크게 양수이면 병목이 풀리는 중일 수 있다.
-  이때는 웹 검색으로 무엇이 공급 제약을 풀었는지 확인한다.
-- 팩터 결측이 30% 를 넘는 그룹은 점수를 신뢰하지 않는다.
-  결측 비율만큼 표준점수가 중립으로 줄어든다. 출력의 결측 줄을 읽는다.
+## 병목의 실체를 확인한다
 
-## 3. 병목의 실체를 확인한다
+상위 그룹의 대표 종목과 가치사슬을 현재 공개 자료로 검색한다.
+다음 질문에 모두 답한다.
 
-점수는 어디를 볼지 알려줄 뿐 왜인지는 말하지 않는다.
-상위 그룹의 대표 종목 이름으로 웹 검색해 다음 셋에 답한다.
+- 무엇이 공급을 제약하는가.
+- 제약이 3년을 넘겨 유지되는가.
+- 누가 제약을 통제하고 가격결정력을 갖는가.
 
-- 무엇이 공급을 제약하는가. 생산능력인가, 기술 장벽인가, 계약 구조인가.
-- 그 제약이 몇 년 유지되는가. 증설 발표가 있으면 그 시점이 병목의 끝이다.
-  **3년 안에 풀리는 병목은 버린다.** 목표 기간이 3년이므로 그 안에 공급이 따라오면 배수가 확대되지 않는다.
-- 누가 그 제약을 쥐고 있는가. 병목 안에서도 가격을 정하는 계층이 따로 있다.
-
-세 질문에 답하지 못하면 그 그룹을 버리고 다음 순위로 내려간다.
-점수만 높고 실체를 설명 못 하는 그룹은 텐베거가 나오지 않는다.
-
-## 4. 그룹의 폭을 확인한다
-
-히트맵은 TRBC 4자리까지만 준다. 한 그룹이 생각보다 넓다.
-`5710` 에는 반도체와 함께 애플이 들어 있다.
+병목 근거 파일은 템플릿에서 만든다.
 
 ```bash
-python3 scripts/bottleneck.py reports/universe-USA-<날짜>.json --group <그룹코드>
+cp skills/sector-bottleneck/assets/bottleneck-basis.template.json \
+  "reports/bottleneck-basis-<GROUP>-$today.json"
 ```
 
-대표 종목 다섯과 `bottleneck_context` 를 보고 한 가지 사업으로 묶이는지 판정한다.
-묶이지 않으면 그룹 단위 성장률이 대형 저성장주에 희석된 값이므로,
-리포트에 그 사실을 적고 종목 단위 판정을 `tenbagger-pick` 에 넘긴다.
+`group_code`는 점수를 낸 그룹과 같아야 한다.
+`reviewed_at`과 각 출처의 `observed_at`은 실제 확인일을 쓴다.
+`duration_years`는 3보다 커야 한다.
+모든 조건을 확인했을 때만 `verdict`를 `pass`로 바꾼다.
 
-## 5. 한국 시장은 별도로 다룬다
+## 전달 문맥을 확정한다
 
-한국 종목의 컨센서스 추정 보유율이 26% 다.
-수요와 가격결정력 팩터가 대부분 결측이라 병목 점수를 그대로 믿지 않는다.
-자금 집중만 참고하고, 종목 선별은 미국 시장에서 한다.
-시가총액이 원화라 달러 기준 시총 상한도 그대로 쓰지 못한다.
-
-## 6. 리포트
-
-로컬 HTML 파일로 만든다. 외부에 게시하지 않는다.
-
-```
-~/personal/finance-skills/reports/bottleneck-<YYYYMMDD>.html
+```bash
+python3 scripts/bottleneck.py "reports/universe-USA-$today.json" \
+  --group <GROUP> --basis "reports/bottleneck-basis-<GROUP>-$today.json" \
+  --json --output "reports/bottleneck-context-<GROUP>-$today.json"
 ```
 
-만든 뒤 경로를 사용자에게 알린다. 브라우저로 열어 보여주지 않는다.
+출력의 `candidate_pool_passed`가 `true`일 때만 `tenbagger-pick`으로 넘긴다.
+`false`이면 누락 필드와 실패 조건을 리포트에 남기고 종목 후보를 만들지 않는다.
 
-담을 것은 이렇다.
+## 한국 시장을 선택적으로 계산한다
 
-- 판정을 맨 위에 둔다. 상위 병목 그룹과 그 근거를 먼저 보인다.
-- 팩터별 표준점수를 그룹마다 표로 낸다. 어느 팩터가 점수를 만들었는지 보이게 한다.
-- 팩터 결측 비율을 함께 적는다.
-- 3단계의 세 질문에 대한 답을 그룹마다 적는다. 출처 링크를 붙인다.
-- 계산 스크립트 경로와 원자료 JSON 경로를 남겨 숫자를 재현할 수 있게 한다.
-- 종목 후보 목록은 담지 않는다. 후보 선별은 `tenbagger-pick` 단계에서 별도로 실행한다.
+```bash
+python3 scripts/bottleneck.py "reports/universe-KOR-$today.json" \
+  --json --output "reports/bottleneck-KOR-$today.json"
+```
+
+데이터 품질 검사에서 실패하면 한국 결과를 억지로 만들지 않는다.
+미국 종목 선별은 계속할 수 있으며 HTML에서 한국 시장을 생략한다.
+
+## HTML 리포트를 만든다
+
+한국 결과가 없으면 다음 명령을 쓴다.
+
+```bash
+python3 scripts/render_report.py bottleneck "reports/bottleneck-USA-$today.json" \
+  --context "reports/bottleneck-context-<GROUP>-$today.json" \
+  --asof "$(date +%Y-%m-%d)" -o "reports/bottleneck-$today.html"
+```
+
+한국 결과가 유효하면 `--kor "reports/bottleneck-KOR-$today.json"`을 추가한다.
+
+리포트에는 정량 순위, 데이터 품질, 공급 제약, 지속 기간, 통제 주체와 출처를 표시한다.
+종목 후보 목록은 표시하지 않는다.
+
+로컬 HTML을 실제로 열어 제목과 오류를 확인한다.
+
+```bash
+REPORT_PAGE=$($B open "file://$PWD/reports/bottleneck-$today.html")
+$B snap "$REPORT_PAGE"
+$B errors "$REPORT_PAGE"
+$B close "$REPORT_PAGE"
+```
 
 ## 다음 단계로 넘긴다
 
-상위 병목 그룹이 정해지면 `tenbagger-pick` 스킬로 넘긴다.
-넘길 때 그룹 코드, 유니버스 파일 경로, 공급 제약, 지속 기간, 통제 주체, 출처를
-`bottleneck_context` 로 함께 전한다.
-지속 기간은 숫자 필드로도 남기며 3년 이상이어야 한다.
+다음 값만 `tenbagger-pick`에 넘긴다.
+
+- 유니버스 JSON 경로
+- 그룹 코드
+- `bottleneck_context` JSON 경로
+
+병목 리포트는 사용자가 근거를 확인하는 산출물이며 다음 스킬의 입력은 아니다.
 
 ## 내기 전에 점검할 것
 
-- [ ] 같은 날 유니버스 파일을 중복으로 받지 않았다
-- [ ] 상위 그룹의 수요 수준과 가격결정력이 둘 다 양수다
-- [ ] 팩터 결측 30% 초과 그룹을 신뢰하지 않았다
-- [ ] 병목의 실체를 세 질문으로 확인했고 3년 안에 풀리지 않는다
-- [ ] 그룹이 한 가지 사업으로 묶이는지 확인했다
-- [ ] 리포트의 모든 숫자가 스크립트 출력에서 나왔다
+- [ ] 기간 수익률과 팩터 관측률 기준을 통과했다
+- [ ] 수요 수준과 가격결정력이 모두 양수다
+- [ ] 병목 근거가 점수를 낸 그룹과 묶여 있다
+- [ ] 제약이 3년을 넘겨 유지된다
+- [ ] 모든 출처에 제목, 위치와 확인일이 있다
+- [ ] 종목 후보를 이 스킬에서 출력하지 않았다
+- [ ] HTML을 실제로 열고 오류를 확인했다
