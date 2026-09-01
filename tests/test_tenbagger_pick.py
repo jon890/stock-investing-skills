@@ -1,4 +1,5 @@
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -77,6 +78,56 @@ class TenbaggerPickTest(unittest.TestCase):
         self.assertEqual(result["candidate_pool_status"], "screenable")
         self.assertGreater(len(result["candidates"]), 0)
         self.assertTrue(all(c["candidate_status"] == "screenable" for c in result["candidates"]))
+
+    def test_cli_consumes_sector_context_and_writes_json_safely(self):
+        with tempfile.TemporaryDirectory() as td:
+            tmp = Path(td)
+            universe_path = self.write_universe(td)
+            basis_path = tmp / "basis.json"
+            context_path = tmp / "context.json"
+            output_path = tmp / "candidates.json"
+            basis_path.write_text(json.dumps(valid_basis()), encoding="utf-8")
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "bottleneck.py"),
+                    str(universe_path),
+                    "--group",
+                    "5740",
+                    "--basis",
+                    str(basis_path),
+                    "--json",
+                    "--output",
+                    str(context_path),
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True,
+            )
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "tenbagger_pick.py"),
+                    str(universe_path),
+                    "--group",
+                    "5740",
+                    "--context",
+                    str(context_path),
+                    "--json",
+                    "--output",
+                    str(output_path),
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True,
+            )
+            parsed = json.loads(output_path.read_text())
+
+        self.assertEqual(parsed["candidate_pool_status"], "screenable")
+        self.assertIn("작성:", result.stdout)
 
     def test_ticker_must_pass_size_growth_and_margin_screen(self):
         with tempfile.TemporaryDirectory() as td:

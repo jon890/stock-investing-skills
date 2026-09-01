@@ -128,20 +128,27 @@ class BottleneckTest(unittest.TestCase):
             usa_source.write_text(json.dumps(sample_universe()), encoding="utf-8")
 
             result = subprocess.run(
-                [sys.executable, str(ROOT / "scripts/bottleneck.py"), str(usa_source), "--json"],
+                [
+                    sys.executable,
+                    str(ROOT / "scripts/bottleneck.py"),
+                    str(usa_source),
+                    "--json",
+                    "--output",
+                    str(usa_json),
+                ],
                 text=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 check=True,
             )
-            parsed = json.loads(result.stdout)
-            usa_json.write_text(result.stdout)
+            parsed = json.loads(usa_json.read_text())
             self.assertIn("dispersion", parsed["factors"])
             self.assertIn("quality", parsed)
             self.assertIn("coverage", parsed["groups"][0])
             self.assertIn("persistence", parsed["groups"][0])
             self.assertNotIn("candidates", parsed["groups"][0])
             self.assertGreaterEqual(parsed["quality"]["min_return_coverage"], 0.98)
+            self.assertIn("작성:", result.stdout)
 
             result = subprocess.run(
                 [
@@ -248,7 +255,7 @@ class BottleneckTest(unittest.TestCase):
         context = json.loads(result.stdout)["bottleneck_context"]
         self.assertEqual(context["ticker"]["ticker"], "T40")
         self.assertFalse(context["bottleneck_basis"]["verified"])
-        self.assertTrue(all(c["candidate_status"] == "reference_only" for c in context["candidates"]))
+        self.assertNotIn("candidates", context)
 
     def test_basis_requires_three_year_duration_and_observed_sources(self):
         bad = bottleneck.bottleneck_basis({

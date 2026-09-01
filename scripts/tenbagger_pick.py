@@ -3,6 +3,7 @@
 사용법:
     python3 tenbagger_pick.py reports/universe-USA-20260828.json --group 5710 --basis basis.json --json
     python3 tenbagger_pick.py reports/universe-USA-20260828.json --ticker CRDO --basis basis.json --json
+    python3 tenbagger_pick.py reports/universe-USA-20260828.json --group 5710 --context context.json --json
 """
 from __future__ import annotations
 
@@ -124,20 +125,62 @@ def analyze(ticker, universe_path, basis=None):
     return analyze_ticker(ticker, universe_path, basis=basis)
 
 
+def load_handoff_context(path):
+    if not path:
+        return None
+    raw = json.loads(Path(path).read_text())
+    context = raw.get("bottleneck_context", raw) if isinstance(raw, dict) else None
+    if not isinstance(context, dict):
+        raise SystemExit("전달 파일에 bottleneck_context가 없습니다.")
+    required = {
+        "universe_path",
+        "group_code",
+        "rank",
+        "score",
+        "is_bottleneck_group",
+        "bottleneck_basis",
+        "candidate_pool_passed",
+    }
+    missing = sorted(required - context.keys())
+    if missing:
+        raise SystemExit(f'전달 파일에 필수 필드가 없습니다: {", ".join(missing)}.')
+    return context
+
+
+def validate_handoff_context(source, generated, universe_path):
+    if not source:
+        return
+    source_universe = Path(source["universe_path"]).expanduser().resolve()
+    requested_universe = Path(universe_path).expanduser().resolve()
+    if source_universe != requested_universe:
+        raise SystemExit("전달 문맥과 후보 분석의 유니버스 파일이 다릅니다.")
+    if source["group_code"] != generated["group_code"]:
+        raise SystemExit("전달 문맥과 후보 분석의 산업 그룹이 다릅니다.")
+    comparable = ("rank", "is_bottleneck_group", "candidate_pool_passed")
+    if any(source[key] != generated[key] for key in comparable):
+        raise SystemExit("전달 문맥과 현재 유니버스의 병목 판정이 다릅니다.")
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("universe", help="시장 유니버스 JSON 경로")
     target = parser.add_mutually_exclusive_group(required=True)
     target.add_argument("--group", help="후보를 찾을 TRBC 산업 그룹")
     target.add_argument("--ticker", help="역방향으로 병목 여부를 확인할 티커")
-    parser.add_argument("--basis", help="병목 실체와 출처를 담은 JSON 경로")
+    evidence = parser.add_mutually_exclusive_group()
+    evidence.add_argument("--basis", help="병목 실체와 출처를 담은 JSON 경로")
+    evidence.add_argument("--context", help="sector-bottleneck이 확정한 JSON 경로")
     parser.add_argument("--json", action="store_true", help="JSON으로 출력한다")
+    parser.add_argument("--output", help="JSON 출력 파일 경로")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    basis = bottleneck.load_basis(args.basis)
+    if args.output and not args.json:
+        raise SystemExit("--output은 --json과 함께 사용합니다.")
+    handoff = load_handoff_context(args.context)
+    basis = handoff["bottleneck_basis"] if handoff else bottleneck.load_basis(args.basis)
     if args.group:
         result = analyze_group(args.group, args.universe, basis=basis)
         label = f'{args.group} 후보 풀 상태: {result["candidate_pool_status"]}'
@@ -146,8 +189,14 @@ def main():
         result = analyze_ticker(args.ticker, args.universe, basis=basis)
         label = f'{result["ticker"]} 후보 상태: {result["candidate_status"]}'
         reasons = result["candidate_status_reasons"]
+    validate_handoff_context(handoff, result["bottleneck_context"], args.universe)
     if args.json:
-        print(json.dumps(result, ensure_ascii=False, default=float))
+        body = json.dumps(result, ensure_ascii=False, default=float)
+        if args.output:
+            Path(args.output).write_text(body + "\n")
+            print(f"작성: {args.output}")
+        else:
+            print(body)
         return
     print(label)
     for reason in reasons:

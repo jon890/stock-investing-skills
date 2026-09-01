@@ -6,6 +6,7 @@
 사용법:
     python3 bottleneck.py reports/universe-USA-20260828.json
     python3 bottleneck.py reports/universe-USA-20260828.json --json
+    python3 bottleneck.py reports/universe-USA-20260828.json --json --output reports/bottleneck-USA-20260828.json
     python3 bottleneck.py reports/universe-USA-20260828.json --group 5710
     python3 bottleneck.py reports/universe-USA-20260828.json --ticker CRDO --json
 """
@@ -173,6 +174,15 @@ def opt_value(flag):
         return sys.argv[sys.argv.index(flag) + 1]
     except IndexError:
         raise SystemExit(f"{flag} 뒤에 값이 필요합니다.")
+
+
+def emit_json(payload, output_path=None):
+    body = json.dumps(payload, ensure_ascii=False, default=float)
+    if output_path:
+        Path(output_path).write_text(body + "\n")
+        print(f"작성: {output_path}")
+    else:
+        print(body)
 
 
 def sector_label(group_code):
@@ -458,6 +468,9 @@ def main():
     group_arg = opt_value("--group")
     ticker_arg = opt_value("--ticker")
     basis = load_basis(opt_value("--basis"))
+    output_path = opt_value("--output")
+    if output_path and not as_json:
+        raise SystemExit("--output은 --json과 함께 사용합니다.")
 
     if ticker_arg:
         group, member = find_ticker(groups, ticker_arg)
@@ -465,7 +478,7 @@ def main():
             raise SystemExit(f"{ticker_arg.upper()} 티커를 유니버스에서 찾지 못했습니다.")
         context = serialize_group(group, rank_by_group[group["group"]],
                                   universe_path=universe_path, basis=basis,
-                                  include_candidates=True)
+                                  include_candidates=False)
         context["ticker"] = {
             "ticker": member["t"], "name": member["name"],
             "mcap": member["val"].get("mcap"),
@@ -473,8 +486,7 @@ def main():
             "margin_delta": member["d"]["margin_delta"],
         }
         if as_json:
-            print(json.dumps({"market": data["market"], "bottleneck_context": context},
-                             ensure_ascii=False, default=float))
+            emit_json({"market": data["market"], "bottleneck_context": context}, output_path)
             return
         print(f'{member["t"]} {member["name"]} — {group["group"]} {sector_label(group["group"])}')
         print(f'  병목 순위 {context["rank"]}위, 점수 {context["score"]:+.2f}')
@@ -491,8 +503,7 @@ def main():
                                   universe_path=universe_path, basis=basis,
                                   include_candidates=False)
         if as_json:
-            print(json.dumps({"market": data["market"], "bottleneck_context": context},
-                             ensure_ascii=False, default=float))
+            emit_json({"market": data["market"], "bottleneck_context": context}, output_path)
             return
         v = groups[g]
         print(f'{g} {sector_label(g)} — 병목 점수 {v["score"]:+.2f}')
@@ -507,14 +518,14 @@ def main():
         for v in ranked:
             v.pop("members"); v["top"] = [{"t": m["t"], "name": m["name"],
                                            "cap": m["cap"]} for m in v["top"]]
-        print(json.dumps({"market": data["market"], "market_ret": market_ret,
-                          "quality": {
-                              "missing_valuation": data.get("missing_valuation"),
-                              **quality,
-                          },
-                          "factors": {k: {"label": v[0], "weight": v[1], "why": v[2]}
-                                      for k, v in FACTORS.items()},
-                          "groups": ranked}, ensure_ascii=False, default=float))
+        emit_json({"market": data["market"], "market_ret": market_ret,
+                   "quality": {
+                       "missing_valuation": data.get("missing_valuation"),
+                       **quality,
+                   },
+                   "factors": {k: {"label": v[0], "weight": v[1], "why": v[2]}
+                               for k, v in FACTORS.items()},
+                   "groups": ranked}, output_path)
         return
 
     print(f'{data["market"]} 시장 산업 그룹 병목 점수  (종목 {data["count"]}개, '
