@@ -7,6 +7,7 @@
     python3 bottleneck.py reports/universe-USA-20260828.json
     python3 bottleneck.py reports/universe-USA-20260828.json --json
     python3 bottleneck.py reports/universe-USA-20260828.json --group 5710
+    python3 bottleneck.py reports/universe-USA-20260828.json --ticker CRDO --json
 """
 from __future__ import annotations
 import json, sys, statistics as st
@@ -43,6 +44,7 @@ MIN_RETURN_COVERAGE = 0.98  # 기간 수익률이 이보다 적으면 병목 점
 WINSOR = 0.02            # 이상치가 z 점수를 무너뜨리므로 양끝을 절단한다
 Z_CAP = 2.5              # 절단 뒤에도 남는 이상치의 표준점수 상한
 CAPITAL_EXIT = -1.0      # 자금 집중이 이보다 낮으면 이탈 중으로 본다
+BOTTLENECK_GROUP_LIMIT = 3
 
 SECTOR_NAME = {"50": "에너지", "51": "소재", "52": "산업재", "53": "경기소비재",
                "54": "필수소비재", "55": "금융", "56": "헬스케어", "57": "기술",
@@ -161,6 +163,19 @@ def factor_gap_text(group):
         if c < 1.0
     )
     return gaps or "없음"
+
+
+def opt_value(flag):
+    if flag not in sys.argv:
+        return None
+    try:
+        return sys.argv[sys.argv.index(flag) + 1]
+    except IndexError:
+        raise SystemExit(f"{flag} 뒤에 값이 필요합니다.")
+
+
+def sector_label(group_code):
+    return SECTOR_NAME.get(group_code[:2], "")
 
 
 # ────────────── 그룹 집계 ──────────────
@@ -301,21 +316,167 @@ def tenbagger_candidates(group, limit=8):
     return sorted(out, key=lambda x: -x["rank"])[:limit]
 
 
+# ────────────── handoff 계약 ──────────────
+
+RESEARCH_FIELDS = ("constraint", "duration", "duration_years", "controller")
+PASS_VERDICTS = {"pass", "통과"}
+MIN_FACTOR_COVERAGE = 0.70
+
+
+def bottleneck_basis(raw=None):
+    """정량 점수와 별도로 사람이 확인한 병목 실체를 검증한다."""
+    basis = dict(raw or {})
+    sources = basis.get("sources") or []
+    missing = [k for k in RESEARCH_FIELDS if not basis.get(k)]
+    if not sources:
+        missing.append("sources")
+    if not isinstance(basis.get("duration_years"), (int, float)) or basis.get("duration_years", 0) < 3:
+        missing.append("duration_years>=3")
+    verified_sources = [
+        s for s in sources
+        if isinstance(s, dict) and s.get("title") and (s.get("url") or s.get("source_locator"))
+        and (s.get("observed_at") or s.get("source_observed_at"))
+    ]
+    if len(verified_sources) != len(sources):
+        missing.append("verified_sources")
+    verdict = basis.get("verdict") or "unverified"
+    basis.update({
+        "constraint": basis.get("constraint"),
+        "duration": basis.get("duration"),
+        "controller": basis.get("controller"),
+        "sources": sources,
+        "verdict": verdict,
+        "missing": sorted(set(missing)),
+        "verified": verdict in PASS_VERDICTS and not missing,
+    })
+    return basis
+
+
+def is_bottleneck_group(group, rank):
+    z = group["z"]
+    coverage_ok = all(group["coverage"].get(k, 0.0) >= MIN_FACTOR_COVERAGE for k in group["coverage"])
+    return (
+        rank <= BOTTLENECK_GROUP_LIMIT
+        and group["score"] > 0
+        and z["demand"] > 0
+        and z["pricing"] > 0
+        and coverage_ok
+    )
+
+
+def serialize_group(group, rank, universe_path=None, basis=None, include_candidates=False):
+    """다음 스킬로 넘기는 최소 계약을 만든다."""
+    basis_checked = bottleneck_basis(basis)
+    out = {
+        "universe_path": str(universe_path) if universe_path else None,
+        "group_code": group["group"],
+        "group_name": sector_label(group["group"]),
+        "rank": rank,
+        "score": group["score"],
+        "is_bottleneck_group": is_bottleneck_group(group, rank),
+        "bottleneck_basis": basis_checked,
+        "quality": {
+            "coverage": group["coverage"],
+            "return_coverage": group.get("return_coverage", {}),
+            "factor_gap": factor_gap_text(group),
+        },
+        "signals": {
+            "raw": group["raw"],
+            "z": group["z"],
+            "excess": group["excess"],
+            "persistence": group.get("persistence"),
+        },
+        "top": [{"t": m["t"], "name": m["name"], "cap": m["cap"]} for m in group["top"]],
+    }
+    out["candidate_pool_passed"] = out["is_bottleneck_group"] and basis_checked["verified"]
+    if include_candidates:
+        status = "screenable" if out["candidate_pool_passed"] else "reference_only"
+        out["candidates"] = [
+            {**c, "candidate_status": status}
+            for c in tenbagger_candidates(group)
+        ]
+    return out
+
+
+def load_basis(path):
+    if not path:
+        return None
+    return json.loads(Path(path).read_text())
+
+
+def find_ticker(groups, ticker):
+    wanted = ticker.upper()
+    for group in groups.values():
+        for member in group["members"]:
+            if member["t"].upper() == wanted:
+                return group, member
+    return None, None
+
+
 # ────────────── 출력 ──────────────
 
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     if not args:
         raise SystemExit(__doc__)
-    data = json.loads(Path(args[0]).read_text())
+    universe_path = Path(args[0])
+    data = json.loads(universe_path.read_text())
     stocks, quality = validate_universe(data)
     groups, market_ret = aggregate(stocks)
     groups = score(groups)
     ranked = sorted(groups.values(), key=lambda v: -v["score"])
+    rank_by_group = {v["group"]: i + 1 for i, v in enumerate(ranked)}
+    as_json = "--json" in sys.argv
+    group_arg = opt_value("--group")
+    ticker_arg = opt_value("--ticker")
+    basis = load_basis(opt_value("--basis"))
 
-    if "--json" in sys.argv:
+    if ticker_arg:
+        group, member = find_ticker(groups, ticker_arg)
+        if not group:
+            raise SystemExit(f"{ticker_arg.upper()} 티커를 유니버스에서 찾지 못했습니다.")
+        context = serialize_group(group, rank_by_group[group["group"]],
+                                  universe_path=universe_path, basis=basis,
+                                  include_candidates=True)
+        context["ticker"] = {
+            "ticker": member["t"], "name": member["name"],
+            "mcap": member["val"].get("mcap"),
+            "rev_g": member["d"]["rev_g"],
+            "margin_delta": member["d"]["margin_delta"],
+        }
+        if as_json:
+            print(json.dumps({"market": data["market"], "bottleneck_context": context},
+                             ensure_ascii=False, default=float))
+            return
+        print(f'{member["t"]} {member["name"]} — {group["group"]} {sector_label(group["group"])}')
+        print(f'  병목 순위 {context["rank"]}위, 점수 {context["score"]:+.2f}')
+        print(f'  병목 그룹 통과: {"예" if context["is_bottleneck_group"] else "아니오"}')
+        print(f'  근거 검증: {"통과" if context["bottleneck_basis"]["verified"] else "미검증"}')
+        return
+
+    if group_arg:
+        g = group_arg
+        if g not in groups:
+            available = ", ".join(v["group"] for v in ranked[:8])
+            raise SystemExit(f"{g} 그룹을 찾지 못했습니다. 상위 그룹 예시는 {available} 입니다.")
+        context = serialize_group(groups[g], rank_by_group[g],
+                                  universe_path=universe_path, basis=basis,
+                                  include_candidates=False)
+        if as_json:
+            print(json.dumps({"market": data["market"], "bottleneck_context": context},
+                             ensure_ascii=False, default=float))
+            return
+        v = groups[g]
+        print(f'{g} {sector_label(g)} — 병목 점수 {v["score"]:+.2f}')
+        print(f'  병목 순위 {context["rank"]}위, 구성 {v["n"]}개, 시총 {v["cap"]/1000:,.0f}십억 달러')
+        print(f'  병목 그룹 통과: {"예" if context["is_bottleneck_group"] else "아니오"}')
+        print(f'  근거 검증: {"통과" if context["bottleneck_basis"]["verified"] else "미검증"}')
+        print(f'  대표 종목 ' + ", ".join(m["t"] for m in v["top"]))
+        print(f'  팩터 결측 ' + factor_gap_text(v))
+        return
+
+    if as_json:
         for v in ranked:
-            v["candidates"] = tenbagger_candidates(v)
             v.pop("members"); v["top"] = [{"t": m["t"], "name": m["name"],
                                            "cap": m["cap"]} for m in v["top"]]
         print(json.dumps({"market": data["market"], "market_ret": market_ret,
@@ -326,26 +487,6 @@ def main():
                           "factors": {k: {"label": v[0], "weight": v[1], "why": v[2]}
                                       for k, v in FACTORS.items()},
                           "groups": ranked}, ensure_ascii=False, default=float))
-        return
-
-    if "--group" in sys.argv:
-        try:
-            g = sys.argv[sys.argv.index("--group") + 1]
-        except IndexError:
-            raise SystemExit("--group 뒤에 산업 그룹 코드가 필요합니다. 예: --group 5720")
-        if g not in groups:
-            available = ", ".join(v["group"] for v in ranked[:8])
-            raise SystemExit(f"{g} 그룹을 찾지 못했습니다. 상위 그룹 예시는 {available} 입니다.")
-        v = groups[g]
-        print(f'{g} {SECTOR_NAME.get(v["sector"],"")} — 병목 점수 {v["score"]:+.2f}')
-        print(f'  구성 {v["n"]}개, 시총 {v["cap"]/1000:,.0f}십억 달러\n')
-        print("  텐베거 후보 (시총 500억 달러 이하, 매출 성장 10% 이상)")
-        for c in tenbagger_candidates(v):
-            print(f'    {c["ticker"]:6} {c["name"][:22]:24} 시총 {c["mcap"]/1000:7,.1f}십억  '
-                  f'성장 {c["rev_g"]*100:5.1f}%  '
-                  f'마진변화 {(c["margin_delta"] or 0)*100:+5.1f}%p  '
-                  f'분산 {(c["dispersion"] or 0)*100:5.1f}%  '
-                  f'1년 {c["ret_1y"] or 0:+6.1f}%')
         return
 
     print(f'{data["market"]} 시장 산업 그룹 병목 점수  (종목 {data["count"]}개, '
@@ -381,15 +522,7 @@ def main():
     print("  기간 수익률 결측 " + (missing_text or "없음"))
     print(f'  기간별 초과수익  ' + "  ".join(
         f'{p} {best["excess"][p]:+.1f}%' for p in RETURN_WINDOWS))
-    cands = tenbagger_candidates(best)
-    if cands:
-        print(f'\n  텐베거 후보')
-        for c in cands[:5]:
-            print(f'    {c["ticker"]:6} {c["name"][:20]:22} 시총 {c["mcap"]/1000:6,.1f}십억  '
-                  f'성장 {c["rev_g"]*100:5.1f}%  '
-                  f'분산 {(c["dispersion"] or 0)*100:5.1f}%')
-    else:
-        print('\n  텐베거 후보 없음 — 이 그룹은 이미 대형주로만 이루어져 있다')
+    print('\n  종목 선별은 tenbagger-pick 단계에서 별도로 실행한다')
 
 
 if __name__ == "__main__":

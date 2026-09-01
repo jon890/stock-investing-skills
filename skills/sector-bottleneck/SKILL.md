@@ -85,7 +85,7 @@ python3 scripts/bottleneck.py reports/universe-USA-$(date +%Y%m%d).json
 python3 scripts/bottleneck.py reports/universe-USA-<날짜>.json --group <그룹코드>
 ```
 
-대표 종목 다섯을 보고 한 가지 사업으로 묶이는지 판정한다.
+대표 종목 다섯과 `bottleneck_context` 를 보고 한 가지 사업으로 묶이는지 판정한다.
 묶이지 않으면 그룹 단위 성장률이 대형 저성장주에 희석된 값이므로,
 리포트에 그 사실을 적고 종목 단위 판정을 `tenbagger-pick` 에 넘긴다.
 
@@ -113,11 +113,14 @@ python3 scripts/bottleneck.py reports/universe-USA-<날짜>.json --group <그룹
 - 팩터 결측 비율을 함께 적는다.
 - 3단계의 세 질문에 대한 답을 그룹마다 적는다. 출처 링크를 붙인다.
 - 계산 스크립트 경로와 원자료 JSON 경로를 남겨 숫자를 재현할 수 있게 한다.
+- 종목 후보 목록은 담지 않는다. 후보 선별은 `tenbagger-pick` 단계에서 별도로 실행한다.
 
 ## 다음 단계로 넘긴다
 
 상위 병목 그룹이 정해지면 `tenbagger-pick` 스킬로 넘긴다.
-넘길 때 그룹 코드, 유니버스 파일 경로, 3단계에서 확인한 병목의 실체를 함께 전한다.
+넘길 때 그룹 코드, 유니버스 파일 경로, 공급 제약, 지속 기간, 통제 주체, 출처를
+`bottleneck_context` 로 함께 전한다.
+지속 기간은 숫자 필드로도 남기며 3년 이상이어야 한다.
 
 ## 내기 전에 점검할 것
 

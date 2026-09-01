@@ -196,8 +196,29 @@ expert 페이지의 증거 ID는 해당 expert 의 증거만 가리킨다.
 수집 실패 값을 0으로 바꾸지 않고 `null` 또는 필드 부재로 남긴다.
 
 `scripts/bottleneck.py --json` 결과는 `market`, `market_ret`, `factors`, `groups`, `quality` 를 가진다.
-각 그룹은 `group`, `sector`, `n`, `coverage`, `raw`, `z`, `score`, `candidates` 를 가진다.
+각 그룹은 `group`, `sector`, `n`, `coverage`, `raw`, `z`, `score`, `top` 을 가진다.
 `factors` 의 가중치와 설명은 실행 시점의 코드에서 함께 출력하므로 문서에 별도 숫자 사본을 두지 않는다.
+
+`scripts/bottleneck.py --group <GROUP> --json` 과 `--ticker <TICKER> --json` 결과는
+`bottleneck_context` 를 가진다.
+이 문맥은 다음 필드를 포함한다.
+
+| 필드 | 뜻 |
+| --- | --- |
+| `universe_path` | 병목 점수를 만든 원자료 JSON 경로 |
+| `group_code`, `group_name` | TRBC 산업 그룹과 섹터 이름 |
+| `rank`, `score` | 산업 그룹 순위와 병목 점수 |
+| `is_bottleneck_group` | 상위 3위, 양수 점수, 양수 수요·가격결정력, 팩터 관측 70% 이상 통과 여부 |
+| `bottleneck_basis` | 사람이 확인한 공급 제약, 지속 기간, 통제 주체, 출처 |
+| `candidate_pool_passed` | 정량 병목과 근거 검증을 모두 통과해 종목 선별로 넘길 수 있는지 |
+
+`bottleneck_basis` 는 `constraint`, `duration`, `duration_years`, `controller`, `sources`, `verdict` 를 가진다.
+`duration_years` 는 3 이상이어야 하고, 각 출처는 제목, URL 또는 locator, 확인일을 가져야 한다.
+이 조건을 통과하지 못하면 `verified=false` 가 되며 종목 결과는 참고 가치평가로만 남긴다.
+
+`scripts/tenbagger_pick.py <TICKER> <UNIVERSE_JSON> --json` 결과는
+`candidate_status`, `candidate_status_reasons`, `bottleneck_context`, `valuation` 을 가진다.
+병목 밖이거나 병목 근거가 미검증이면 `candidate_status=reference_only` 로 둔다.
 
 ## 가치평가 입력과 결과
 

@@ -16,7 +16,8 @@ description: >
 
 목표와 판정 기준은 `docs/prd.md` 가 소유한다.
 전체 흐름은 `docs/flow.md` 가 소유한다.
-계산은 `scripts/bottleneck.py`, `scripts/valuation.py`, `scripts/render_report.py` 가 소유한다.
+계산은 `scripts/bottleneck.py`, `scripts/tenbagger_pick.py`,
+`scripts/valuation.py`, `scripts/render_report.py` 가 소유한다.
 일반 투자 용어는 `docs/glossary.md` 를 기준으로 삼는다.
 특정 expert 의 용어집을 공통 정의의 원본으로 쓰지 않는다.
 
@@ -41,8 +42,12 @@ description: >
 
 ```bash
 cd ~/personal/finance-skills
-python3 scripts/bottleneck.py reports/universe-USA-<YYYYMMDD>.json --group <그룹코드>
+python3 scripts/tenbagger_pick.py <티커> reports/universe-USA-<YYYYMMDD>.json --basis <병목근거.json> --json
 ```
+
+`--basis` 파일에는 공급 제약, 지속 기간, 통제 주체, 출처를 둔다.
+`duration_years` 가 3 미만이거나 출처에 확인일이 없으면 후보로 올리지 않고
+`candidate_status=reference_only` 로 둔다.
 
 기본 후보 조건은 다음과 같다.
 
@@ -113,6 +118,7 @@ python3 scripts/render_report.py company reports/valuation-<TICKER>-<YYYYMMDD>.j
 ## 내기 전에 점검할 것
 
 - [ ] 병목 그룹과 유니버스 JSON 경로를 확인했다
+- [ ] 병목 근거가 `constraint`, `duration_years`, `controller`, `sources`, `verdict=pass` 를 가진다
 - [ ] 티커 직행이면 병목 여부를 역확인했다
 - [ ] 모든 현재 데이터에 조회일과 출처를 붙였다
 - [ ] 시총, 성장률, 마진 확대 조건을 확인했다

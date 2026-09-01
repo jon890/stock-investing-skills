@@ -61,6 +61,9 @@ def sample_universe():
                 group,
                 0.01 + group_index * 0.005,
             )
+            item["val"]["es27"] = 4.0 / (1.05 + group_index * 0.05)
+            margin27 = item["d"]["margin27"] if item.get("d") else 0.21 + group_index * 0.005
+            item["val"]["ee27"] = item["val"]["es27"] / margin27
             item["ret"] = {
                 period: value + group_index
                 for period, value in item["ret"].items()
@@ -137,6 +140,7 @@ class BottleneckTest(unittest.TestCase):
             self.assertIn("quality", parsed)
             self.assertIn("coverage", parsed["groups"][0])
             self.assertIn("persistence", parsed["groups"][0])
+            self.assertNotIn("candidates", parsed["groups"][0])
             self.assertGreaterEqual(parsed["quality"]["min_return_coverage"], 0.98)
 
             result = subprocess.run(
@@ -172,6 +176,89 @@ class BottleneckTest(unittest.TestCase):
             best["coverage"][factor] = 1.0
 
         self.assertEqual(bottleneck.factor_gap_text(best), "없음")
+
+    def test_group_json_exports_bottleneck_context_without_candidates(self):
+        with tempfile.TemporaryDirectory() as td:
+            tmp = Path(td)
+            universe_path = tmp / "universe.json"
+            basis_path = tmp / "basis.json"
+            universe_path.write_text(json.dumps(sample_universe()), encoding="utf-8")
+            basis_path.write_text(json.dumps({
+                "constraint": "advanced package capacity",
+                "duration": "minimum three years",
+                "duration_years": 3,
+                "controller": "foundry and packaging suppliers",
+                "verdict": "pass",
+                "sources": [{
+                    "title": "capacity note",
+                    "url": "https://example.com/capacity",
+                    "observed_at": "2026-08-29",
+                }],
+            }), encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts/bottleneck.py"),
+                    str(universe_path),
+                    "--group",
+                    "5740",
+                    "--basis",
+                    str(basis_path),
+                    "--json",
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True,
+            )
+
+        parsed = json.loads(result.stdout)
+        context = parsed["bottleneck_context"]
+        self.assertEqual(context["group_code"], "5740")
+        self.assertTrue(context["is_bottleneck_group"])
+        self.assertTrue(context["bottleneck_basis"]["verified"])
+        self.assertTrue(context["candidate_pool_passed"])
+        self.assertNotIn("candidates", context)
+
+    def test_ticker_json_marks_unverified_basis_reference_only(self):
+        with tempfile.TemporaryDirectory() as td:
+            universe_path = Path(td) / "universe.json"
+            universe_path.write_text(json.dumps(sample_universe()), encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts/bottleneck.py"),
+                    str(universe_path),
+                    "--ticker",
+                    "T40",
+                    "--json",
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True,
+            )
+
+        context = json.loads(result.stdout)["bottleneck_context"]
+        self.assertEqual(context["ticker"]["ticker"], "T40")
+        self.assertFalse(context["bottleneck_basis"]["verified"])
+        self.assertTrue(all(c["candidate_status"] == "reference_only" for c in context["candidates"]))
+
+    def test_basis_requires_three_year_duration_and_observed_sources(self):
+        bad = bottleneck.bottleneck_basis({
+            "constraint": "capacity",
+            "duration": "short",
+            "duration_years": 2,
+            "controller": "supplier",
+            "verdict": "pass",
+            "sources": [{"title": "note", "url": "https://example.com"}],
+        })
+
+        self.assertFalse(bad["verified"])
+        self.assertIn("duration_years>=3", bad["missing"])
+        self.assertIn("verified_sources", bad["missing"])
 
 
 if __name__ == "__main__":

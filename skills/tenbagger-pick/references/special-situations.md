@@ -2,7 +2,7 @@
 
 일반 DCF 와 상대가치가 설명력을 잃는 사건은 먼저 분기한다.
 이 문서는 월가아재 영상 노트의 공통 절차만 옮긴 것이다.
-원자료 요약은 `.cache/wsaj-youtube/notes/special-cases.md` 에 있다.
+필요한 근거는 `wiki/experts/wsaj/pages/special-situations.md` 와 연결된 evidence 에서 확인한다.
 
 ## IPO
 

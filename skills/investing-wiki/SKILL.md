@@ -37,8 +37,8 @@ python3 scripts/query_investing_wiki.py --json --expert <expert_id> "<질문>"
 공통 용어집의 일반 정의를 expert 의 주장처럼 인용하지 않는다.
 expert 용어집의 설명은 evidence 와 함께 쓰고 일반 상식으로 넓히지 않는다.
 
-`.cache/` 는 원자료 확인용이다.
-증거 ID 충돌, 화면 근거 재확인, 미승격 원자료 검토가 필요할 때만 본다.
+실행 중에는 Git 에 추적되는 `wiki/`, `docs/`, `scripts/` 산출물만 읽는다.
+증거 JSON 의 `contact_sheet_path` 같은 원자료 경로는 출처 위치를 남긴 문자열로만 다루고, 이 스킬에서 직접 열지 않는다.
 
 ## 답변 계약
 

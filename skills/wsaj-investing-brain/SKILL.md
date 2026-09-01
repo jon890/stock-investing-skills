@@ -12,7 +12,7 @@ description: 월가아재 공개 영상의 근거로 투자 철학, 용어, 가�
 
 ## 먼저 읽을 파일
 
-질문을 받으면 `.cache` 원자료보다 추적되는 검토 산출물을 먼저 읽는다.
+질문을 받으면 Git 에 추적되는 검토 산출물만 읽는다.
 
 1. `wiki/experts/wsaj/profile.json`
 2. `wiki/experts/wsaj/evidence/core.json`
@@ -25,9 +25,8 @@ description: 월가아재 공개 영상의 근거로 투자 철학, 용어, 가�
 `docs/glossary.md` 의 일반 정의를 월가아재의 주장처럼 말하지 않는다.
 `wiki/experts/wsaj/glossary.md` 의 용례는 연결된 evidence 와 함께 쓴다.
 
-`.cache/wsaj-youtube/` 는 원자료 확인용이다.
-증거 ID 사이에 충돌이 있거나 화면 근거를 다시 봐야 할 때만 `analysis.json` 과 contact sheet를 확인한다.
-긴 전사문이나 화면 원자료를 최종 답변 근거로 직접 내세우지 않는다.
+증거 JSON 의 `contact_sheet_path` 같은 원자료 경로는 출처 위치를 남긴 문자열로만 다룬다.
+이 스킬은 실행 중에 영상 원자료, 긴 전사문, 화면 원자료를 직접 열지 않는다.
 
 ## 답변 계약
 

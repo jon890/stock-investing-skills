@@ -16,6 +16,8 @@
 | 검색과 답변 | 질문과 관련된 근거를 찾고, 근거가 부족하면 답하지 않는다 | `skills/investing-wiki/` | Codex, Claude Code |
 | 호환 진입점 | 기존 월가아재 호출을 새 검색 스크립트로 위임한다 | `skills/wsaj-investing-brain/` | Codex, Claude Code |
 | 현재 데이터 연결 | 주가, 배수, 실적 발표, 컨센서스처럼 시점이 바뀌는 값만 새로 조회한다 | `scripts/` 또는 별도 adapter | 답변 스킬 |
+| 병목 handoff | 정량 병목 점수와 사람이 확인한 병목 근거를 `bottleneck_context` 로 묶는다 | `scripts/bottleneck.py` | `scripts/tenbagger_pick.py` |
+| 종목 후보 연결 | 티커가 병목 안 후보인지 확인한 뒤 가치평가 결과를 붙인다 | `scripts/tenbagger_pick.py` | `tenbagger-pick` |
 | 품질 평가 | 인용, 거절, 숫자와 시점 정확도를 고정 문항으로 검증한다 | `tests/fixtures/`, `tests/` | 배포 전 검증 |
 
 현재 시장 사실은 영상 근거에서 가져오지 않는다.

@@ -110,16 +110,6 @@ def render_bottleneck(usa, kor, asof):
     rows = "".join(grow(v, i) for i, v in enumerate(g[:15]))
     fh = "".join(f'<th>{esc(v["label"])}</th>' for v in F.values())
 
-    cand = best.get("candidates", [])
-    crows = "".join(
-        f'<tr><td class="l"><b>{esc(c["ticker"])}</b></td>'
-        f'<td class="l">{esc(c["name"])}</td>'
-        f'<td>{num(c["mcap"]/1000,1)}B</td><td>{pct(c["rev_g"])}</td>'
-        f'<td>{pct(c["margin_delta"])}</td><td>{num(c["es27"],1)}배</td>'
-        f'<td>{pct(c.get("dispersion"), 0, sign=False)}</td>'
-        f'<td>{pct((c["ret_1y"] or 0)/100)}</td>'
-        f'<td>{num(c["nest"],0) if c["nest"] else "-"}</td></tr>' for c in cand)
-
     ex = best["excess"]
     exr = "".join(f'<td>{pct(None if v is None else v/100)}</td>' for v in ex.values())
     exh = "".join(f'<th>{k}</th>' for k in ex)
@@ -156,8 +146,6 @@ def render_bottleneck(usa, kor, asof):
 <div><div class="vk">마진 변화</div>
 <div class="vv">{(best["raw"]["pricing"] or 0)*100:+.1f}%p</div>
 <div class="vn">가격결정력의 증거</div></div>
-<div><div class="vk">텐베거 후보</div><div class="vv">{len(cand)}개</div>
-<div class="vn">시총 500억 달러 이하</div></div>
 </div></div>
 
 <h2>병목을 무엇으로 재는가</h2>
@@ -190,14 +178,6 @@ def render_bottleneck(usa, kor, asof):
 <div class="scroll"><table><thead><tr>{exh}</tr></thead>
 <tbody><tr>{exr}</tr></tbody></table></div>
 
-<h2>텐베거 후보</h2>
-<p>병목을 찾아도 그 안의 대형주는 답이 아니다. 수혜를 이미 값에 담았다.
-시총 500억 달러 이하이면서 매출 성장 10% 이상인 종목만 남겼다.</p>
-<div class="scroll"><table>
-<thead><tr><th class="l">티커</th><th class="l">이름</th><th>시총</th>
-<th>매출성장</th><th>마진변화</th><th>EV/Sales</th><th>분산</th><th>1년</th><th>추정기관</th></tr></thead>
-<tbody>{crows or '<tr><td colspan="9" class="l mut">후보 없음</td></tr>'}</tbody></table></div>
-
 <h2>한국 시장</h2>
 <div class="note"><b>점수를 그대로 믿지 않는다.</b>
 한국 종목의 컨센서스 추정 보유율이 26%다. 수요와 가격결정력 팩터가 대부분 결측이라
@@ -209,7 +189,7 @@ def render_bottleneck(usa, kor, asof):
 
 <h2>다음에 확인할 것</h2>
 <p>점수는 어디를 볼지 알려줄 뿐 왜인지는 말하지 않는다.
-최상위 그룹에 대해 다음 셋에 답해야 종목 선정으로 넘어간다.</p>
+최상위 그룹에 대해 다음 셋에 답하고 <code>scripts/tenbagger_pick.py</code> 로 종목 선별을 실행해야 한다.</p>
 <ul>
 <li>무엇이 공급을 제약하는가. 생산능력인가, 기술 장벽인가, 계약 구조인가.</li>
 <li>그 제약이 몇 년 유지되는가. 증설 발표가 있으면 그 시점이 병목의 끝이다.</li>
