@@ -32,6 +32,15 @@ class ValuationEngineTest(unittest.TestCase):
         path.write_text(json.dumps(cfg, ensure_ascii=False))
         return path
 
+    def current_provenance(self):
+        return {
+            "provider": "test",
+            "queried_at": "2026-08-28T00:00:00+09:00",
+            "source_url": "https://example.test/valuation",
+            "fields": ["market", "fundamentals", "peers"],
+            "status": "current",
+        }
+
     def test_input_declares_three_year_tenbagger_and_final_year(self):
         cfg = self.load_cfg()
 
@@ -106,6 +115,129 @@ class ValuationEngineTest(unittest.TestCase):
         self.assertEqual(data["relative_fields"]["sales"], "es27")
         self.assertTrue(all(r["relative_multiple_year"] == 2027 for r in data["relative_rows"]))
         self.assertTrue(all(r["relative_field"] in {"es27", "ee27"} for r in data["relative_rows"]))
+
+    def test_analyze_returns_same_json_contract_as_cli(self):
+        direct = valuation.analyze("MRVL")
+        cli = self.run_json("MRVL")
+
+        self.assertEqual(direct["ticker"], cli["ticker"])
+        self.assertEqual(direct["relative_hold_reason"], cli["relative_hold_reason"])
+        self.assertEqual(direct["candidate"], cli["candidate"])
+
+    def test_extrapolated_relative_multiples_are_excluded(self):
+        data = self.run_json("CRDO")
+
+        self.assertEqual(data["relative_rows"], [])
+        self.assertIsNone(data["relative"])
+        self.assertIn("적합 구간", data["relative_hold_reason"])
+        self.assertIn("밖이라 제외", data["relative_hold_reason"])
+        self.assertEqual(data["candidate"]["call"], "보류")
+
+    def test_tenbagger_verdict_blocks_candidate_when_not_possible(self):
+        cfg = self.load_cfg("MRVL")
+        cfg["data_provenance"] = self.current_provenance()
+
+        data = valuation.analyze_config(cfg, "MRVL")
+
+        self.assertNotIn(data["tenbagger"]["verdict"][0], {"가능", "최선 시나리오만"})
+        self.assertEqual(data["candidate"]["eligible"], False)
+        self.assertIn("텐베거 판정이 '", " ".join(data["candidate"]["reasons"]))
+        self.assertIn("라서 후보 기준을 넘지 못했다", " ".join(data["candidate"]["reasons"]))
+
+    def test_legacy_provenance_is_preserved_and_blocks_candidate(self):
+        data = self.run_json("MRVL")
+
+        self.assertEqual(data["data_provenance"]["status"], "legacy_unavailable")
+        self.assertEqual(data["data_provenance"]["source_urls"], [])
+        self.assertIn("legacy 데이터", data["data_provenance_hold_reason"])
+        self.assertIn(data["data_provenance_hold_reason"], data["candidate"]["reasons"])
+
+    def test_missing_provenance_is_validation_error(self):
+        cfg = self.load_cfg()
+        cfg.pop("data_provenance")
+
+        with self.assertRaisesRegex(ValueError, "data_provenance 필드가 부족하다"):
+            valuation.analyze_config(cfg, "CRDO")
+
+    def test_current_provenance_requires_urls_timezone_and_fields(self):
+        cfg = self.load_cfg("MRVL")
+
+        cfg["data_provenance"] = self.current_provenance() | {"source_urls": [], "source_url": None}
+        with self.assertRaisesRegex(ValueError, "source_urls 가 비어 있으면 안 된다"):
+            valuation.analyze_config(cfg, "MRVL")
+
+        cfg["data_provenance"] = self.current_provenance() | {"queried_at": "2026-08-28T00:00:00"}
+        with self.assertRaisesRegex(ValueError, "timezone 을 포함"):
+            valuation.analyze_config(cfg, "MRVL")
+
+        cfg["data_provenance"] = self.current_provenance() | {"fields": []}
+        with self.assertRaisesRegex(ValueError, "fields 는 비어 있으면 안 된다"):
+            valuation.analyze_config(cfg, "MRVL")
+
+    def test_legacy_unavailable_provenance_requires_empty_urls_date_and_hold_reason(self):
+        cfg = self.load_cfg("MRVL")
+
+        cfg["data_provenance"] = self.current_provenance() | {
+            "status": "legacy_unavailable",
+            "queried_at": "2026-08-28",
+            "hold_reason": "legacy 보류",
+        }
+        with self.assertRaisesRegex(ValueError, "source_urls 를 비워야 한다"):
+            valuation.analyze_config(cfg, "MRVL")
+
+        cfg["data_provenance"] = {
+            "provider": "legacy",
+            "queried_at": "2026-08-28T00:00:00+09:00",
+            "source_urls": [],
+            "fields": ["market"],
+            "status": "legacy_unavailable",
+            "hold_reason": "legacy 보류",
+        }
+        with self.assertRaisesRegex(ValueError, "날짜만 허용"):
+            valuation.analyze_config(cfg, "MRVL")
+
+        cfg["data_provenance"] = {
+            "provider": "legacy",
+            "queried_at": "2026-08-28",
+            "source_urls": [],
+            "fields": ["market"],
+            "status": "legacy_unavailable",
+        }
+        with self.assertRaisesRegex(ValueError, "hold_reason 이 필요"):
+            valuation.analyze_config(cfg, "MRVL")
+
+    def test_special_situation_without_completed_contract_blocks_candidate(self):
+        cfg = self.load_cfg("MRVL")
+        cfg["data_provenance"] = self.current_provenance()
+        cfg["special_situation"] = {"active": True, "evidence": ["계약 발표"], "source_urls": ["https://example.test/event"]}
+
+        data = valuation.analyze_config(cfg, "MRVL")
+
+        self.assertEqual(data["special_situation"]["active"], True)
+        self.assertIn("완료 계약이 부족", data["special_situation_hold_reason"])
+        self.assertIn("type", data["special_situation_hold_reason"])
+        self.assertIn("review_status", data["special_situation_hold_reason"])
+        self.assertIn("decision", data["special_situation_hold_reason"])
+        self.assertEqual(data["candidate"]["call"], "보류")
+        self.assertIn(data["special_situation_hold_reason"], data["candidate"]["reasons"])
+
+    def test_special_situation_hold_decision_blocks_candidate(self):
+        cfg = self.load_cfg("MRVL")
+        cfg["data_provenance"] = self.current_provenance()
+        cfg["special_situation"] = {
+            "active": True,
+            "type": "customer_contract",
+            "review_status": "completed",
+            "decision": "hold",
+            "evidence": ["계약 발표"],
+            "source_urls": ["https://example.test/event"],
+        }
+
+        data = valuation.analyze_config(cfg, "MRVL")
+
+        self.assertIn("decision=hold", data["special_situation_hold_reason"])
+        self.assertEqual(data["candidate"]["call"], "보류")
+        self.assertIn(data["special_situation_hold_reason"], data["candidate"]["reasons"])
 
     def test_cli_mentions_dynamic_horizon_and_required_cagr(self):
         out = subprocess.check_output(

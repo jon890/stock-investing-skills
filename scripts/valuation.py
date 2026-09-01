@@ -6,6 +6,7 @@
 """
 from __future__ import annotations
 import json, os, sys, statistics as st
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -212,13 +213,15 @@ def judge_multiples(peers, target_growth, relative_year=DEFAULT_RELATIVE_MULTIPL
 
 
 def relative_value(peers, target_ticker, base_sales, base_ebitda, market,
-                   relative_year=DEFAULT_RELATIVE_MULTIPLE_YEAR):
+                   relative_year=DEFAULT_RELATIVE_MULTIPLE_YEAR, usable_fields=None):
     """동종군 사분위로 범위를 낸다. 회귀 외삽은 하지 않는다."""
     fields = multiple_fields(relative_year)
     others = {t: x for t, x in peers.items() if t != target_ticker}
     rows = []
     for key, label, base in [(fields["ebitda"], "EV/EBITDA", base_ebitda),
                              (fields["sales"], "EV/Sales", base_sales)]:
+        if usable_fields is not None and key not in usable_fields:
+            continue
         vals = sorted(x[key] for x in others.values() if x.get(key) and x[key] > 0)
         if len(vals) < 4 or not base:
             continue
@@ -233,14 +236,32 @@ def relative_value(peers, target_ticker, base_sales, base_ebitda, market,
     return rows, st.median([r["price"] for r in rows]) if rows else None
 
 
-def relative_hold_reason(peers, target_ticker, relative_year, min_count=4):
+def relative_hold_reason(peers, target_ticker, relative_year, fits=None, target_growth=None, min_count=4):
     fields = multiple_fields(relative_year)
     others = {t: x for t, x in peers.items() if t != target_ticker}
     sales_count = sum(1 for x in others.values() if x.get(fields["sales"]) and x[fields["sales"]] > 0)
     ebitda_count = sum(1 for x in others.values() if x.get(fields["ebitda"]) and x[fields["ebitda"]] > 0)
+    excluded = []
+    for key in (fields["sales"], fields["ebitda"]):
+        fit = (fits or {}).get(key)
+        if fit and fit.get("extrapolates"):
+            excluded.append(
+                f"{key} 대상 성장률 {target_growth*100:.1f}%가 "
+                f"동종군 적합 구간 {fit['xmin']*100:.1f}~{fit['xmax']*100:.1f}% 밖이라 제외했다")
+    if excluded:
+        return f"{relative_year}년 기준 상대가치 배수를 모두 보류했다. " + " ".join(excluded)
     return (f"{relative_year}년 기준 동종군 배수가 부족하다. "
             f"{fields['sales']} 관측 {sales_count}개, {fields['ebitda']} 관측 {ebitda_count}개라 "
             f"사분위 계산에 필요한 {min_count}개를 채우지 못했다.")
+
+
+def usable_relative_fields(fits, relative_year):
+    """대상 성장률이 동종군 적합 구간 안에 있는 배수만 상대가치에 쓴다."""
+    fields = multiple_fields(relative_year)
+    return {
+        key for key in (fields["sales"], fields["ebitda"])
+        if fits.get(key) and not fits[key].get("extrapolates")
+    }
 
 
 # ────────────────────────── 텐베거 판정 ──────────────────────────
@@ -418,6 +439,94 @@ def disagreement(absolute, relative):
     return {"gap": gap, "note": note}
 
 
+def normalize_source_urls(provenance):
+    if "source_urls" in provenance:
+        return provenance.get("source_urls") or []
+    if provenance.get("source_url"):
+        return [provenance["source_url"]]
+    return []
+
+
+def validate_data_provenance(cfg):
+    """현재 데이터의 출처와 갱신 상태를 검증하고 후보 게이트 사유를 낸다."""
+    provenance = cfg.get("data_provenance") or {}
+    required = ["provider", "queried_at"]
+    missing = [k for k in required if not provenance.get(k)]
+    if "source_url" not in provenance and "source_urls" not in provenance:
+        missing.append("source_url 또는 source_urls")
+    if missing:
+        raise ValueError("data_provenance 필드가 부족하다: " + ", ".join(missing))
+
+    out = dict(provenance)
+    out["source_urls"] = normalize_source_urls(out)
+    status = out.get("status", "current")
+    fields = out.get("fields") or []
+    if not fields:
+        raise ValueError("data_provenance.fields 는 비어 있으면 안 된다.")
+
+    hold_reason = None
+    if status == "current":
+        if not out["source_urls"]:
+            raise ValueError("current data_provenance 는 source_urls 가 비어 있으면 안 된다.")
+        try:
+            queried_at = datetime.fromisoformat(out["queried_at"])
+        except ValueError as e:
+            raise ValueError("current data_provenance.queried_at 은 ISO 8601 형식이어야 한다.") from e
+        if queried_at.tzinfo is None:
+            raise ValueError("current data_provenance.queried_at 은 timezone 을 포함해야 한다.")
+    elif status == "legacy_unavailable":
+        if out["source_urls"]:
+            raise ValueError("legacy_unavailable data_provenance 는 source_urls 를 비워야 한다.")
+        if "T" in out["queried_at"]:
+            raise ValueError("legacy_unavailable data_provenance.queried_at 은 날짜만 허용한다.")
+        if not out.get("hold_reason"):
+            raise ValueError("legacy_unavailable data_provenance 는 hold_reason 이 필요하다.")
+        hold_reason = out["hold_reason"]
+    else:
+        hold_reason = out.get("hold_reason") or (
+            f"data_provenance.status={status} 라서 현재 데이터 기반 후보 판정으로 올릴 수 없다.")
+    return out, hold_reason
+
+
+def validate_special_situation(cfg):
+    """특수상황 투자는 검토 완료와 계속 진행 결정이 있어야 후보 판정을 통과한다."""
+    special = cfg.get("special_situation") or {"active": False, "evidence": [], "source_urls": []}
+    out = dict(special)
+    out.setdefault("active", False)
+    out["source_urls"] = normalize_source_urls(out)
+    out.setdefault("evidence", [])
+    hold_reason = None
+    if out["active"]:
+        missing = [
+            key for key in ["type", "review_status", "decision"]
+            if not out.get(key)
+        ]
+        if not out["evidence"]:
+            missing.append("evidence")
+        if not out["source_urls"]:
+            missing.append("source_urls")
+        if missing:
+            hold_reason = "특수상황이 활성화됐지만 완료 계약이 부족하다: " + ", ".join(missing)
+        elif out["review_status"] != "completed" or out["decision"] != "continue":
+            hold_reason = (
+                f"특수상황 검토 상태가 review_status={out['review_status']}, "
+                f"decision={out['decision']} 이라 후보 판정을 올릴 수 없다.")
+    return out, hold_reason
+
+
+def candidate_gate(absolute, relative, tenbagger_result, relative_hold, provenance_hold, special_hold):
+    reasons = [x for x in [relative_hold, provenance_hold, special_hold] if x]
+    tenbagger_call = tenbagger_result["verdict"][0]
+    if tenbagger_call not in {"가능", "최선 시나리오만"}:
+        reasons.append(f"텐베거 판정이 '{tenbagger_call}'라서 후보 기준을 넘지 못했다.")
+    if reasons:
+        return {"eligible": False, "call": "보류", "reasons": reasons}
+    calls = [absolute["call"], relative["call"] if relative else "보유"]
+    if any(x in {"매수", "비중 확대"} for x in calls):
+        return {"eligible": True, "call": "후보", "reasons": []}
+    return {"eligible": False, "call": "보류", "reasons": ["절대가치와 상대가치가 후보 기준을 넘지 못했다."]}
+
+
 # ────────────────────────────── 실행 ──────────────────────────────
 
 def load(ticker):
@@ -433,15 +542,17 @@ def config_years(cfg):
     relative_year = cfg.get("relative_multiple_year", DEFAULT_RELATIVE_MULTIPLE_YEAR)
     return years, first_year, relative_year
 
-def main():
-    if len(sys.argv) < 2:
-        raise SystemExit(__doc__)
-    ticker = sys.argv[1].upper()
-    as_json = "--json" in sys.argv
-    cfg = load(ticker)
+def analyze(ticker):
+    ticker = ticker.upper()
+    return analyze_config(load(ticker), ticker)
+
+
+def analyze_config(cfg, ticker):
     m, f = cfg["market"], cfg["fundamentals"]
     P = m["price"]
     tenbagger_years, first_projection_year, relative_year = config_years(cfg)
+    data_provenance, provenance_hold = validate_data_provenance(cfg)
+    special_situation, special_hold = validate_special_situation(cfg)
 
     scen, weighted = run_scenarios(cfg)
     rev = reverse_dcf(cfg)
@@ -452,15 +563,18 @@ def main():
     base_ebitda = base_sales * f["ebitda_margin_f2"]
     growth = base_sales / f["guidance_sales_f1"] - 1
     fits = judge_multiples({t: x for t, x in peers.items() if t != ticker}, growth, relative_year)
-    rel_rows, rel_ps = relative_value(peers, ticker, base_sales, base_ebitda, m, relative_year)
-    rel_hold = relative_hold_reason(peers, ticker, relative_year) if not rel_rows else None
+    usable_fields = usable_relative_fields(fits, relative_year)
+    rel_rows, rel_ps = relative_value(peers, ticker, base_sales, base_ebitda, m, relative_year, usable_fields)
+    rel_hold = (relative_hold_reason(peers, ticker, relative_year, fits, growth)
+                if not rel_rows else None)
 
     absolute = judge_absolute(scen, weighted, P)
     relative = judge_relative(rel_rows, P)
     gapinfo = disagreement(absolute, relative)
     ten = tenbagger(cfg, years=tenbagger_years, first_year=first_projection_year)
+    candidate = candidate_gate(absolute, relative, ten, rel_hold, provenance_hold, special_hold)
 
-    result = {"ticker": ticker, "name": cfg["name"], "asof": cfg["asof"],
+    return {"ticker": ticker, "name": cfg["name"], "asof": cfg["asof"],
               "market": m, "fundamentals": f,
               "assumptions": {k: {"wacc": x["wacc"], "g": x["g"], "tax": x["tax"],
                                   "probability": x["probability"],
@@ -475,10 +589,32 @@ def main():
               "absolute": absolute, "relative": relative, "disagreement": gapinfo,
               "tenbagger": ten, "peers": peers, "base_sales": base_sales,
               "base_ebitda": base_ebitda, "target_growth": growth,
+              "data_provenance": data_provenance,
+              "data_provenance_hold_reason": provenance_hold,
+              "special_situation": special_situation,
+              "special_situation_hold_reason": special_hold,
+              "candidate": candidate,
               "tenbagger_years": tenbagger_years,
               "first_projection_year": first_projection_year,
               "relative_multiple_year": relative_year,
               "relative_fields": multiple_fields(relative_year)}
+
+
+def main():
+    if len(sys.argv) < 2:
+        raise SystemExit(__doc__)
+    ticker = sys.argv[1].upper()
+    as_json = "--json" in sys.argv
+    cfg = load(ticker)
+    result = analyze_config(cfg, ticker)
+    m, P = result["market"], result["market"]["price"]
+    f = result["fundamentals"]
+    scen, weighted, rev = result["scenarios"], result["dcf_weighted"], result["reverse"]
+    chk, fits = result["consensus_check"], result["multiple_fits"]
+    rel_rows, rel_hold = result["relative_rows"], result["relative_hold_reason"]
+    absolute, relative = result["absolute"], result["relative"]
+    gapinfo, ten = result["disagreement"], result["tenbagger"]
+    growth = result["target_growth"]
 
     if as_json:
         print(json.dumps(result, ensure_ascii=False, default=float))

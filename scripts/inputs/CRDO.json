@@ -1,6 +1,23 @@
 {
   "name": "Credo Technology Group",
   "asof": "2026-08-28",
+  "data_provenance": {
+    "provider": "legacy manual capture",
+    "queried_at": "2026-08-28",
+    "source_urls": [],
+    "fields": [
+      "market",
+      "fundamentals",
+      "peers"
+    ],
+    "status": "legacy_unavailable",
+    "hold_reason": "원 입력에 조회 URL 이 남아 있지 않은 legacy 데이터라 현재 데이터 기반 후보 판정으로 올리지 않는다."
+  },
+  "special_situation": {
+    "active": false,
+    "evidence": [],
+    "source_urls": []
+  },
   "market": {
     "price": 240.24,
     "shares": 187.94,
