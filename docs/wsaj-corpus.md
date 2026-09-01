@@ -8,7 +8,7 @@
 | 항목 | 값 |
 | --- | --- |
 | 채널 | `https://www.youtube.com/@wsaj/videos` |
-| 색인한 영상 수 | 495개 |
+| 색인한 영상 수 | 아래 `status` 명령의 `total` 값 |
 | 처리 상태 | 증분 처리 중 |
 | 최신 진행률 | 아래 `status` 명령의 출력이 기준 |
 
@@ -82,5 +82,10 @@ Mac 비밀번호 입력을 피하기 위해 기본 경로에서는 쿠키와 브
 - 화면 근거가 있으면 contact sheet 경로와 프레임 시각을 함께 남긴다.
 - 승격 뒤 `scripts/evaluate_wsaj_brain.py` 를 다시 실행한다.
 
-현재 `wiki/experts/wsaj/evidence/core.json` 에 승격된 증거는 29개다.
+승격된 증거 수는 다음 명령으로 확인한다.
+
+```bash
+jq '.evidence | length' wiki/experts/wsaj/evidence/core.json
+```
+
 처리 완료된 영상 전체가 답변 근거로 승격된 것은 아니다.

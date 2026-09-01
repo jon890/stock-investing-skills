@@ -1,5 +1,7 @@
 # plan003-wsaj-wiki-mvp
 
+> 이 계획의 저장 구조는 `plan005-multi-expert-wiki`와 [ADR-0003](../docs/adr/0003-tool-independent-multi-expert-wiki.md)으로 대체됐다. 아래 경로와 명령은 당시 결정의 기록이다.
+
 ## 목적
 
 월가아재 공개 영상 근거로만 답하는 비공식 연구 보조자 MVP를 만든다.

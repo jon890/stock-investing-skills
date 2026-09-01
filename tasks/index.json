@@ -47,6 +47,7 @@
       "id": "plan003-wsaj-wiki-mvp",
       "title": "월가아재 공개 영상 근거 기반 연구 보조자 MVP",
       "task_file": "tasks/plan003-wsaj-wiki-mvp.md",
+      "superseded_by": "plan005-multi-expert-wiki",
       "dependencies": [
         "plan001-sector-bottleneck"
       ],
@@ -157,10 +158,7 @@
         "docs/data-schema.md",
         "docs/glossary.md",
         "docs/adr/0004-separate-common-and-expert-glossaries.md",
-        "docs/handoff.md",
-        "docs/investing-wiki.md",
         "wiki/index.md",
-        "wiki/log.md",
         "wiki/experts/wsaj/profile.json",
         "wiki/experts/wsaj/index.md",
         "wiki/experts/wsaj/glossary.md",
@@ -170,6 +168,11 @@
         "scripts/lint_investing_wiki.py",
         "tests/test_investing_wiki_lint.py",
         "tasks/plan003-wsaj-wiki-mvp.md"
+      ],
+      "deleted_files": [
+        "docs/handoff.md",
+        "docs/investing-wiki.md",
+        "wiki/log.md"
       ],
       "validation_commands": [
         "python3 scripts/lint_investing_wiki.py",

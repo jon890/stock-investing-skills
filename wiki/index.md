@@ -19,7 +19,6 @@
 | `experts/<expert_id>/pages/*.md` | expert 별 주제 문서 |
 | `experts/<expert_id>/evidence/*.json` | 답변에 쓸 수 있는 검토 증거 |
 | `concepts/*.md` | 둘 이상 expert 의 근거가 모였을 때만 만드는 공통 개념 |
-| `log.md` | 사람이 유지할 가치가 있는 Wiki 변경 기록 |
 
 ## 새 expert 추가 최소 계약
 

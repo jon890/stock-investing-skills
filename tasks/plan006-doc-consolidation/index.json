@@ -1,10 +1,10 @@
 {
   "name": "plan006-doc-consolidation",
   "description": "핵심 문서의 사실관계를 고치고 중복 문서를 관리 원본에 통합하며 공통·expert 용어집을 분리한다",
-  "status": "planned",
+  "status": "completed",
   "created_at": "2026-09-01",
   "total_phases": 2,
-  "current_phases": 1,
+  "current_phases": 2,
   "phases": [
     {
       "number": 1,
