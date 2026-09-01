@@ -17,7 +17,8 @@ description: >
 목표와 판정 기준은 `docs/prd.md` 가 소유한다.
 전체 흐름은 `docs/flow.md` 가 소유한다.
 계산은 `scripts/bottleneck.py`, `scripts/valuation.py`, `scripts/render_report.py` 가 소유한다.
-용어는 `docs/glossary.md` 를 우선한다.
+일반 투자 용어는 `docs/glossary.md` 를 기준으로 삼는다.
+특정 expert 의 용어집을 공통 정의의 원본으로 쓰지 않는다.
 
 매매 주문은 넣지 않는다.
 분석과 리포트까지만 만든다.

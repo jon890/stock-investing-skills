@@ -137,6 +137,38 @@ class InvestingWikiLintTests(unittest.TestCase):
 
         self.assertTrue(any("supporting_evidence_ids must not include itself" in item for item in failures), failures)
 
+    def test_profile_glossary_path_missing_file_fails(self):
+        with temp_wiki() as wiki:
+            profile_path = wiki / "experts" / "wsaj" / "profile.json"
+            payload = json.loads(profile_path.read_text(encoding="utf-8"))
+            payload["paths"]["glossary"] = "missing-glossary.md"
+            profile_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+            failures = lint_investing_wiki.lint(wiki)
+
+        self.assertTrue(any("paths.glossary file does not exist: missing-glossary.md" in item for item in failures), failures)
+
+    def test_profile_glossary_path_escape_fails(self):
+        with temp_wiki() as wiki:
+            profile_path = wiki / "experts" / "wsaj" / "profile.json"
+            payload = json.loads(profile_path.read_text(encoding="utf-8"))
+            payload["paths"]["glossary"] = "../shared-glossary.md"
+            (wiki / "experts" / "shared-glossary.md").write_text("# Shared glossary\n", encoding="utf-8")
+            profile_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+            failures = lint_investing_wiki.lint(wiki)
+
+        self.assertTrue(any("paths.glossary must stay inside" in item for item in failures), failures)
+
+    def test_profile_glossary_path_existing_file_passes(self):
+        with temp_wiki() as wiki:
+            profile_path = wiki / "experts" / "wsaj" / "profile.json"
+            payload = json.loads(profile_path.read_text(encoding="utf-8"))
+            payload["paths"]["glossary"] = "glossary.md"
+            (wiki / "experts" / "wsaj" / "glossary.md").write_text("# Glossary\n", encoding="utf-8")
+            profile_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+            failures = lint_investing_wiki.lint(wiki)
+
+        self.assertFalse([item for item in failures if "paths.glossary" in item], failures)
+
 
 def temp_wiki():
     class TempWiki:

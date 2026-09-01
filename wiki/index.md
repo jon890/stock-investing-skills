@@ -7,7 +7,7 @@
 
 | expert | 범위 | 진입점 |
 | --- | --- | --- |
-| [월가아재](experts/wsaj/index.md) | 공개 YouTube 영상에서 검토한 투자 철학, 용어, 가치평가 흐름, 사례. [그래프 보기](experts/wsaj/graph.md) | `expert_id=wsaj` |
+| [월가아재](experts/wsaj/index.md) | 공개 YouTube 영상에서 검토한 투자 철학, 용어, 가치평가 흐름, 사례. [그래프 보기](experts/wsaj/graph.md), [용어집](experts/wsaj/glossary.md) | `expert_id=wsaj` |
 
 ## 구조
 
@@ -15,6 +15,7 @@
 | --- | --- |
 | `experts/<expert_id>/profile.json` | expert 이름, 자료 범위, 답변 정책 |
 | `experts/<expert_id>/index.md` | expert 별 주제 지도 |
+| `experts/<expert_id>/glossary.md` | expert 별 용어 사용과 강조점 |
 | `experts/<expert_id>/pages/*.md` | expert 별 주제 문서 |
 | `experts/<expert_id>/evidence/*.json` | 답변에 쓸 수 있는 검토 증거 |
 | `concepts/*.md` | 둘 이상 expert 의 근거가 모였을 때만 만드는 공통 개념 |

@@ -6,12 +6,14 @@
 ## 범위
 
 - 증거 원본: `evidence/core.json`
+- 용어집: `glossary.md`
 - 주제 문서: `pages/`
 - 프로필: `profile.json`
 
 ## 주제 문서
 
 - [그래프로 보는 Wiki 구조와 투자 원칙](graph.md)
+- [월가아재 용어집](glossary.md)
 - [투자 가치관](pages/investing-values.md)
 - [가치평가 프로세스](pages/valuation-process.md)
 - [기업 사례](pages/company-cases.md)

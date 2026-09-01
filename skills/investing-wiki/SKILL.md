@@ -30,8 +30,12 @@ python3 scripts/query_investing_wiki.py --json --expert <expert_id> "<질문>"
 - `wiki/experts/<expert_id>/evidence/*.json`
 - `wiki/experts/<expert_id>/index.md`
 - 질문 주제에 맞는 `wiki/experts/<expert_id>/pages/*.md`
+- 해당 인물의 용어 사용이 필요하고 profile 에 `paths.glossary` 가 있으면 그 expert 용어집
 - 공통 개념이 필요하면 `wiki/concepts/*.md`
-- 용어와 전체 하네스 흐름이 필요하면 `docs/glossary.md`, `docs/flow.md`
+- 일반 투자 용어와 전체 하네스 흐름이 필요하면 `docs/glossary.md`, `docs/flow.md`
+
+공통 용어집의 일반 정의를 expert 의 주장처럼 인용하지 않는다.
+expert 용어집의 설명은 evidence 와 함께 쓰고 일반 상식으로 넓히지 않는다.
 
 `.cache/` 는 원자료 확인용이다.
 증거 ID 충돌, 화면 근거 재확인, 미승격 원자료 검토가 필요할 때만 본다.

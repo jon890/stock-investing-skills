@@ -97,6 +97,27 @@ def validate_profile(expert_dir: Path) -> tuple[dict[str, Any] | None, list[str]
     for field in ("expert_name", "corpus_id", "source_scope", "language"):
         if not str(profile.get(field, "")).strip():
             failures.append(f"{profile_path}: missing {field}")
+    paths = profile.get("paths", {})
+    if "paths" in profile and not isinstance(paths, dict):
+        failures.append(f"{profile_path}: paths must be an object")
+    elif isinstance(paths, dict) and "glossary" in paths:
+        glossary = paths.get("glossary")
+        if not isinstance(glossary, str) or not glossary.strip():
+            failures.append(f"{profile_path}: paths.glossary must be a relative path string")
+        else:
+            glossary_path = Path(glossary)
+            if glossary_path.is_absolute():
+                failures.append(f"{profile_path}: paths.glossary must be a relative path string")
+            else:
+                expert_root = expert_dir.resolve()
+                resolved_glossary = (expert_dir / glossary_path).resolve()
+                try:
+                    resolved_glossary.relative_to(expert_root)
+                except ValueError:
+                    failures.append(f"{profile_path}: paths.glossary must stay inside {expert_dir}")
+                else:
+                    if not resolved_glossary.is_file():
+                        failures.append(f"{profile_path}: paths.glossary file does not exist: {glossary}")
     return profile, failures
 
 

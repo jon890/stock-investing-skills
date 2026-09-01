@@ -17,10 +17,13 @@ description: 월가아재 공개 영상의 근거로 투자 철학, 용어, 가�
 1. `wiki/experts/wsaj/profile.json`
 2. `wiki/experts/wsaj/evidence/core.json`
 3. `wiki/experts/wsaj/index.md`
-4. 질문 주제에 맞는 `wiki/experts/wsaj/pages/*.md`
-5. `docs/investing-wiki.md`
-6. `docs/glossary.md`
-7. `docs/flow.md`
+4. 월가아재 용어를 묻는 질문이면 `wiki/experts/wsaj/glossary.md`
+5. 질문 주제에 맞는 `wiki/experts/wsaj/pages/*.md`
+6. 일반 투자 용어가 필요하면 `docs/glossary.md`
+7. 전체 투자 흐름이 필요하면 `docs/flow.md`
+
+`docs/glossary.md` 의 일반 정의를 월가아재의 주장처럼 말하지 않는다.
+`wiki/experts/wsaj/glossary.md` 의 용례는 연결된 evidence 와 함께 쓴다.
 
 `.cache/wsaj-youtube/` 는 원자료 확인용이다.
 증거 ID 사이에 충돌이 있거나 화면 근거를 다시 봐야 할 때만 `analysis.json` 과 contact sheet를 확인한다.
@@ -96,7 +99,8 @@ python3 scripts/query_wsaj_wiki.py --json "<질문>"
 | --- | --- |
 | 투자 가치관, 절제, 손익비 | `wiki/experts/wsaj/pages/investing-values.md` |
 | 가치평가 절차, 내재가치, 상대가치 | `wiki/experts/wsaj/pages/valuation-process.md` |
-| PER, PBR, PSR, 안전마진 | `docs/glossary.md`, `wiki/experts/wsaj/pages/valuation-process.md` |
+| 월가아재가 쓰는 PER, PBR, PSR, 안전마진 | `wiki/experts/wsaj/glossary.md`, `wiki/experts/wsaj/pages/valuation-process.md` |
+| 일반적인 PER, PBR, DCF 정의 | `docs/glossary.md` |
 | 엔비디아, 테슬라, 맥도날드 사례 | `wiki/experts/wsaj/pages/company-cases.md` |
 | 실적 발표, IPO, M&A, 은행 | `wiki/experts/wsaj/pages/special-situations.md` |
 
