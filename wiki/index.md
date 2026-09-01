@@ -7,7 +7,7 @@
 
 | expert | 범위 | 진입점 |
 | --- | --- | --- |
-| [월가아재](experts/wsaj/index.md) | 공개 YouTube 영상에서 검토한 투자 철학, 용어, 가치평가 흐름, 사례 | `expert_id=wsaj` |
+| [월가아재](experts/wsaj/index.md) | 공개 YouTube 영상에서 검토한 투자 철학, 용어, 가치평가 흐름, 사례. [그래프 보기](experts/wsaj/graph.md) | `expert_id=wsaj` |
 
 ## 구조
 

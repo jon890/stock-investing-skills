@@ -11,6 +11,7 @@
 
 ## 주제 문서
 
+- [그래프로 보는 Wiki 구조와 투자 원칙](graph.md)
 - [투자 가치관](pages/investing-values.md)
 - [가치평가 프로세스](pages/valuation-process.md)
 - [기업 사례](pages/company-cases.md)
