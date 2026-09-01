@@ -14,6 +14,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_WIKI_ROOT = ROOT / "wiki"
 
 ALIASES = {
+    "투자 가치관": ["investing-values", "probabilistic-edge", "discipline", "risk-reward"],
+    "투자 철학": ["investing-values", "probabilistic-edge", "discipline", "risk-reward"],
+    "투자 원칙": ["investing-values", "probabilistic-edge", "discipline", "risk-reward"],
     "가치평가": ["valuation", "process"],
     "밸류에이션": ["valuation"],
     "내재가치": ["intrinsic-value"],

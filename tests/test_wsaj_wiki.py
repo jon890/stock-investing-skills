@@ -70,6 +70,23 @@ class WsajEvidenceTests(unittest.TestCase):
         self.assertEqual(result["status"], "matched")
         self.assertEqual(result["matches"][0]["id"], "wsaj-evidence-000026")
 
+    def test_query_matches_investing_values_in_natural_language(self):
+        questions = [
+            "월가아재의 투자 가치관은 무엇인가?",
+            "월가아재의 투자 철학을 설명해 줘",
+            "개인 투자자가 참고할 투자 원칙은 무엇인가?",
+        ]
+        for question in questions:
+            with self.subTest(question=question):
+                result = run_query(question)
+                self.assertEqual(result["status"], "matched")
+                self.assertEqual(result["matches"][0]["id"], "wsaj-evidence-000026")
+
+    def test_investing_values_alias_does_not_match_unrelated_question(self):
+        result = run_query("가치관과 무관한 원유 선물 롤오버 전략은 어떻게 판단해?")
+        self.assertEqual(result["status"], "unsupported")
+        self.assertEqual(result["matches"], [])
+
     def test_query_matches_index_dcf(self):
         result = run_query("인덱스 DCF로 시장 리스크 프리미엄을 어떻게 봐?")
         self.assertEqual(result["status"], "matched")
