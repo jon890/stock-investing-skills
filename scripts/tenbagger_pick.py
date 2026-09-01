@@ -76,10 +76,11 @@ def context_reasons(context):
     return reasons
 
 
-def analyze_group(group_code, universe_path, basis=None):
+def analyze_group(group_code, universe_path, basis=None, handoff=None):
     context = load_group_context(
         universe_path, group_code, basis=basis, include_candidates=True
     )
+    validate_handoff_context(handoff, context, universe_path)
     candidates = context.pop("candidates")
     reasons = context_reasons(context)
     status = "screenable" if not reasons else "reference_only"
@@ -106,9 +107,12 @@ def candidate_status(context, valuation_result):
     return {"status": "candidate", "reasons": []}
 
 
-def analyze_ticker(ticker, universe_path, basis=None):
+def analyze_ticker(ticker, universe_path, basis=None, handoff=None):
     ticker = ticker.upper()
     context = load_ticker_context(universe_path, ticker, basis=basis)
+    validate_handoff_context(
+        handoff, context, universe_path, require_group_match=False
+    )
     valuation_result = valuation.analyze(ticker)
     status = candidate_status(context, valuation_result)
     return {
@@ -147,7 +151,7 @@ def load_handoff_context(path):
     return context
 
 
-def validate_handoff_context(source, generated, universe_path):
+def validate_handoff_context(source, generated, universe_path, require_group_match=True):
     if not source:
         return
     source_universe = Path(source["universe_path"]).expanduser().resolve()
@@ -155,7 +159,9 @@ def validate_handoff_context(source, generated, universe_path):
     if source_universe != requested_universe:
         raise SystemExit("전달 문맥과 후보 분석의 유니버스 파일이 다릅니다.")
     if source["group_code"] != generated["group_code"]:
-        raise SystemExit("전달 문맥과 후보 분석의 산업 그룹이 다릅니다.")
+        if require_group_match:
+            raise SystemExit("전달 문맥과 후보 분석의 산업 그룹이 다릅니다.")
+        return
     comparable = ("rank", "is_bottleneck_group", "candidate_pool_passed")
     if any(source[key] != generated[key] for key in comparable):
         raise SystemExit("전달 문맥과 현재 유니버스의 병목 판정이 다릅니다.")
@@ -182,14 +188,13 @@ def main():
     handoff = load_handoff_context(args.context)
     basis = handoff["bottleneck_basis"] if handoff else bottleneck.load_basis(args.basis)
     if args.group:
-        result = analyze_group(args.group, args.universe, basis=basis)
+        result = analyze_group(args.group, args.universe, basis=basis, handoff=handoff)
         label = f'{args.group} 후보 풀 상태: {result["candidate_pool_status"]}'
         reasons = result["candidate_pool_reasons"]
     else:
-        result = analyze_ticker(args.ticker, args.universe, basis=basis)
+        result = analyze_ticker(args.ticker, args.universe, basis=basis, handoff=handoff)
         label = f'{result["ticker"]} 후보 상태: {result["candidate_status"]}'
         reasons = result["candidate_status_reasons"]
-    validate_handoff_context(handoff, result["bottleneck_context"], args.universe)
     if args.json:
         body = json.dumps(result, ensure_ascii=False, default=float)
         if args.output:

@@ -129,6 +129,29 @@ class TenbaggerPickTest(unittest.TestCase):
         self.assertEqual(parsed["candidate_pool_status"], "screenable")
         self.assertIn("작성:", result.stdout)
 
+    def test_ticker_handoff_mismatch_returns_reference_valuation(self):
+        with tempfile.TemporaryDirectory() as td:
+            universe_path = self.write_universe(td)
+            handoff = tenbagger_pick.analyze_group(
+                "5740", universe_path, basis=valid_basis()
+            )["bottleneck_context"]
+            with mock.patch.object(
+                tenbagger_pick.valuation, "analyze", return_value=VALUATION_OK
+            ) as analyze:
+                result = tenbagger_pick.analyze_ticker(
+                    "T00",
+                    universe_path,
+                    basis=handoff["bottleneck_basis"],
+                    handoff=handoff,
+                )
+
+        self.assertEqual(result["candidate_status"], "reference_only")
+        self.assertIn(
+            "산업 그룹이 병목 상위권",
+            " ".join(result["candidate_status_reasons"]),
+        )
+        analyze.assert_called_once_with("T00")
+
     def test_ticker_must_pass_size_growth_and_margin_screen(self):
         with tempfile.TemporaryDirectory() as td:
             universe = sample_universe()
