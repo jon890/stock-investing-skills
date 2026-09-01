@@ -1,0 +1,22 @@
+{
+  "name": "plan005-multi-expert-wiki",
+  "description": "도구 이름에 묶인 월가아재 Wiki를 다중 expert 투자 Wiki 구조로 옮긴다",
+  "status": "pending",
+  "created_at": "2026-09-01",
+  "total_phases": 2,
+  "current_phases": 1,
+  "phases": [
+    {
+      "number": 1,
+      "title": "저장 구조와 검색 스크립트 마이그레이션",
+      "file": "phase-01.md",
+      "execution_profile": "standard"
+    },
+    {
+      "number": 2,
+      "title": "스킬, 문서, 검증 연결",
+      "file": "phase-02.md",
+      "execution_profile": "standard"
+    }
+  ]
+}

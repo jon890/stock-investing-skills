@@ -73,7 +73,7 @@ Mac 비밀번호 입력을 피하기 위해 기본 경로에서는 쿠키와 브
 `.cache` 의 전사문은 원자료다.
 답변 근거로 바로 쓰지 않는다.
 
-영상에서 투자 원칙, 가치평가 절차, 회사 사례, 특수 상황 규칙이 확인되면 짧은 증거 단위로 요약해 `docs/wsaj/evidence/core.json` 에 승격한다.
+영상에서 투자 원칙, 가치평가 절차, 회사 사례, 특수 상황 규칙이 확인되면 짧은 증거 단위로 요약해 `wiki/experts/wsaj/evidence/core.json` 에 승격한다.
 승격할 때는 다음 조건을 확인한다.
 
 - 영상 ID, 제목, URL, 타임스탬프가 있어야 한다.
@@ -82,5 +82,5 @@ Mac 비밀번호 입력을 피하기 위해 기본 경로에서는 쿠키와 브
 - 화면 근거가 있으면 contact sheet 경로와 프레임 시각을 함께 남긴다.
 - 승격 뒤 `scripts/evaluate_wsaj_brain.py` 를 다시 실행한다.
 
-현재 `docs/wsaj/evidence/core.json` 에 승격된 증거는 29개다.
+현재 `wiki/experts/wsaj/evidence/core.json` 에 승격된 증거는 29개다.
 처리 완료된 영상 전체가 답변 근거로 승격된 것은 아니다.

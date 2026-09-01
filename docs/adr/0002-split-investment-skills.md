@@ -25,7 +25,8 @@
 | --- | --- |
 | `sector-bottleneck` | 시장과 섹터 데이터를 받아 병목 산업 그룹을 찾는다 |
 | `tenbagger-pick` | 확정된 병목 안에서 텐베거 후보를 찾고 가치평가로 검증한다 |
-| `wsaj-investing-brain` | 월가아재 자료 기반 원칙과 용어를 근거와 함께 검색해 답한다 |
+| `investing-wiki` | 투자 거장별 자료 기반 원칙과 용어를 근거와 함께 검색해 답한다 |
+| `wsaj-investing-brain` | 기존 월가아재 호출을 `investing-wiki --expert wsaj` 로 위임한다 |
 
 Claude Code 와 Codex 는 모두 `skills/` 를 실제 원본으로 읽는다.
 `.claude/skills` 와 `.agents/skills` 는 `skills/` 를 가리키는 호환 경로로 둔다.
@@ -50,6 +51,6 @@ Claude Code 와 Codex 는 모두 `skills/` 를 실제 원본으로 읽는다.
 
 1. `sector-bottleneck` 은 종목 목표가 없이 병목 그룹을 낸다.
 2. `tenbagger-pick` 은 병목 그룹 입력 없이는 종목 결론을 내지 않는다.
-3. `wsaj-investing-brain` 은 투자 원칙 답변에 증거 ID 를 붙인다.
-4. 세 스킬은 `skills/` 에만 원본을 둔다.
+3. `investing-wiki` 와 `wsaj-investing-brain` 은 투자 원칙 답변에 증거 ID 를 붙인다.
+4. 스킬 원본은 `skills/` 에만 둔다.
 5. `CLAUDE.md`, `.claude/skills`, `.agents/skills` 의 심볼릭 링크가 끊어지지 않는다.

@@ -94,6 +94,53 @@
         "python3 -m unittest -v tests/test_wsaj_video_corpus.py",
         "git status --ignored --short reports .cache"
       ]
+    },
+    {
+      "id": "plan005-multi-expert-wiki",
+      "title": "도구와 독립된 다중 expert 투자 Wiki 구조",
+      "task_file": "tasks/plan005-multi-expert-wiki/index.json",
+      "dependencies": [
+        "plan003-wsaj-wiki-mvp"
+      ],
+      "owned_files": [
+        "docs/prd.md",
+        "docs/flow.md",
+        "docs/code-architecture.md",
+        "docs/data-schema.md",
+        "docs/investing-wiki.md",
+        "docs/adr/0001-evidence-backed-wsaj-wiki.md",
+        "docs/adr/0002-split-investment-skills.md",
+        "docs/adr/0003-tool-independent-multi-expert-wiki.md",
+        "docs/wsaj-corpus.md",
+        "docs/handoff.md",
+        "wiki/experts/<expert_id>/profile.json",
+        "wiki/experts/<expert_id>/index.md",
+        "wiki/experts/<expert_id>/pages/*.md",
+        "wiki/experts/<expert_id>/evidence/*.json",
+        "wiki/concepts/*.md",
+        "skills/investing-wiki/SKILL.md",
+        "skills/wsaj-investing-brain/SKILL.md",
+        "scripts/query_investing_wiki.py",
+        "scripts/query_wsaj_wiki.py",
+        "scripts/lint_investing_wiki.py",
+        "scripts/evaluate_wsaj_brain.py",
+        "tests/fixtures/wsaj-brain-eval.json",
+        "tests/test_wsaj_brain.py",
+        "tests/test_wsaj_wiki.py",
+        "tests/test_investing_wiki_lint.py"
+      ],
+      "validation_commands": [
+        "python3 scripts/lint_investing_wiki.py",
+        "python3 scripts/evaluate_wsaj_brain.py",
+        "python3 -m unittest -v tests/test_wsaj_wiki.py tests/test_wsaj_brain.py tests/test_investing_wiki_lint.py tests/test_youtube_publish_dates.py",
+        "python3 /Users/nhn/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/investing-wiki",
+        "python3 /Users/nhn/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/wsaj-investing-brain",
+        "for file in docs/prd.md docs/flow.md docs/code-architecture.md docs/data-schema.md docs/investing-wiki.md docs/wsaj-corpus.md docs/handoff.md docs/adr/0001-evidence-backed-wsaj-wiki.md docs/adr/0002-split-investment-skills.md docs/adr/0003-tool-independent-multi-expert-wiki.md skills/investing-wiki/SKILL.md skills/wsaj-investing-brain/SKILL.md; do ~/.claude/scripts/korean-style-check.sh \"$file\"; python3 ~/.claude/scripts/check-readability.py \"$file\"; done",
+        "python3 scripts/query_investing_wiki.py --json \"안전마진은 어떻게 조절해?\" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data[\"status\"] == \"expert_required\"; assert \"wsaj\" in data[\"experts\"]'",
+        "! rg -n \"omx_wiki|docs/wsaj/\" docs scripts skills tests -g '!docs/adr/**' -g '!docs/retrospectives/**'",
+        "rg -n \"omx_wiki|docs/wsaj/\" docs/adr tasks || true",
+        "git status --ignored --short reports .cache"
+      ]
     }
   ]
 }
