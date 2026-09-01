@@ -11,8 +11,8 @@
 | 경계 | 책임 | 쓰기 위치 | 읽기 위치 |
 | --- | --- | --- | --- |
 | 영상 적재 | 영상 ID, 제목, URL, 음성 전사, 화면 요약을 로컬 원자료로 저장한다 | `.cache/wsaj-youtube/` | 증거 추출기 |
-| 증거 저장소 | 원자료에서 짧은 주장 단위와 출처를 뽑아 expert 별로 구조화한다 | `wiki/experts/<expert_id>/evidence/` | wiki 컴파일러, 검색 스크립트 |
-| wiki 컴파일 | 증거를 expert 별 주제 문서와 공통 개념 문서로 엮고 출처를 남긴다 | `wiki/experts/<expert_id>/pages/`, `wiki/concepts/` | 답변 스킬 |
+| 증거 저장소 | 원자료에서 짧은 주장 단위와 출처를 뽑아 expert 별로 구조화한다 | `wiki/experts/<expert_id>/evidence/` | Wiki 편집, 검색 스크립트 |
+| Wiki 편집 | 검토자가 증거를 expert 별 주제 문서, 용어집, 공통 개념 문서로 엮는다 | `wiki/experts/<expert_id>/`, `wiki/concepts/` | 답변 스킬 |
 | 검색과 답변 | 질문과 관련된 근거를 찾고, 근거가 부족하면 답하지 않는다 | `skills/investing-wiki/` | Codex, Claude Code |
 | 호환 진입점 | 기존 월가아재 호출을 새 검색 스크립트로 위임한다 | `skills/wsaj-investing-brain/` | Codex, Claude Code |
 | 현재 데이터 연결 | 주가, 배수, 실적 발표, 컨센서스처럼 시점이 바뀌는 값만 새로 조회한다 | `scripts/` 또는 별도 adapter | 답변 스킬 |
@@ -31,10 +31,11 @@
 | `.agents/skills` | `skills/` 를 가리키는 Codex 호환 경로다 |
 | `.claude/skills` | `skills/` 를 가리키는 Claude Code 호환 경로다 |
 | `.cache/wsaj-youtube/` | 영상 원자료, 전사 결과, 프레임, 임시 분석 결과를 둔다 |
+| `docs/glossary.md` | 특정 expert 와 무관한 투자 공통 용어와 적용 범위를 둔다 |
 | `wiki/index.md` | 투자 Wiki의 canonical entrypoint 와 expert 목록을 둔다 |
-| `wiki/log.md` | 사람이 유지할 가치가 있는 Wiki 변경 기록을 둔다 |
 | `wiki/experts/<expert_id>/profile.json` | expert 이름, 공개 자료 범위, 금지된 답변 범위를 둔다 |
 | `wiki/experts/<expert_id>/index.md` | expert 별 주제 지도와 주요 문서를 둔다 |
+| `wiki/experts/<expert_id>/glossary.md` | 해당 expert 의 용어 사용과 강조점을 증거와 함께 둔다 |
 | `wiki/experts/<expert_id>/evidence/` | 사람이 검토한 증거 단위를 둔다 |
 | `wiki/experts/<expert_id>/pages/` | expert 별 철학, 원칙, 사례, 한계를 사람이 읽는 문서로 둔다 |
 | `wiki/concepts/` | 여러 expert 를 연결하는 공통 개념 문서를 둔다 |
@@ -45,6 +46,7 @@
 wiki 원본은 `wiki/` 하나만 둔다.
 특정 도구 이름이 들어간 경로는 장기 저장 구조로 쓰지 않는다.
 `wiki/concepts/` 는 둘 이상 expert 의 근거가 있을 때만 만든다.
+Git 이 Wiki 변경 이력을 소유하므로 별도 수동 변경 로그를 중복해서 두지 않는다.
 
 ## 처리 흐름
 

@@ -42,6 +42,7 @@
       "summary": "슬라이드에 내재가치 구성 요소가 표시된다."
     }
   ],
+  "supporting_evidence_ids": ["wsaj-evidence-000002"],
   "confidence": "high",
   "reviewed_by": "agent",
   "reviewed_at": "YYYY-MM-DD"
@@ -72,6 +73,7 @@
 | `source_summary` | 예 | 원자료 종류와 관계없이 긴 원문 대신 검토 요약을 쓴다 |
 | `transcript_summary` | 조건부 | 기존 WSAJ 영상 평가와 호환할 때 `source_summary` 와 같은 요약을 쓴다 |
 | `visual_evidence` | 아니요 | 화면 근거가 있으면 contact sheet 경로, 프레임 시각, 요약을 쓴다 |
+| `supporting_evidence_ids` | 아니요 | 추론을 뒷받침하는 같은 expert 의 증거 ID 배열이다. 자기 자신이나 다른 expert 증거는 넣지 않는다 |
 | `confidence` | 예 | `high`, `medium`, `low` 중 하나다 |
 | `reviewed_by` | 예 | 검토 주체를 쓴다 |
 | `reviewed_at` | 예 | 검토일을 쓴다 |
@@ -126,30 +128,43 @@ YouTube가 아닌 자료는 `video_id` 를 쓰지 않는다.
 
 ```json
 {
+  "schema_version": "1.0",
   "expert_id": "wsaj",
   "expert_name": "월가아재",
-  "default_corpus_id": "wsaj-youtube-public",
-  "source_scope": "public-youtube",
+  "display_name": "월가아재",
+  "corpus_id": "wsaj-youtube-public",
+  "source_scope": "공개 YouTube 영상",
   "language": "ko",
-  "persona_policy": "no_impersonation",
-  "current_data_policy": "external_lookup_required",
-  "created_at": "YYYY-MM-DD",
-  "updated_at": "YYYY-MM-DD"
+  "answer_policy": {
+    "mode": "evidence_backed_research_assistant",
+    "no_impersonation": true,
+    "requires_citation": true,
+    "current_market_data_boundary": true
+  },
+  "paths": {
+    "index": "index.md",
+    "glossary": "glossary.md",
+    "pages": "pages/",
+    "evidence": "evidence/"
+  }
 }
 ```
 
 `profile.json` 은 인물의 성격을 재현하기 위한 파일이 아니다.
 검색 범위, 출처 범위, 답변 금지 조건을 고정하는 설정 파일이다.
+현재 linter 는 디렉터리 이름과 같은 `expert_id`, `expert_name`, `corpus_id`, `source_scope`, `language` 를 필수로 검사한다.
+`schema_version`, `display_name`, `answer_policy`, `paths` 는 검색기와 스킬이 읽는 확장 설정이다.
+expert 별 용어집을 만들면 `paths.glossary` 로 위치를 선언한다.
 
 ## wiki 문서 frontmatter
 
-`wiki/experts/<expert_id>/index.md`, `wiki/experts/<expert_id>/pages/*.md`, `wiki/concepts/*.md` 의 주제 문서는 같은 최소 frontmatter 를 가진다.
+`wiki/experts/<expert_id>/pages/*.md` 와 `wiki/concepts/*.md` 의 주제 문서는 다음 frontmatter 를 쓴다.
+expert 인덱스와 용어집은 탐색 문서이므로 frontmatter 를 강제하지 않는다.
 
 ```yaml
 ---
-title: "내재가치"
-expert_id: "wsaj"
-source_scope: "public-youtube"
+title: "월가아재 가치평가 흐름"
+source_scope: "wsaj-video-evidence"
 last_compiled_at: "YYYY-MM-DD"
 evidence_ids:
   - wsaj-evidence-000001
@@ -161,8 +176,41 @@ claim_types:
 
 본문은 설명, 적용 조건, 오용 위험, 관련 증거 순서로 쓴다.
 본문의 핵심 문장은 증거 ID 를 함께 적는다.
+expert 페이지의 증거 ID는 해당 expert 의 증거만 가리킨다.
 `wiki/concepts/` 문서는 여러 expert 의 `evidence_ids` 를 함께 가질 수 있다.
 이때 본문은 출처별 견해를 병렬로 제시하고, 한 expert 의 판단을 다른 expert 의 판단처럼 합치지 않는다.
+
+## 투자 공통 용어와 expert 용어
+
+`docs/glossary.md` 는 구조화 데이터가 아니라 사람이 읽는 공통 참조 문서다.
+용어, 일반 정의, 주로 쓰는 지표나 계산, 적용 범위, 오용 주의를 적고 특정 expert 의 출처를 일반 정의의 근거로 삼지 않는다.
+
+`wiki/experts/<expert_id>/glossary.md` 는 해당 expert 의 자료에서 확인한 용례를 적는다.
+각 항목에는 용어, 자료에서 확인한 의미, 적용 맥락, 오용 위험, 증거 ID를 둔다.
+같은 용어가 공통 용어집에 있더라도 expert 용어집은 그 인물의 강조점과 근거만 소유한다.
+
+## 시장 유니버스와 병목 결과
+
+`reports/universe-<MARKET>-<YYYYMMDD>.json` 은 `market`, `count`, `missing_valuation`, `stocks` 를 가진다.
+각 종목은 식별자와 티커, 거래소, 이름, 시가총액, 섹터·산업 그룹, 기간별 수익률 `ret`, 밸류에이션 `val` 을 가진다.
+수집 실패 값을 0으로 바꾸지 않고 `null` 또는 필드 부재로 남긴다.
+
+`scripts/bottleneck.py --json` 결과는 `market`, `market_ret`, `factors`, `groups`, `quality` 를 가진다.
+각 그룹은 `group`, `sector`, `n`, `coverage`, `raw`, `z`, `score`, `candidates` 를 가진다.
+`factors` 의 가중치와 설명은 실행 시점의 코드에서 함께 출력하므로 문서에 별도 숫자 사본을 두지 않는다.
+
+## 가치평가 입력과 결과
+
+`scripts/inputs/<TICKER>.json` 은 종목별 가정의 원본이다.
+최상위 필드는 `name`, `asof`, `market`, `fundamentals`, `scenarios`, `probability_basis`, `peers`, 출처 묶음, 텐베거 기간 설정으로 나뉜다.
+
+시나리오는 기본, 낙관, 비관을 포함한 세 개 이상을 둔다.
+각 시나리오는 `probability`, `wacc`, `g`, `tax`, `nwc_pct`, 연도별 `revenue`, `opm`, `sbc_pct`, `rationale` 을 가진다.
+확률 합은 1이어야 한다.
+DCF 명시 예측은 기본 5개 연도 값을 쓰며, 기간을 바꾸면 입력 파일에 이유를 남긴다.
+
+`scripts/valuation.py <TICKER> --json` 결과는 입력의 기준일과 시장·기초체력·가정을 보존하고 `absolute`, `dcf_weighted`, `reverse`, `relative`, `multiple_fits`, `disagreement`, `tenbagger` 를 추가한다.
+절대가치와 상대가치는 별도 필드로 유지하며 하나의 가중 목표가로 합치지 않는다.
 
 ## 현재 데이터 조회 기록
 

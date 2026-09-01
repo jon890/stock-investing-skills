@@ -141,6 +141,46 @@
         "rg -n \"omx_wiki|docs/wsaj/\" docs/adr tasks || true",
         "git status --ignored --short reports .cache"
       ]
+    },
+    {
+      "id": "plan006-doc-consolidation",
+      "title": "핵심 문서 통합과 공통·expert 용어집 분리",
+      "task_file": "tasks/plan006-doc-consolidation/index.json",
+      "dependencies": [
+        "plan005-multi-expert-wiki"
+      ],
+      "owned_files": [
+        "README.md",
+        "docs/prd.md",
+        "docs/flow.md",
+        "docs/code-architecture.md",
+        "docs/data-schema.md",
+        "docs/glossary.md",
+        "docs/adr/0004-separate-common-and-expert-glossaries.md",
+        "docs/handoff.md",
+        "docs/investing-wiki.md",
+        "wiki/index.md",
+        "wiki/log.md",
+        "wiki/experts/wsaj/profile.json",
+        "wiki/experts/wsaj/index.md",
+        "wiki/experts/wsaj/glossary.md",
+        "skills/tenbagger-pick/SKILL.md",
+        "skills/investing-wiki/SKILL.md",
+        "skills/wsaj-investing-brain/SKILL.md",
+        "scripts/lint_investing_wiki.py",
+        "tests/test_investing_wiki_lint.py",
+        "tasks/plan003-wsaj-wiki-mvp.md"
+      ],
+      "validation_commands": [
+        "python3 scripts/lint_investing_wiki.py",
+        "python3 scripts/evaluate_wsaj_brain.py",
+        "python3 -m unittest discover -s tests",
+        "python3 /Users/nhn/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/tenbagger-pick",
+        "python3 /Users/nhn/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/investing-wiki",
+        "python3 /Users/nhn/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/wsaj-investing-brain",
+        "! rg -n \"docs/(handoff|investing-wiki)\\.md|wiki/log\\.md\" README.md docs scripts skills tests wiki",
+        "git diff --check"
+      ]
     }
   ]
 }

@@ -100,6 +100,10 @@ valley 데이터는 로그인 세션과 화면 API에 의존한다.
 질문이 철학, 용어, 가치평가 방식에 관한 것이면 `investing-wiki` 가 선택한 expert 의 공개 자료 근거를 찾는다.
 기존 월가아재 질문은 `wsaj-investing-brain` 이 `expert_id=wsaj` 로 위임해 처리한다.
 
+일반적인 투자 용어 뜻은 `docs/glossary.md` 에서 먼저 찾는다.
+특정 expert 가 그 용어를 어떻게 쓰는지 묻는 질문은 `wiki/experts/<expert_id>/glossary.md` 와 증거 저장소를 함께 읽는다.
+공통 정의는 expert 의 주장처럼 인용하지 않고, expert 별 설명은 근거 ID 없이 일반 상식으로 넓히지 않는다.
+
 답변은 다음 순서로 만든다.
 
 | 순서 | 내용 |
