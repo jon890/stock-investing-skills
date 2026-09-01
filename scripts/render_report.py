@@ -1,7 +1,7 @@
 """병목 점수와 밸류에이션 JSON 을 로컬 HTML 리포트로 렌더링한다.
 
 사용법:
-    python3 render_report.py bottleneck reports/bottleneck-USA-<날짜>.json KOR-JSON --context CONTEXT-JSON -o <출력>
+    python3 render_report.py bottleneck reports/bottleneck-USA-<날짜>.json [--kor KOR-JSON] [--context CONTEXT-JSON] [--asof YYYY-MM-DD] -o <출력>
     python3 render_report.py company    reports/valuation-<티커>-<날짜>.json  -o <출력>
 """
 from __future__ import annotations
@@ -75,7 +75,7 @@ def page(title, body):
 
 # ────────────────────── 병목 리포트 ──────────────────────
 
-def render_bottleneck(usa, kor, asof, context_payload=None):
+def render_bottleneck(usa, kor=None, asof="-", context_payload=None):
     F = usa["factors"]
     g = usa["groups"]
     best = g[0]
@@ -114,13 +114,28 @@ def render_bottleneck(usa, kor, asof, context_payload=None):
     exr = "".join(f'<td>{pct(None if v is None else v/100)}</td>' for v in ex.values())
     exh = "".join(f'<th>{k}</th>' for k in ex)
 
-    krows = "".join(
-        f'<tr><td class="l">{v["group"]}</td>'
-        f'<td class="l">{esc(SECTOR.get(v["sector"],"?"))}</td>'
-        f'<td>{v["score"]:+.2f}</td><td>{v["z"]["capital"]:+.1f}</td>'
-        f'<td>{signed(v.get("persistence"))}</td>'
-        f'<td class="l mut">{esc(", ".join(t["name"][:8] for t in v["top"][:3]))}</td></tr>'
-        for v in kor["groups"][:6])
+    if kor:
+        krows = "".join(
+            f'<tr><td class="l">{value["group"]}</td>'
+            f'<td class="l">{esc(SECTOR.get(value["sector"],"?"))}</td>'
+            f'<td>{value["score"]:+.2f}</td><td>{value["z"]["capital"]:+.1f}</td>'
+            f'<td>{signed(value.get("persistence"))}</td>'
+            f'<td class="l mut">{esc(", ".join(item["name"][:8] for item in value["top"][:3]))}</td></tr>'
+            for value in kor["groups"][:6]
+        )
+        kor_block = f"""
+<h2>한국 시장</h2>
+<div class="note"><b>점수를 그대로 믿지 않는다.</b>
+한국 시장은 컨센서스 추정 커버리지를 먼저 확인한다. 기준을 통과하지 못하면
+자금 집중과 지속성만 참고하고 종목 후보를 만들지 않는다.</div>
+<div class="scroll"><table>
+<thead><tr><th class="l">그룹</th><th class="l">섹터</th><th>점수</th>
+<th>자금 집중</th><th>지속성</th><th class="l">대표 종목</th></tr></thead>
+<tbody>{krows}</tbody></table></div>"""
+    else:
+        kor_block = """
+<h2>한국 시장</h2>
+<div class="note"><b>생략</b> · 유효한 한국 시장 병목 JSON이 없어 미국 결과만 표시한다.</div>"""
 
     def coverage_row(value):
         coverage = value.get("coverage", {})
@@ -218,14 +233,7 @@ def render_bottleneck(usa, kor, asof, context_payload=None):
 <div class="scroll"><table><thead><tr>{exh}</tr></thead>
 <tbody><tr>{exr}</tr></tbody></table></div>
 
-<h2>한국 시장</h2>
-<div class="note"><b>점수를 그대로 믿지 않는다.</b>
-한국 종목의 컨센서스 추정 보유율이 26%다. 수요와 가격결정력 팩터가 대부분 결측이라
-자금 집중과 지속성만 참고한다. 시가총액도 원화라 달러 기준 시총 상한을 그대로 쓰지 못한다.</div>
-<div class="scroll"><table>
-<thead><tr><th class="l">그룹</th><th class="l">섹터</th><th>점수</th>
-<th>자금 집중</th><th>지속성</th><th class="l">대표 종목</th></tr></thead>
-<tbody>{krows}</tbody></table></div>
+{kor_block}
 
 {basis_block}
 
@@ -526,6 +534,18 @@ def render_company(payload):
 투자 판단의 근거 자료이며 매매 권유가 아니다.</footer>""")
 
 
+def pop_option(values, flag):
+    if flag not in values:
+        return None
+    index = values.index(flag)
+    if index == len(values) - 1:
+        print(f"\n오류: '{flag}' 뒤에 값이 없다.", file=sys.stderr)
+        raise SystemExit(2)
+    value = values[index + 1]
+    del values[index:index + 2]
+    return value
+
+
 def main():
     a = sys.argv[1:]
     if not a or a[0] in {"-h", "--help"}:
@@ -541,14 +561,9 @@ def main():
         print("\n오류: '-o' 뒤에 출력 경로가 없다.", file=sys.stderr)
         raise SystemExit(2)
     before_output = list(a[:out_i])
-    context_path = None
-    if "--context" in before_output:
-        context_i = before_output.index("--context")
-        if context_i == len(before_output) - 1:
-            print("\n오류: '--context' 뒤에 입력 JSON 경로가 없다.", file=sys.stderr)
-            raise SystemExit(2)
-        context_path = before_output[context_i + 1]
-        del before_output[context_i:context_i + 2]
+    context_path = pop_option(before_output, "--context")
+    kor_path = pop_option(before_output, "--kor")
+    asof_option = pop_option(before_output, "--asof")
     kind = before_output[0]
     if kind not in {"bottleneck", "company"}:
         print(__doc__.strip(), file=sys.stderr)
@@ -558,15 +573,20 @@ def main():
         print(__doc__.strip(), file=sys.stderr)
         print("\n오류: company 리포트는 입력 JSON 하나가 필요하다.", file=sys.stderr)
         raise SystemExit(2)
-    if kind == "bottleneck" and len(before_output) < 3:
+    if kind == "bottleneck" and len(before_output) < 2:
         print(__doc__.strip(), file=sys.stderr)
-        print("\n오류: bottleneck 리포트는 미국 JSON 과 한국 JSON 이 필요하다.", file=sys.stderr)
+        print("\n오류: bottleneck 리포트는 미국 JSON 이 필요하다.", file=sys.stderr)
         raise SystemExit(2)
     out = a[out_i + 1]
     if kind == "bottleneck":
         usa = json.loads(Path(before_output[1]).read_text())
-        kor = json.loads(Path(before_output[2]).read_text())
-        asof = before_output[3] if len(before_output) > 3 else "2026-08-28"
+        if len(before_output) > 3:
+            print("\n오류: bottleneck 위치 인자가 너무 많다.", file=sys.stderr)
+            raise SystemExit(2)
+        if len(before_output) == 3 and not kor_path:
+            kor_path = before_output[2]
+        kor = json.loads(Path(kor_path).read_text()) if kor_path else None
+        asof = asof_option or "2026-08-28"
         context_payload = json.loads(Path(context_path).read_text()) if context_path else None
         Path(out).write_text(render_bottleneck(usa, kor, asof, context_payload))
     else:

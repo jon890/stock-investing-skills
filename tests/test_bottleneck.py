@@ -149,7 +149,9 @@ class BottleneckTest(unittest.TestCase):
                     str(ROOT / "scripts/render_report.py"),
                     "bottleneck",
                     str(usa_json),
+                    "--kor",
                     str(usa_json),
+                    "--asof",
                     "2026-08-29",
                     "-o",
                     str(html),
@@ -332,6 +334,11 @@ class BottleneckTest(unittest.TestCase):
         self.assertIn("advanced package capacity", html)
         self.assertIn("https://example.com/capacity", html)
         self.assertIn("통과", html)
+
+        usa_only_html = render_report.render_bottleneck(
+            payload, asof="2026-08-29", context_payload={"bottleneck_context": context}
+        )
+        self.assertIn("유효한 한국 시장 병목 JSON이 없어", usa_only_html)
 
 
 if __name__ == "__main__":
