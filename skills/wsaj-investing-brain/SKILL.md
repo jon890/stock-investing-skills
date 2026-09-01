@@ -7,17 +7,20 @@ description: 월가아재 공개 영상의 근거로 투자 철학, 용어, 가�
 
 월가아재 공개 영상에서 검토한 증거로 투자 철학, 용어, 가치평가 흐름, 사례 해석을 답한다.
 이 스킬은 인물 대역이 아니라 근거형 연구 보조 도구다.
+운영 구조는 범용 `investing-wiki` 와 같다.
+이 스킬은 기존 호출을 유지하기 위한 호환 진입점이며, 실제 원본은 `wiki/experts/wsaj/` 다.
 
 ## 먼저 읽을 파일
 
 질문을 받으면 `.cache` 원자료보다 추적되는 검토 산출물을 먼저 읽는다.
 
-1. `docs/wsaj/evidence/core.json`
-2. `docs/wsaj-wiki.md`
-3. 질문 주제에 맞는 `docs/wsaj/*.md`
-4. 질문 주제에 맞는 `omx_wiki/*.md`
-5. `docs/glossary.md`
-6. `docs/flow.md`
+1. `wiki/experts/wsaj/profile.json`
+2. `wiki/experts/wsaj/evidence/core.json`
+3. `wiki/experts/wsaj/index.md`
+4. 질문 주제에 맞는 `wiki/experts/wsaj/pages/*.md`
+5. `docs/investing-wiki.md`
+6. `docs/glossary.md`
+7. `docs/flow.md`
 
 `.cache/wsaj-youtube/` 는 원자료 확인용이다.
 증거 ID 사이에 충돌이 있거나 화면 근거를 다시 봐야 할 때만 `analysis.json` 과 contact sheet를 확인한다.
@@ -29,6 +32,12 @@ description: 월가아재 공개 영상의 근거로 투자 철학, 용어, 가�
 
 ```bash
 cd ~/personal/finance-skills
+python3 scripts/query_investing_wiki.py --json --expert wsaj "<질문>"
+```
+
+기존 호환 스크립트가 필요하면 아래 명령도 같은 WSAJ evidence 를 읽는다.
+
+```bash
 python3 scripts/query_wsaj_wiki.py --json "<질문>"
 ```
 
@@ -49,7 +58,7 @@ python3 scripts/query_wsaj_wiki.py --json "<질문>"
 
 ## 주장 종류
 
-`docs/wsaj/evidence/core.json` 의 `claim_type` 허용값은 다섯 가지다.
+`wiki/experts/wsaj/evidence/core.json` 의 `claim_type` 허용값은 다섯 가지다.
 
 | 값 | 답변에서 쓰는 방식 |
 | --- | --- |
@@ -85,10 +94,10 @@ python3 scripts/query_wsaj_wiki.py --json "<질문>"
 
 | 질문 주제 | 우선 문서 |
 | --- | --- |
-| 투자 가치관, 절제, 손익비 | `docs/wsaj/investing-values.md`, `omx_wiki/wsaj-investing-values.md` |
-| 가치평가 절차, 내재가치, 상대가치 | `docs/wsaj/valuation-process.md`, `omx_wiki/wsaj-valuation-process.md` |
-| PER, PBR, PSR, 안전마진 | `docs/glossary.md`, `docs/wsaj/valuation-process.md` |
-| 엔비디아, 테슬라, 맥도날드 사례 | `docs/wsaj/company-cases.md`, `omx_wiki/wsaj-company-cases.md` |
-| 실적 발표, IPO, M&A, 은행 | `docs/wsaj/special-situations.md`, `omx_wiki/wsaj-special-situations.md` |
+| 투자 가치관, 절제, 손익비 | `wiki/experts/wsaj/pages/investing-values.md` |
+| 가치평가 절차, 내재가치, 상대가치 | `wiki/experts/wsaj/pages/valuation-process.md` |
+| PER, PBR, PSR, 안전마진 | `docs/glossary.md`, `wiki/experts/wsaj/pages/valuation-process.md` |
+| 엔비디아, 테슬라, 맥도날드 사례 | `wiki/experts/wsaj/pages/company-cases.md` |
+| 실적 발표, IPO, M&A, 은행 | `wiki/experts/wsaj/pages/special-situations.md` |
 
 검색 결과가 없으면 답변을 만들지 않는다.

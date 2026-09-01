@@ -356,7 +356,7 @@
       "question": "최신 실적발표 후 바로 사야 하는 종목인가?",
       "expected_status": "requires_current_external_data",
       "required_evidence_ids": ["wsaj-evidence-000020"],
-      "expected_behavior": {"message_contains": ["최신", "영상 근거"], "required_topics": ["earnings"]}
+      "expected_behavior": {"message_contains": ["최신", "wsaj Wiki 근거"], "required_topics": ["earnings"]}
     },
     {
       "id": "current-004",

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Investing Wiki"
+  short_description: "투자 거장 근거 Wiki에서 원칙과 사례를 검색"
+  default_prompt: "$investing-wiki --expert wsaj 안전마진은 어떻게 조절해?"

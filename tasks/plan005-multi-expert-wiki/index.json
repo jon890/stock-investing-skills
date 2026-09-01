@@ -1,10 +1,10 @@
 {
   "name": "plan005-multi-expert-wiki",
   "description": "도구 이름에 묶인 월가아재 Wiki를 다중 expert 투자 Wiki 구조로 옮긴다",
-  "status": "pending",
+  "status": "completed",
   "created_at": "2026-09-01",
   "total_phases": 2,
-  "current_phases": 1,
+  "current_phases": 2,
   "phases": [
     {
       "number": 1,

@@ -2,12 +2,14 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE_PATH = ROOT / "docs" / "wsaj" / "evidence" / "core.json"
+EVIDENCE_PATH = ROOT / "wiki" / "experts" / "wsaj" / "evidence" / "core.json"
 SCRIPT_PATH = ROOT / "scripts" / "query_wsaj_wiki.py"
+GENERIC_SCRIPT_PATH = ROOT / "scripts" / "query_investing_wiki.py"
 
 
 class WsajEvidenceTests(unittest.TestCase):
@@ -129,6 +131,178 @@ class WsajEvidenceTests(unittest.TestCase):
         self.assertIn("status: matched", completed.stdout)
         self.assertTrue(re.search(r"wsaj-evidence-00001[23]", completed.stdout))
 
+    def test_generic_cli_requires_expert(self):
+        completed = subprocess.run(
+            [sys.executable, str(GENERIC_SCRIPT_PATH), "--json", "안전마진은 어떻게 조절해?"],
+            cwd=ROOT,
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["status"], "expert_required")
+        self.assertIn("wsaj", result["experts"])
+
+    def test_generic_cli_requires_expert_even_with_evidence_dir(self):
+        completed = subprocess.run(
+            [
+                sys.executable,
+                str(GENERIC_SCRIPT_PATH),
+                "--json",
+                "--evidence-dir",
+                str(EVIDENCE_PATH.parent),
+                "안전마진은 어떻게 조절해?",
+            ],
+            cwd=ROOT,
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["status"], "expert_required")
+        self.assertEqual(result["matches"], [])
+
+    def test_generic_cli_reports_unknown_expert(self):
+        completed = subprocess.run(
+            [sys.executable, str(GENERIC_SCRIPT_PATH), "--json", "--expert", "unknown", "안전마진은 어떻게 조절해?"],
+            cwd=ROOT,
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["status"], "expert_not_found")
+        self.assertIn("wsaj", result["experts"])
+
+    def test_generic_cli_rejects_mismatched_evidence_dir(self):
+        with temp_wiki() as wiki:
+            buffett = wiki / "experts" / "buffett"
+            buffett.mkdir(parents=True)
+            write_profile(buffett, "buffett")
+            write_book_evidence(buffett)
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(GENERIC_SCRIPT_PATH),
+                    "--json",
+                    "--wiki-root",
+                    str(wiki),
+                    "--expert",
+                    "wsaj",
+                    "--evidence-dir",
+                    str(buffett / "evidence"),
+                    "안전마진은 어떻게 조절해?",
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+            )
+
+        self.assertEqual(completed.returncode, 2, completed.stdout + completed.stderr)
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["status"], "evidence_dir_mismatch")
+
+    def test_generic_cli_rejects_loaded_evidence_with_wrong_expert(self):
+        with temp_wiki() as wiki:
+            evidence_path = wiki / "experts" / "wsaj" / "evidence" / "core.json"
+            payload = json.loads(evidence_path.read_text(encoding="utf-8"))
+            payload["evidence"][0]["expert_id"] = "other"
+            evidence_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(GENERIC_SCRIPT_PATH),
+                    "--json",
+                    "--wiki-root",
+                    str(wiki),
+                    "--expert",
+                    "wsaj",
+                    "안전마진은 어떻게 조절해?",
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+            )
+
+        self.assertEqual(completed.returncode, 2, completed.stdout + completed.stderr)
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["status"], "evidence_expert_mismatch")
+        self.assertIn("wsaj-evidence-000001", result["mismatched_evidence_ids"])
+
+    def test_generic_text_cli_renders_book_locator(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            wiki = Path(tmpdir) / "wiki"
+            buffett = wiki / "experts" / "buffett"
+            buffett.mkdir(parents=True)
+            write_profile(buffett, "buffett")
+            write_book_evidence(buffett)
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(GENERIC_SCRIPT_PATH),
+                    "--wiki-root",
+                    str(wiki),
+                    "--expert",
+                    "buffett",
+                    "margin",
+                ],
+                cwd=ROOT,
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+
+        self.assertIn("status: matched", completed.stdout)
+        self.assertIn("locator: book: The Essays, p.12", completed.stdout)
+
+    def test_generic_search_matches_non_youtube_source_summary(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            wiki = Path(tmpdir) / "wiki"
+            buffett = wiki / "experts" / "buffett"
+            buffett.mkdir(parents=True)
+            write_profile(buffett, "buffett")
+            write_book_evidence(buffett, source_summary="durable-edge appears only in the summary.")
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(GENERIC_SCRIPT_PATH),
+                    "--json",
+                    "--wiki-root",
+                    str(wiki),
+                    "--expert",
+                    "buffett",
+                    "durable-edge",
+                ],
+                cwd=ROOT,
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["status"], "matched")
+        self.assertEqual(result["matches"][0]["id"], "buffett-evidence-000001")
+
+    def test_wsaj_wrapper_matches_generic_wsaj_search(self):
+        wsaj = run_query("안전마진은 어떻게 조절해?")
+        completed = subprocess.run(
+            [sys.executable, str(GENERIC_SCRIPT_PATH), "--json", "--expert", "wsaj", "안전마진은 어떻게 조절해?"],
+            cwd=ROOT,
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+
+        generic = json.loads(completed.stdout)
+        self.assertEqual(generic["status"], wsaj["status"])
+        self.assertEqual(
+            [row["id"] for row in generic["matches"]],
+            [row["id"] for row in wsaj["matches"]],
+        )
+
 
 def run_query(question):
     completed = subprocess.run(
@@ -139,6 +313,84 @@ def run_query(question):
         capture_output=True,
     )
     return json.loads(completed.stdout)
+
+
+def temp_wiki():
+    class TempWiki:
+        def __enter__(self):
+            self.tmp = tempfile.TemporaryDirectory()
+            self.path = Path(self.tmp.name) / "wiki"
+            copy_tree(ROOT / "wiki", self.path)
+            return self.path
+
+        def __exit__(self, exc_type, exc, tb):
+            self.tmp.cleanup()
+
+    return TempWiki()
+
+
+def copy_tree(src: Path, dst: Path) -> None:
+    for path in src.rglob("*"):
+        target = dst / path.relative_to(src)
+        if path.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(path.read_bytes())
+
+
+def write_profile(expert_dir: Path, expert_id: str) -> None:
+    (expert_dir / "evidence").mkdir(exist_ok=True)
+    (expert_dir / "index.md").write_text(
+        "---\ntitle: Buffett\n---\n# Buffett\n",
+        encoding="utf-8",
+    )
+    (expert_dir / "profile.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "expert_id": expert_id,
+                "expert_name": expert_id.title(),
+                "display_name": expert_id.title(),
+                "corpus_id": f"{expert_id}-public",
+                "source_scope": "public materials",
+                "language": "en",
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+
+def write_book_evidence(expert_dir: Path, source_summary: str = "A short book evidence summary.") -> None:
+    row = {
+        "id": "buffett-evidence-000001",
+        "expert_id": "buffett",
+        "expert_name": "Buffett",
+        "corpus_id": "buffett-public",
+        "source_kind": "book",
+        "claim_type": "direct_claim",
+        "claim": "Margin of safety matters.",
+        "topic": ["margin"],
+        "source_title": "The Essays",
+        "source_url": "https://example.com/essays",
+        "source_date": "1997-01-01",
+        "source_date_status": "verified_publication_date",
+        "source_observed_at": "2026-09-01",
+        "source_summary": source_summary,
+        "confidence": "high",
+        "reviewed_by": "agent",
+        "reviewed_at": "2026-09-01",
+        "source_locator": {
+            "source_kind": "book",
+            "title": "The Essays",
+            "page": 12,
+        },
+    }
+    (expert_dir / "evidence" / "core.json").write_text(
+        json.dumps({"schema_version": "1.0", "evidence": [row]}, ensure_ascii=False),
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":

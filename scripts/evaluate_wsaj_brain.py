@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import query_wsaj_wiki
 
 DEFAULT_FIXTURE = ROOT / "tests" / "fixtures" / "wsaj-brain-eval.json"
-DEFAULT_EVIDENCE_DIR = ROOT / "docs" / "wsaj" / "evidence"
+DEFAULT_EVIDENCE_DIR = query_wsaj_wiki.DEFAULT_EVIDENCE_DIR
 
 
 def load_fixture(path: Path) -> dict[str, Any]:

@@ -31,7 +31,10 @@
 | `.agents/skills` | `skills/` 를 가리키는 Codex 호환 경로다 |
 | `.claude/skills` | `skills/` 를 가리키는 Claude Code 호환 경로다 |
 | `.cache/wsaj-youtube/` | 영상 원자료, 전사 결과, 프레임, 임시 분석 결과를 둔다 |
+| `wiki/index.md` | 투자 Wiki의 canonical entrypoint 와 expert 목록을 둔다 |
+| `wiki/log.md` | 사람이 유지할 가치가 있는 Wiki 변경 기록을 둔다 |
 | `wiki/experts/<expert_id>/profile.json` | expert 이름, 공개 자료 범위, 금지된 답변 범위를 둔다 |
+| `wiki/experts/<expert_id>/index.md` | expert 별 주제 지도와 주요 문서를 둔다 |
 | `wiki/experts/<expert_id>/evidence/` | 사람이 검토한 증거 단위를 둔다 |
 | `wiki/experts/<expert_id>/pages/` | expert 별 철학, 원칙, 사례, 한계를 사람이 읽는 문서로 둔다 |
 | `wiki/concepts/` | 여러 expert 를 연결하는 공통 개념 문서를 둔다 |
@@ -41,6 +44,7 @@
 도구별 경로에는 복사본을 만들지 않고 심볼릭 링크만 둔다.
 wiki 원본은 `wiki/` 하나만 둔다.
 특정 도구 이름이 들어간 경로는 장기 저장 구조로 쓰지 않는다.
+`wiki/concepts/` 는 둘 이상 expert 의 근거가 있을 때만 만든다.
 
 ## 처리 흐름
 

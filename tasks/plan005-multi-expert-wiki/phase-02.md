@@ -29,6 +29,7 @@
 ### 3. `scripts/lint_investing_wiki.py`: 도구 비종속 검증 추가
 
 검증기는 `wiki/experts/*/profile.json`, evidence 필수 필드와 `source_locator`·`source_summary`, evidence ID 중복, wiki 문서의 깨진 증거 참조, expert 간 provenance 혼합을 검사한다.
+`wiki/index.md` 와 각 `wiki/experts/*/index.md` 도 필수 파일로 검사한다.
 OMX 명령 없이 실행되어야 한다.
 부정 테스트는 missing profile, duplicate ID, broken evidence_ids, mismatched expert_id, non-YouTube locator 를 포함한다.
 
@@ -50,6 +51,8 @@ WSAJ 평가는 YouTube 전용 회귀로 유지한다.
 | --- | --- |
 | `skills/investing-wiki/SKILL.md` | 신규 |
 | `skills/wsaj-investing-brain/SKILL.md` | 수정 |
+| `wiki/index.md` | 신규 |
+| `wiki/log.md` | 신규 |
 | `scripts/lint_investing_wiki.py` | 신규 |
 | `scripts/evaluate_wsaj_brain.py` | 수정 |
 | `tests/test_wsaj_wiki.py` | 수정 |

@@ -17,7 +17,10 @@ Wiki의 관리 원본은 `wiki/` 다.
 
 | 자료 | 용도 |
 | --- | --- |
+| `wiki/index.md` | Wiki의 canonical entrypoint 와 expert 목록 |
+| `wiki/log.md` | 사람이 유지할 가치가 있는 Wiki 변경 기록 |
 | `wiki/experts/<expert_id>/profile.json` | expert 이름, 출처 범위, 답변 금지 조건 |
+| `wiki/experts/<expert_id>/index.md` | expert 별 주제 지도 |
 | `wiki/experts/<expert_id>/evidence/*.json` | 답변의 증거 단위 |
 | `wiki/experts/<expert_id>/pages/*.md` | expert 별 주제 설명 |
 | `wiki/concepts/*.md` | 여러 expert 를 연결하는 공통 개념 |
@@ -51,6 +54,7 @@ Git에 올리는 답변 근거는 검토된 짧은 claim과 위치 정보로 제
 
 다른 투자 거장을 추가할 때는 새 `expert_id` 아래 같은 구조를 만든다.
 공통 개념은 `wiki/concepts/` 에 둘 수 있지만, 본문은 expert 별 근거를 섞지 않고 출처별로 나눠 쓴다.
+`wiki/concepts/` 는 둘 이상 expert 의 직접 근거가 있을 때만 만든다.
 
 ## 월가아재 주제 지도
 
@@ -75,7 +79,7 @@ Git에 올리는 답변 근거는 검토된 짧은 claim과 위치 정보로 제
 
 | 검증 | 확인하는 것 |
 | --- | --- |
-| `lint_investing_wiki.py` | `wiki/` 구조, evidence 필드, 깨진 증거 참조, expert 간 provenance 혼합 |
+| `lint_investing_wiki.py` | root/expert index, evidence 필드, 깨진 증거 참조, expert 간 provenance 혼합 |
 | 평가 문항 | 필수 증거 검색, 링크와 타임스탬프 정합성, 게시일 상태, 현재 데이터 질문 보류, 근거 부족 질문 거절 |
 
 이 검사는 자유형 LLM 답변의 문장 품질이나 새로운 투자 판단의 정확도를 보증하지 않는다.

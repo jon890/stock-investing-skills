@@ -29,7 +29,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "I4w_V9qUCXc",
+        "timestamp_start_sec": 79.4,
+        "timestamp_end_sec": 116.3,
+        "url": "https://www.youtube.com/watch?v=I4w_V9qUCXc&t=79s"
+      },
+      "source_summary": "가치평가의 의미와 책의 구성, 내재가치와 상대가치 학습 흐름을 설명한다."
     },
     {
       "id": "wsaj-evidence-000002",
@@ -58,7 +70,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "jS4thlOwR1U",
+        "timestamp_start_sec": 124.5,
+        "timestamp_end_sec": 170.4,
+        "url": "https://www.youtube.com/watch?v=jS4thlOwR1U&t=124s"
+      },
+      "source_summary": "상대가치와 내재가치를 다른 평가 방식으로 나누어 설명한다."
     },
     {
       "id": "wsaj-evidence-000003",
@@ -89,7 +113,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "jS4thlOwR1U",
+        "timestamp_start_sec": 218.7,
+        "timestamp_end_sec": 257.3,
+        "url": "https://www.youtube.com/watch?v=jS4thlOwR1U&t=218s"
+      },
+      "source_summary": "기업 자체의 현금흐름과 성장, 위험을 통해 가치를 계산하는 관점을 설명한다."
     },
     {
       "id": "wsaj-evidence-000004",
@@ -118,7 +154,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "jS4thlOwR1U",
+        "timestamp_start_sec": 265.8,
+        "timestamp_end_sec": 350.8,
+        "url": "https://www.youtube.com/watch?v=jS4thlOwR1U&t=265s"
+      },
+      "source_summary": "유사기업을 찾아 시장 배수로 적정가치를 비교하는 실무 흐름을 설명한다."
     },
     {
       "id": "wsaj-evidence-000005",
@@ -149,7 +197,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "7v8RppYkGcM",
+        "timestamp_start_sec": 615.6,
+        "timestamp_end_sec": 756.7,
+        "url": "https://www.youtube.com/watch?v=7v8RppYkGcM&t=615s"
+      },
+      "source_summary": "PER을 단순 가격 배수가 아니라 성장률, 배당성향, 리스크의 함수로 분해한다."
     },
     {
       "id": "wsaj-evidence-000006",
@@ -180,7 +240,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "7v8RppYkGcM",
+        "timestamp_start_sec": 766.3,
+        "timestamp_end_sec": 823.2,
+        "url": "https://www.youtube.com/watch?v=7v8RppYkGcM&t=766s"
+      },
+      "source_summary": "PBR도 자본 구조와 수익성, 성장 변수로 분해해서 봐야 한다고 설명한다."
     },
     {
       "id": "wsaj-evidence-000007",
@@ -210,7 +282,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "7v8RppYkGcM",
+        "timestamp_start_sec": 578.6,
+        "timestamp_end_sec": 589.1,
+        "url": "https://www.youtube.com/watch?v=7v8RppYkGcM&t=578s"
+      },
+      "source_summary": "배수를 쓸 때 분포와 왜곡값을 보라는 절차를 제시한다."
     },
     {
       "id": "wsaj-evidence-000008",
@@ -239,7 +323,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "w9WGecunB5I",
+        "timestamp_start_sec": 22.5,
+        "timestamp_end_sec": 30.3,
+        "url": "https://www.youtube.com/watch?v=w9WGecunB5I&t=22s"
+      },
+      "source_summary": "PER을 Price/Earnings, 주식 가격/주당순이익으로 정의한다."
     },
     {
       "id": "wsaj-evidence-000009",
@@ -269,7 +365,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "w9WGecunB5I",
+        "timestamp_start_sec": 210.3,
+        "timestamp_end_sec": 353.7,
+        "url": "https://www.youtube.com/watch?v=w9WGecunB5I&t=210s"
+      },
+      "source_summary": "일회성 항목 때문에 GAAP PER이 왜곡될 수 있어 non-GAAP 확인을 강조한다."
     },
     {
       "id": "wsaj-evidence-000010",
@@ -299,7 +407,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "BWbI_nhLTmg",
+        "timestamp_start_sec": 84.6,
+        "timestamp_end_sec": 180.3,
+        "url": "https://www.youtube.com/watch?v=BWbI_nhLTmg&t=84s"
+      },
+      "source_summary": "상대가치평가를 비교군, 배수, 결과 해석 순서로 나눈다."
     },
     {
       "id": "wsaj-evidence-000011",
@@ -329,7 +449,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "BWbI_nhLTmg",
+        "timestamp_start_sec": 544.5,
+        "timestamp_end_sec": 719.4,
+        "url": "https://www.youtube.com/watch?v=BWbI_nhLTmg&t=544s"
+      },
+      "source_summary": "PER, PBR, PSR의 용도를 나누며 PSR의 한계를 경고한다."
     },
     {
       "id": "wsaj-evidence-000012",
@@ -358,7 +490,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "Byn8et9uM3c",
+        "timestamp_start_sec": 64.8,
+        "timestamp_end_sec": 75.0,
+        "url": "https://www.youtube.com/watch?v=Byn8et9uM3c&t=64s"
+      },
+      "source_summary": "안전마진을 내재가치와 시장가격의 차이로 정의한다."
     },
     {
       "id": "wsaj-evidence-000013",
@@ -388,7 +532,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "Byn8et9uM3c",
+        "timestamp_start_sec": 137.1,
+        "timestamp_end_sec": 221.0,
+        "url": "https://www.youtube.com/watch?v=Byn8et9uM3c&t=137s"
+      },
+      "source_summary": "안전마진을 종목과 시점, 불확실성 수준에 맞춰 달리 잡아야 한다고 설명한다."
     },
     {
       "id": "wsaj-evidence-000014",
@@ -418,7 +574,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "GePuFvI8xrg",
+        "timestamp_start_sec": 73.9,
+        "timestamp_end_sec": 87.8,
+        "url": "https://www.youtube.com/watch?v=GePuFvI8xrg&t=73s"
+      },
+      "source_summary": "표준화된 재무제표를 준비하고 주요 항목을 훑는 습관을 강조한다."
     },
     {
       "id": "wsaj-evidence-000015",
@@ -450,7 +618,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "5fhbkQ2Qidc",
+        "timestamp_start_sec": 600.0,
+        "timestamp_end_sec": 1200.0,
+        "url": "https://www.youtube.com/watch?v=5fhbkQ2Qidc&t=600s"
+      },
+      "source_summary": "AI 시장 점유율, R&D 보정 마진, 자본회전율, WACC, 실패확률을 DCF 입력으로 다룬다."
     },
     {
       "id": "wsaj-evidence-000016",
@@ -480,7 +660,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "5fhbkQ2Qidc",
+        "timestamp_start_sec": 1020.0,
+        "timestamp_end_sec": 1200.0,
+        "url": "https://www.youtube.com/watch?v=5fhbkQ2Qidc&t=1020s"
+      },
+      "source_summary": "2033년 매출과 마진 민감도에서 현재 가격을 설명하는 조합이 제한적이라고 설명한다."
     },
     {
       "id": "wsaj-evidence-000017",
@@ -511,7 +703,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "_Ex0vR_1Ekg",
+        "timestamp_start_sec": 960.0,
+        "timestamp_end_sec": 1500.0,
+        "url": "https://www.youtube.com/watch?v=_Ex0vR_1Ekg&t=960s"
+      },
+      "source_summary": "bullish와 bearish 목표가를 나누고 EV, 에너지, FSD 가정을 각각 둔다."
     },
     {
       "id": "wsaj-evidence-000018",
@@ -542,7 +746,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "Crotyq9sbdo",
+        "timestamp_start_sec": 480.0,
+        "timestamp_end_sec": 930.0,
+        "url": "https://www.youtube.com/watch?v=Crotyq9sbdo&t=480s"
+      },
+      "source_summary": "브랜드, 프랜차이즈, 토지와 임대 기반 사업모델을 해자의 출발점으로 본다."
     },
     {
       "id": "wsaj-evidence-000019",
@@ -573,7 +789,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "t7NUYohjjXs",
+        "timestamp_start_sec": 420.0,
+        "timestamp_end_sec": 600.0,
+        "url": "https://www.youtube.com/watch?v=t7NUYohjjXs&t=420s"
+      },
+      "source_summary": "자본잠식이 영업 부실인지 주주환원 때문인지 나누어 봐야 한다고 설명한다."
     },
     {
       "id": "wsaj-evidence-000020",
@@ -603,7 +831,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "qbuyzUI3hAo",
+        "timestamp_start_sec": 27.52,
+        "timestamp_end_sec": 96.24,
+        "url": "https://www.youtube.com/watch?v=qbuyzUI3hAo&t=27s"
+      },
+      "source_summary": "애플 실적을 컨센서스, 가이던스, 서비스 매출과 함께 해석한다."
     },
     {
       "id": "wsaj-evidence-000021",
@@ -634,7 +874,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "EbfuT0zGGjU",
+        "timestamp_start_sec": 122.0,
+        "timestamp_end_sec": 476.22,
+        "url": "https://www.youtube.com/watch?v=EbfuT0zGGjU&t=122s"
+      },
+      "source_summary": "증권신고서, 공모개요, 총액인수와 모집주선, 락업 구조를 설명한다."
     },
     {
       "id": "wsaj-evidence-000022",
@@ -664,7 +916,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "2cDMgeUD7Aw",
+        "timestamp_start_sec": 235.0,
+        "timestamp_end_sec": 510.0,
+        "url": "https://www.youtube.com/watch?v=2cDMgeUD7Aw&t=235s"
+      },
+      "source_summary": "합의가, 스프레드, CMA/EU 규제, 공매도 비중과 차익거래를 함께 설명한다."
     },
     {
       "id": "wsaj-evidence-000023",
@@ -696,7 +960,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "PzpU0H8iqQs",
+        "timestamp_start_sec": 960.0,
+        "timestamp_end_sec": 1800.0,
+        "url": "https://www.youtube.com/watch?v=PzpU0H8iqQs&t=960s"
+      },
+      "source_summary": "Tier 1, RWA, 비보장 예금, FHLB, BTFP와 유동성 구조를 점검한다."
     },
     {
       "id": "wsaj-evidence-000024",
@@ -727,7 +1003,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "3oy4lj7KURw",
+        "timestamp_start_sec": 205.48,
+        "timestamp_end_sec": 316.3,
+        "url": "https://www.youtube.com/watch?v=3oy4lj7KURw&t=205s"
+      },
+      "source_summary": "물타기와 레버리지가 단기 승률과 장기 손익비를 다르게 만들 수 있다고 설명한다."
     },
     {
       "id": "wsaj-evidence-000025",
@@ -766,7 +1054,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "GePuFvI8xrg",
+        "timestamp_start_sec": 73.9,
+        "timestamp_end_sec": 221.0,
+        "url": "https://www.youtube.com/watch?v=GePuFvI8xrg&t=73s"
+      },
+      "source_summary": "여러 기초 강의에서 반복된 절차를 하나의 운용 흐름으로 묶은 추론이다."
     },
     {
       "id": "wsaj-evidence-000026",
@@ -802,7 +1102,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-08-31"
+      "source_observed_at": "2026-08-31",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "3oy4lj7KURw",
+        "timestamp_start_sec": 38.1,
+        "timestamp_end_sec": 834.66,
+        "url": "https://www.youtube.com/watch?v=3oy4lj7KURw&t=38s"
+      },
+      "source_summary": "자가진단 강의의 절제, 레버리지, 손익비 경고와 안전마진 원칙을 묶은 추론이다."
     },
     {
       "id": "wsaj-evidence-000027",
@@ -833,7 +1145,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-09-01"
+      "source_observed_at": "2026-09-01",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "Yh5NJ7tOZ-w",
+        "timestamp_start_sec": 490.52,
+        "timestamp_end_sec": 589.66,
+        "url": "https://www.youtube.com/watch?v=Yh5NJ7tOZ-w&t=490s"
+      },
+      "source_summary": "미국 기업의 미래 현금흐름을 추정하고 할인율을 적용해 S&P500 기대수익률과 주식 리스크 프리미엄을 계산하는 흐름을 설명한다."
     },
     {
       "id": "wsaj-evidence-000028",
@@ -864,7 +1188,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-09-01"
+      "source_observed_at": "2026-09-01",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "80la6WW8O74",
+        "timestamp_start_sec": 372.52,
+        "timestamp_end_sec": 505.04,
+        "url": "https://www.youtube.com/watch?v=80la6WW8O74&t=372s"
+      },
+      "source_summary": "PER과 PBR 같은 유사기업 배수로 적정가치를 추정하는 방법과 시장 전체 고평가 시 생기는 약점을 설명한다."
     },
     {
       "id": "wsaj-evidence-000029",
@@ -895,7 +1231,19 @@
       "reviewed_by": "agent",
       "reviewed_at": "2026-09-01",
       "source_date_status": "verified_upload_date",
-      "source_observed_at": "2026-09-01"
+      "source_observed_at": "2026-09-01",
+      "expert_id": "wsaj",
+      "expert_name": "월가아재",
+      "corpus_id": "wsaj-youtube-public",
+      "source_kind": "youtube_video",
+      "source_locator": {
+        "source_kind": "youtube_video",
+        "video_id": "bkttT8wNPgA",
+        "timestamp_start_sec": 430.9,
+        "timestamp_end_sec": 705.24,
+        "url": "https://www.youtube.com/watch?v=bkttT8wNPgA&t=430s"
+      },
+      "source_summary": "엔비디아 사례에서 현재 주가를 기준으로 Reverse DCF를 열고 매출 성장률과 잉여현금흐름 성장률을 역산하는 과정을 설명한다."
     }
   ]
 }

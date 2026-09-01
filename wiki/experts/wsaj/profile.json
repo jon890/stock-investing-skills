@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "expert_id": "wsaj",
+  "expert_name": "월가아재",
+  "display_name": "월가아재",
+  "corpus_id": "wsaj-youtube-public",
+  "source_scope": "공개 YouTube 영상",
+  "language": "ko",
+  "answer_policy": {
+    "mode": "evidence_backed_research_assistant",
+    "no_impersonation": true,
+    "requires_citation": true,
+    "current_market_data_boundary": true
+  },
+  "paths": {
+    "index": "index.md",
+    "pages": "pages/",
+    "evidence": "evidence/"
+  }
+}
