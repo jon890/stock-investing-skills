@@ -283,6 +283,56 @@ class BottleneckTest(unittest.TestCase):
         self.assertFalse(basis["verified"])
         self.assertIn("group_code_mismatch", basis["missing"])
 
+    def test_bottleneck_report_renders_verified_research_context(self):
+        universe = sample_universe()
+        stocks, _ = bottleneck.validate_universe(universe)
+        groups, market_ret = bottleneck.aggregate(stocks)
+        groups = bottleneck.score(groups)
+        ranked = sorted(groups.values(), key=lambda value: -value["score"])
+        best = ranked[0]
+        basis = {
+            "group_code": best["group"],
+            "reviewed_at": "2026-08-29",
+            "constraint": "advanced package capacity",
+            "duration": "more than three years",
+            "duration_years": 4,
+            "controller": "foundry and packaging suppliers",
+            "verdict": "pass",
+            "sources": [{
+                "title": "capacity note",
+                "url": "https://example.com/capacity",
+                "observed_at": "2026-08-29",
+            }],
+        }
+        context = bottleneck.serialize_group(
+            best, 1, universe_path="universe.json", basis=basis
+        )
+        for group in ranked:
+            group.pop("members")
+            group["top"] = [
+                {"t": item["t"], "name": item["name"], "cap": item["cap"]}
+                for item in group["top"]
+            ]
+        payload = {
+            "market": "USA",
+            "market_ret": market_ret,
+            "factors": {
+                key: {"label": value[0], "weight": value[1], "why": value[2]}
+                for key, value in bottleneck.FACTORS.items()
+            },
+            "quality": {"missing_return_by_period": {}},
+            "groups": ranked,
+        }
+
+        html = render_report.render_bottleneck(
+            payload, payload, "2026-08-29", {"bottleneck_context": context}
+        )
+
+        self.assertIn("병목 실체 검증", html)
+        self.assertIn("advanced package capacity", html)
+        self.assertIn("https://example.com/capacity", html)
+        self.assertIn("통과", html)
+
 
 if __name__ == "__main__":
     unittest.main()

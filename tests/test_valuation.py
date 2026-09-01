@@ -133,6 +133,27 @@ class ValuationEngineTest(unittest.TestCase):
         self.assertIn("밖이라 제외", data["relative_hold_reason"])
         self.assertEqual(data["candidate"]["call"], "보류")
 
+    def test_company_report_renders_candidate_context_and_provenance(self):
+        valuation_result = valuation.analyze("MRVL")
+        payload = {
+            "ticker": "MRVL",
+            "candidate_status": "reference_only",
+            "candidate_status_reasons": ["병목 밖 종목이다."],
+            "bottleneck_context": {
+                "group_code": "5710",
+                "rank": 4,
+                "candidate_pool_passed": False,
+            },
+            "valuation": valuation_result,
+        }
+
+        html = render_report.render_company(payload)
+
+        self.assertIn("후보 상태: reference_only", html)
+        self.assertIn("병목 밖 종목이다.", html)
+        self.assertIn("현재 데이터 출처", html)
+        self.assertIn("legacy manual capture", html)
+
     def test_tenbagger_verdict_blocks_candidate_when_not_possible(self):
         cfg = self.load_cfg("MRVL")
         cfg["data_provenance"] = self.current_provenance()
@@ -142,7 +163,7 @@ class ValuationEngineTest(unittest.TestCase):
         self.assertNotIn(data["tenbagger"]["verdict"][0], {"가능", "최선 시나리오만"})
         self.assertEqual(data["candidate"]["eligible"], False)
         self.assertIn("텐베거 판정이 '", " ".join(data["candidate"]["reasons"]))
-        self.assertIn("라서 후보 기준을 넘지 못했다", " ".join(data["candidate"]["reasons"]))
+        self.assertIn("이라서 후보 기준을 넘지 못했다", " ".join(data["candidate"]["reasons"]))
 
     def test_legacy_provenance_is_preserved_and_blocks_candidate(self):
         data = self.run_json("MRVL")

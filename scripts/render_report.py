@@ -1,7 +1,7 @@
 """병목 점수와 밸류에이션 JSON 을 로컬 HTML 리포트로 렌더링한다.
 
 사용법:
-    python3 render_report.py bottleneck reports/bottleneck-USA-<날짜>.json KOR-JSON -o <출력>
+    python3 render_report.py bottleneck reports/bottleneck-USA-<날짜>.json KOR-JSON --context CONTEXT-JSON -o <출력>
     python3 render_report.py company    reports/valuation-<티커>-<날짜>.json  -o <출력>
 """
 from __future__ import annotations
@@ -75,7 +75,7 @@ def page(title, body):
 
 # ────────────────────── 병목 리포트 ──────────────────────
 
-def render_bottleneck(usa, kor, asof):
+def render_bottleneck(usa, kor, asof, context_payload=None):
     F = usa["factors"]
     g = usa["groups"]
     best = g[0]
@@ -122,12 +122,52 @@ def render_bottleneck(usa, kor, asof):
         f'<td class="l mut">{esc(", ".join(t["name"][:8] for t in v["top"][:3]))}</td></tr>'
         for v in kor["groups"][:6])
 
-    covrows = "".join(
-        f'<tr><td class="l">{v["group"]}</td>'
-        f'<td class="l">{esc(SECTOR.get(v["sector"],"?"))}</td>'
-        + "".join(f'<td>{pct(v["coverage"].get(k), 0, sign=False)}</td>' for k in F if k != "capital")
-        + f'<td>{pct(min(v.get("return_coverage", {}).values()), 0, sign=False)}</td></tr>'
-        for v in g[:8])
+    def coverage_row(value):
+        coverage = value.get("coverage", {})
+        return_values = list(value.get("return_coverage", {}).values())
+        return_coverage = min(return_values) if return_values else None
+        return (
+            f'<tr><td class="l">{value["group"]}</td>'
+            f'<td class="l">{esc(SECTOR.get(value["sector"],"?"))}</td>'
+            + "".join(
+                f'<td>{pct(coverage.get(key), 0, sign=False)}</td>'
+                for key in F if key != "capital"
+            )
+            + f'<td>{pct(return_coverage, 0, sign=False)}</td></tr>'
+        )
+
+    covrows = "".join(coverage_row(value) for value in g[:8])
+
+    context = (context_payload or {}).get("bottleneck_context", context_payload or {})
+    basis = context.get("bottleneck_basis", {})
+    context_matches = context.get("group_code") == best["group"]
+    basis_verified = bool(context_matches and context.get("candidate_pool_passed"))
+    if basis_verified:
+        source_rows = []
+        for source in basis.get("sources", []):
+            title = esc(source.get("title", "출처"))
+            observed = esc(source.get("observed_at") or source.get("source_observed_at") or "-")
+            if source.get("url"):
+                label = f'<a href="{esc(source["url"])}">{title}</a>'
+            else:
+                label = f'{title}: <code>{esc(json.dumps(source.get("source_locator"), ensure_ascii=False))}</code>'
+            source_rows.append(f"<li>{label} · 확인일 {observed}</li>")
+        basis_block = f"""
+<h2>병목 실체 검증</h2>
+<div class="note"><b>통과</b> · {esc(context["group_code"])} 그룹의 정량 점수와 질적 근거가 연결됐다.</div>
+<p><b>공급 제약</b> · {esc(basis["constraint"])}</p>
+<p><b>지속 기간</b> · {esc(basis["duration"])} ({basis["duration_years"]:g}년)</p>
+<p><b>통제 주체</b> · {esc(basis["controller"])}</p>
+<ul>{''.join(source_rows)}</ul>"""
+    else:
+        missing = ", ".join(basis.get("missing", [])) or "검증된 bottleneck_context"
+        if context and not context_matches:
+            missing = f"최상위 그룹 {best['group']}과 문맥 그룹 {context.get('group_code')}이 다르다"
+        basis_block = f"""
+<h2>병목 실체 검증</h2>
+<div class="note"><b>미검증</b> · {esc(missing)}</div>
+<p>공급 제약, 3년을 넘는 지속 기간, 통제 주체와 확인일이 있는 출처를 검증하기 전에는
+종목 후보 단계로 넘기지 않는다.</p>"""
 
     return page(f"섹터 병목 점수 {asof}", f"""
 <h1>섹터 병목 점수</h1>
@@ -187,14 +227,7 @@ def render_bottleneck(usa, kor, asof):
 <th>자금 집중</th><th>지속성</th><th class="l">대표 종목</th></tr></thead>
 <tbody>{krows}</tbody></table></div>
 
-<h2>다음에 확인할 것</h2>
-<p>점수는 어디를 볼지 알려줄 뿐 왜인지는 말하지 않는다.
-최상위 그룹에 대해 다음 셋에 답하고 <code>scripts/tenbagger_pick.py</code> 로 종목 선별을 실행해야 한다.</p>
-<ul>
-<li>무엇이 공급을 제약하는가. 생산능력인가, 기술 장벽인가, 계약 구조인가.</li>
-<li>그 제약이 몇 년 유지되는가. 증설 발표가 있으면 그 시점이 병목의 끝이다.</li>
-<li>누가 그 제약을 쥐고 있는가. 병목 안에서도 가격을 정하는 계층이 따로 있다.</li>
-</ul>
+{basis_block}
 
 <footer>재현: <code>python3 scripts/bottleneck.py reports/universe-USA-{asof.replace('-','')}.json</code><br>
 투자 판단의 근거 자료이며 매매 권유가 아니다.</footer>""")
@@ -221,7 +254,9 @@ def _judge_block(title, j, P, why):
 </div></div>"""
 
 
-def render_company(v):
+def render_company(payload):
+    envelope = payload if "valuation" in payload else None
+    v = envelope["valuation"] if envelope else payload
     m, t, rev = v["market"], v["tenbagger"], v["reverse"]
     a, rl, gap = v["absolute"], v["relative"], v["disagreement"]
     chk, P = v["consensus_check"], v["market"]["price"]
@@ -235,6 +270,42 @@ def render_company(v):
         "ebitda": f"ee{relative_year % 100:02d}",
         "per": f"per{relative_year % 100:02d}",
     })
+    if envelope:
+        candidate_label = envelope.get("candidate_status", "reference_only")
+        candidate_reasons = envelope.get("candidate_status_reasons", [])
+        bottleneck_context = envelope.get("bottleneck_context", {})
+    else:
+        candidate = v.get("candidate", {})
+        candidate_label = "candidate" if candidate.get("eligible") else "reference_only"
+        candidate_reasons = candidate.get("reasons", [])
+        bottleneck_context = {}
+    reason_items = "".join(f"<li>{esc(reason)}</li>" for reason in candidate_reasons)
+    context_note = ""
+    if bottleneck_context:
+        context_note = (
+            f'<p>산업 그룹 <code>{esc(bottleneck_context.get("group_code"))}</code> · '
+            f'병목 순위 {esc(bottleneck_context.get("rank"))}위 · '
+            f'근거 검증 {"통과" if bottleneck_context.get("candidate_pool_passed") else "미통과"}</p>'
+        )
+    candidate_block = f"""
+<div class="note"><b>후보 상태: {esc(candidate_label)}</b>{context_note}
+{'<ul>' + reason_items + '</ul>' if reason_items else '<p>병목과 가치평가 안전장치를 통과했다.</p>'}</div>"""
+
+    provenance = v.get("data_provenance", {})
+    provenance_links = " · ".join(
+        f'<a href="{esc(url)}">출처</a>' for url in provenance.get("source_urls", [])
+    ) or "출처 URL 없음"
+    provenance_block = f"""
+<h2>현재 데이터 출처</h2>
+<p>제공자 {esc(provenance.get("provider", "-"))} · 조회 시점 {esc(provenance.get("queried_at", "-"))} ·
+상태 {esc(provenance.get("status", "-"))} · {provenance_links}</p>"""
+    special = v.get("special_situation", {})
+    special_block = ""
+    if special.get("active"):
+        special_block = f"""
+<h2>특수 상황</h2>
+<div class="note"><b>{esc(special.get("type", "미분류"))}</b> ·
+검토 {esc(special.get("review_status", "미완료"))} · 결정 {esc(special.get("decision", "미정"))}</div>"""
     sales_field = relative_fields["sales"]
     ebitda_field = relative_fields["ebitda"]
     per_field = relative_fields["per"]
@@ -331,6 +402,8 @@ def render_company(v):
 시가총액 {P*m["shares"]/100:,.0f}억 달러 ·
 재현 <code>python3 scripts/valuation.py {esc(v["ticker"])}</code></div>
 
+{candidate_block}
+
 <div class="note"><b>두 밸류에이션을 합치지 않는다.</b>
 절대가치는 이 사업이 벌어들일 현금의 오늘 값을 묻고,
 상대가치는 시장이 같은 부류에 매기는 값을 묻는다.
@@ -396,6 +469,9 @@ def render_company(v):
 <tbody>{arows}</tbody></table></div>
 {ratl}
 <p class="mut"><b>확률의 근거</b> — {esc(v.get("probability_basis",""))}</p>
+
+{provenance_block}
+{special_block}
 
 <h3>기본 시나리오 현금흐름 (백만 달러)</h3>
 <div class="scroll"><table>
@@ -464,27 +540,37 @@ def main():
         print(__doc__.strip(), file=sys.stderr)
         print("\n오류: '-o' 뒤에 출력 경로가 없다.", file=sys.stderr)
         raise SystemExit(2)
-    kind = a[0]
+    before_output = list(a[:out_i])
+    context_path = None
+    if "--context" in before_output:
+        context_i = before_output.index("--context")
+        if context_i == len(before_output) - 1:
+            print("\n오류: '--context' 뒤에 입력 JSON 경로가 없다.", file=sys.stderr)
+            raise SystemExit(2)
+        context_path = before_output[context_i + 1]
+        del before_output[context_i:context_i + 2]
+    kind = before_output[0]
     if kind not in {"bottleneck", "company"}:
         print(__doc__.strip(), file=sys.stderr)
         print(f"\n오류: 알 수 없는 리포트 종류다: {kind}", file=sys.stderr)
         raise SystemExit(2)
-    if kind == "company" and len(a[:out_i]) != 2:
+    if kind == "company" and len(before_output) != 2:
         print(__doc__.strip(), file=sys.stderr)
         print("\n오류: company 리포트는 입력 JSON 하나가 필요하다.", file=sys.stderr)
         raise SystemExit(2)
-    if kind == "bottleneck" and len(a[:out_i]) < 3:
+    if kind == "bottleneck" and len(before_output) < 3:
         print(__doc__.strip(), file=sys.stderr)
         print("\n오류: bottleneck 리포트는 미국 JSON 과 한국 JSON 이 필요하다.", file=sys.stderr)
         raise SystemExit(2)
     out = a[out_i + 1]
     if kind == "bottleneck":
-        usa = json.loads(Path(a[1]).read_text())
-        kor = json.loads(Path(a[2]).read_text())
-        asof = a[3] if len(a) > 3 and not a[3].startswith("-") else "2026-08-28"
-        Path(out).write_text(render_bottleneck(usa, kor, asof))
+        usa = json.loads(Path(before_output[1]).read_text())
+        kor = json.loads(Path(before_output[2]).read_text())
+        asof = before_output[3] if len(before_output) > 3 else "2026-08-28"
+        context_payload = json.loads(Path(context_path).read_text()) if context_path else None
+        Path(out).write_text(render_bottleneck(usa, kor, asof, context_payload))
     else:
-        v = json.loads(Path(a[1]).read_text())
+        v = json.loads(Path(before_output[1]).read_text())
         Path(out).write_text(render_company(v))
     print(f"작성: {out}")
 

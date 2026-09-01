@@ -333,8 +333,7 @@ def tenbagger_candidates(group, limit=8):
 # ────────────── handoff 계약 ──────────────
 
 RESEARCH_FIELDS = (
-    "group_code", "reviewed_at", "constraint", "duration",
-    "duration_years", "controller",
+    "group_code", "constraint", "duration", "controller",
 )
 PASS_VERDICTS = {"pass", "통과"}
 MIN_FACTOR_COVERAGE = 0.70
@@ -357,7 +356,7 @@ def bottleneck_basis(raw=None, expected_group=None):
         missing.append("sources")
     if not valid_date(basis.get("reviewed_at")):
         missing.append("reviewed_at")
-    if expected_group and basis.get("group_code") != expected_group:
+    if expected_group and basis.get("group_code") and basis["group_code"] != expected_group:
         missing.append("group_code_mismatch")
     if not isinstance(basis.get("duration_years"), (int, float)) or basis.get("duration_years", 0) <= 3:
         missing.append("duration_years>3")

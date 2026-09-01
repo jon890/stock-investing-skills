@@ -518,7 +518,7 @@ def candidate_gate(absolute, relative, tenbagger_result, relative_hold, provenan
     reasons = [x for x in [relative_hold, provenance_hold, special_hold] if x]
     tenbagger_call = tenbagger_result["verdict"][0]
     if tenbagger_call not in {"가능", "최선 시나리오만"}:
-        reasons.append(f"텐베거 판정이 '{tenbagger_call}'라서 후보 기준을 넘지 못했다.")
+        reasons.append(f"텐베거 판정이 '{tenbagger_call}'이라서 후보 기준을 넘지 못했다.")
     if reasons:
         return {"eligible": False, "call": "보류", "reasons": reasons}
     calls = [absolute["call"], relative["call"] if relative else "보유"]
