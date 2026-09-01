@@ -17,9 +17,13 @@ ALIASES = {
     "가치평가": ["valuation", "process"],
     "밸류에이션": ["valuation"],
     "내재가치": ["intrinsic-value"],
+    "상대가치평가": ["relative-valuation", "process"],
     "상대가치": ["relative-valuation"],
     "유사기업": ["peer-group"],
     "비교군": ["peer-group"],
+    "고평가": ["valuation-risk", "market-efficiency"],
+    "왜곡": ["valuation-risk", "market-efficiency"],
+    "약점": ["valuation-risk"],
     "배수": ["multiples"],
     "멀티플": ["multiples"],
     "per": ["per"],
@@ -108,10 +112,16 @@ def load_evidence(evidence_dir: Path = DEFAULT_EVIDENCE_DIR) -> list[dict[str, A
 def query_terms(question: str) -> set[str]:
     lowered = question.lower()
     terms = set(re.findall(r"[a-z0-9][a-z0-9\-]+", lowered))
-    for key, aliases in ALIASES.items():
-        if key.lower() in lowered:
-            terms.add(key.lower())
-            terms.update(aliases)
+    matched_keys = [key for key in ALIASES if key.lower() in lowered]
+    for key in matched_keys:
+        normalized_key = key.lower()
+        if any(
+            normalized_key != other.lower() and normalized_key in other.lower()
+            for other in matched_keys
+        ):
+            continue
+        terms.add(normalized_key)
+        terms.update(ALIASES[key])
     return terms
 
 

@@ -78,6 +78,17 @@ class WsajEvidenceTests(unittest.TestCase):
         self.assertEqual(result["status"], "matched")
         self.assertEqual(result["matches"][0]["id"], "wsaj-evidence-000029")
 
+    def test_query_matches_relative_valuation_risk(self):
+        questions = [
+            "상대가치평가 약점은 뭐야?",
+            "유사기업 전체가 고평가되어 있으면 결론도 왜곡돼?",
+        ]
+        for question in questions:
+            with self.subTest(question=question):
+                result = run_query(question)
+                self.assertEqual(result["status"], "matched")
+                self.assertEqual(result["matches"][0]["id"], "wsaj-evidence-000028")
+
     def test_query_rejects_current_buy_sell(self):
         result = run_query("오늘 엔비디아 매수해도 돼?")
         self.assertEqual(result["status"], "requires_current_external_data")
